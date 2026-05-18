@@ -1,0 +1,104 @@
+# /api/v3/meetings/{id}/agenda_items
+---
+get:
+  summary: List meeting agenda items
+  operationId: list_meeting_agenda_items
+  tags:
+    - Meetings
+  description: Lists all agenda items for the given meeting.
+  parameters:
+    - description: Meeting identifier
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: OK
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/meeting_agenda_item_collection_model.yml"
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the meeting does not exist or the client does not have sufficient permissions to see it.
+
+        **Required permission:** view meetings
+
+post:
+  summary: Create meeting agenda item
+  operationId: create_meeting_agenda_item
+  tags:
+    - Meetings
+  description: Creates a new agenda item for the given meeting.
+  parameters:
+    - description: Meeting identifier
+      example: 1
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: "../components/schemas/meeting_agenda_item_write_model.yml"
+  responses:
+    '201':
+      description: Created
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/meeting_agenda_item_model.yml"
+    '400':
+      $ref: "../components/responses/invalid_request_body.yml"
+    '403':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:MissingPermission
+                message: You are not authorized to access this resource.
+      description: |-
+        Returned if the client does not have sufficient permissions.
+
+        **Required permission:** manage agendas
+    '404':
+      content:
+        application/hal+json:
+          schema:
+            $ref: "../components/schemas/error_response.yml"
+          examples:
+            response:
+              value:
+                _type: Error
+                errorIdentifier: urn:openproject-org:api:v3:errors:NotFound
+                message: The requested resource could not be found.
+      description: |-
+        Returned if the meeting does not exist or the client does not have sufficient permissions to see it.
+    '406':
+      $ref: "../components/responses/missing_content_type.yml"
+    '415':
+      $ref: "../components/responses/unsupported_media_type.yml"
+    '422':
+      description: |-
+        Returned if:
+
+        * a constraint for a property was violated (`PropertyConstraintViolation`)

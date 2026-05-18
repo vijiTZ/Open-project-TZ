@@ -1,0 +1,97 @@
+---
+zh-CN:
+  activerecord:
+    attributes:
+      wikis/page_link:
+        provider: Wiki 提供商
+      wikis/xwiki_provider:
+        authentication_method: 身份验证方式
+        authentication_methods:
+          oauth2_sso: 通过 OpenID Connect 身份提供商进行单点登录
+          two_way_oauth2: 双向 OAuth 2.0 授权代码流
+        name: 名称
+        token_exchange_scope: XWiki 范围
+        universal_identifier: 通用标识符
+        url: 实例 URL
+        wiki_audience: XWiki 受众
+    errors: {}
+    models:
+      wikis/inline_page_link:
+        other: 内联页面链接
+      wikis/internal_provider: 内部 Wiki
+      wikis/relation_page_link:
+        other: 关系页面链接
+      wikis/xwiki_provider: XWiki 提供商
+  permission_manage_wiki_page_links: 管理 Wiki 页面链接
+  project_module_wiki_platforms: Wiki 提供商
+  wikis:
+    buttons:
+      connect_account: 连接 %{provider} 帐户
+      done_continue: 完成, 继续
+      save_and_continue: 保存并继续
+      wiki_page: Wiki 页面
+    work_package_wikis_tab_component:
+      inline_page_links: 内联页面链接
+      referencing_pages: 引用于
+    page_link_component:
+      remove: 删除页面链接
+    relation_page_links_component:
+      empty_heading: 无相关页面
+      empty_text: 手动添加链接到其他相关Wiki页面。
+    oauth_login_component:
+      heading: 未连接至 %{provider}
+      description: 登录 %{provider} ，查看和管理此 OpenProject 实例的相关Wiki页面。
+      connect_button: 连接 %{provider} 账户
+    admin:
+      destroy_confirmation_dialog_component:
+        title: 删除 wiki 提供商
+        heading: 删除维基提供者？
+        warning_html: 您即将删除 %{wiki_provider}。此操作无法撤消。
+      forms:
+        general_info_form_component:
+          xwiki_instance_description: 在进行设置之前，请确保您在 XWiki 实例中具有管理权限。
+        oauth_application_form_component:
+          application_id: 应用程序 ID
+          application_secret: 应用程序密钥
+        oauth_client_form_component:
+          client_id: 客户端 ID
+      oauth_application_info_component:
+        confirm_replace_oauth_application: 此操作将重置当前的 OAuth 凭据。确认后，您必须在 XWiki 实例中重新输入凭据，所有用户都必须重新授权。确定要继续吗？
+        label_pending: 待处理
+        replace_oauth_application: 替换 OpenProject OAuth 应用程序
+      oauth_client_info_component:
+        confirm_replace_oauth_client: 此操作将重置当前的 XWiki OAuth 凭据。所有用户都需要针对 XWiki 进行重新授权。确定要继续吗？
+        label_pending: 待处理
+        replace_oauth_client: 替换 XWiki OAuth 应用程序
+      wiki_provider_list_component:
+        label_creation_time: 创建时间
+        label_name: 名称
+        label_provider: 提供商
+        no_results_description: 添加 Wiki 提供商，以在此处查看。
+        no_results_title: 您尚未设置任何 Wiki 提供商。
+      wiki_providers:
+        index_description: 添加外部 Wiki 服务，以将工作包链接到现有 Wiki 页面，或直接从 OpenProject 创建新页面。
+        label_add_new: 添加新 Wiki 提供商
+        label_edit: 编辑 XWiki 提供商
+        label_new_xwiki_instance: 新建 XWiki 提供商
+        label_wiki_platform: Wiki 提供商
+        name_caption: 为您的存储空间命名，以便用户可以区分多个 Wiki 平台。
+        name_placeholder: XWiki 知识库
+        new_provider_html: 有关详情，请阅读我们关于[设置 XWiki 集成](docs_url)的文档。
+        oauth:
+          openproject_oauth: OpenProject OAuth
+        sections:
+          general_information: 基本信息
+          oauth_configuration: OAuth 配置
+        url_caption: 请添加您的 Wiki 平台的主机地址（包含 https://）。该地址的长度不应超过 255 个字符。
+        xwiki_instance: XWiki 实例
+        xwiki:
+          oauth:
+            openproject_oauth_description: 允许 XWiki 使用 OAuth 应用程序访问 OpenProject 数据。请将以下凭据复制到您的 XWiki 实例。
+            provider_oauth: XWiki OAuth
+            provider_oauth_description: 允许 OpenProject 使用 OAuth 访问 XWiki 数据。将自动生成一个客户端 ID，以向 XWiki 标识 OpenProject — 无需在 XWiki 端进行手动配置。
+          openproject_oauth_description: 允许 XWiki 使用 OAuth 访问 OpenProject 数据。
+          xwiki_oauth: XWiki OAuth
+          xwiki_oauth_description: 允许 OpenProject 使用 OAuth 访问 XWiki 数据。
+    macro:
+      page_not_found: 关联的 Wiki 页面不再可用

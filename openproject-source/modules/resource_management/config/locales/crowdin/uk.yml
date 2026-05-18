@@ -1,0 +1,73 @@
+---
+uk:
+  activerecord:
+    attributes:
+      resource_planner:
+        name: Назва
+        start_date: Дата початку
+        end_date: Дата завершення
+        default_view_class_name: Типове подання
+        public: Загальнодоступне
+        favorite: Вибране
+      resource_allocation:
+        entity: Entity
+        principal: Assignee
+        state: State
+        start_date: Start date
+        end_date: Finish date
+        allocated_time: Allocated time
+        user_filter: User filter
+    errors:
+      models:
+        resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: не має передувати даті початку.
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: must be after the start date.
+  plugin_openproject_resource_management:
+    name: Керування ресурсами OpenProject
+    description: Забезпечує керування ресурсами й планування завантаження.
+  project_module_resource_management: Керування ресурсами
+  permission_view_resource_planners: Переглядати планувальники ресурсів
+  permission_view_resource_planners_explanation: 'Дає змогу користувачам отримувати доступ до планувальників ресурсів. Дозволяє їм створювати власні планувальники ресурсів і керувати ними, а також переглядати загальнодоступні. Не дозволяє переглядати планувальники ресурсів інших користувачів, які не є загальнодоступними.
+
+    '
+  permission_manage_public_resource_planners: Керувати загальнодоступними планувальниками ресурсів
+  permission_manage_public_resource_planners_explanation: 'Дає змогу користувачам створювати загальнодоступні планувальники ресурсів і керувати ними. Дозволяє їм переглядати, створювати й публікувати власні планувальники ресурсів, а також керувати ними. Не дозволяє переглядати планувальники ресурсів інших користувачів, які не є загальнодоступними.
+
+    '
+  permission_allocate_user_resources: Allocate user resources
+  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
+
+    '
+  label_resource_management: Планування ресурсів
+  button_next: Зберегти
+  resource_management:
+    label_resource_planner: Планувальник ресурсів
+    label_resource_planner_plural: Планувальники ресурсів
+    label_new_resource_planner: Новий планувальник ресурсів
+    public_caption: 'Якщо зробити це подання загальнодоступним, доступ до нього отримають усі учасники проєкту. Це не вплине на видимість пакетів робіт, яка все ще залежить від того, чи є в користувача відповідний дозвіл.
+
+      '
+    favorite_caption: 'Якщо додати це подання у вибране, воно з’явиться у верхній частині меню бічної панелі.
+
+      '
+    view_types:
+      UserCardView: Картки користувачів
+    action:
+      favorite: Додати у вибране
+      unfavorite: Вилучити з вибраного
+      make_public: Зробити загальнодоступним
+      make_private: Зробити приватним
+      delete: Видалити
+    sidebar:
+      public: Загальнодоступні
+      private: Приватні
+    blankslate:
+      title: Ще немає планувальників ресурсів
+      desc: Створіть планувальник ресурсів, щоб почати планувати завантаження для цього проєкту.
+    show:
+      placeholder: Детальний огляд цього планувальника ресурсів з’явиться незабаром.

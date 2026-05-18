@@ -1,0 +1,227 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+zh-CN:
+  plugin_openproject_backlogs:
+    name: OpenProject 待办清单
+    description: 该模块为敏捷团队在敏捷项目中使用 OpenProject 添加了功能。
+  activerecord:
+    attributes:
+      project:
+        sprint_sharing: 冲刺共享
+      sprint:
+        duration: 持续时间
+        finish_date: 结束日期
+        goal: 冲刺目标
+        name: Sprint 冲刺名称
+        sharing: 共享中
+        statuses:
+          in_planning: 计划中
+          active: 激活
+          completed: 已完成
+      user_preference:
+        backlogs_versions_default_fold_state: 以折叠形式显示冲刺
+      work_package:
+        backlog_bucket: 积压工作存储桶
+        backlogs_work_package_type: 待办清单类型
+        position: 位置
+        sprint: 冲刺
+        story_points: 故事点
+    errors:
+      messages:
+        must_be_in_planning: 必须处于规划中状态才能开始。
+        only_one_active_sprint_allowed: 每个项目只允许有一个有效冲刺。
+        dates_required: 必须设置开始和结束日期才能开始冲刺。
+      models:
+        project:
+          receiving_sprints: 正在接收共享冲刺。无法创建自己的冲刺。
+          attributes:
+            sprint_sharing:
+              share_all_projects_already_taken: 无法设置，因为项目“%{name}”已经与所有项目共享。
+              share_all_projects_already_taken_anonymous: 无法设置，因为另一个项目已经与所有项目共享。
+        sprint:
+          attributes:
+            base:
+              unfinished_work_packages:
+                other: 此冲刺中有 %{count} 个未完成的工作包。
+              format: "%{message}"
+            status:
+              not_active: 未激活，无法关闭。
+        work_package:
+          backlog_bucket_xor_sprint: 无法同时指定至冲刺和积压工作存储桶。
+          attributes:
+            backlog_bucket:
+              backlog_bucket_from_another_project: 必须与工作包属于同一个项目。
+            blocks_ids:
+              can_only_contain_work_packages_of_current_sprint: 只可以包含当前冲刺 (sprint) 中的工作包 ID。
+              must_block_at_least_one_work_package: 必须包含至少一个票证的 ID。
+            version_id:
+              task_version_must_be_the_same_as_story_version: 必须与父级故事的版本相同。
+            sprint:
+              not_assignable: 是不可分配的，因为它要么没有与项目共享，要么已经完成。
+              not_eligible_for_moving: 在该工作包被移出的冲刺所属的项目中，没有处于有效状态的冲刺。
+    models:
+      sprint: 冲刺
+  backlogs:
+    caption_sprints_default_fold_state: 查看“积压工作和冲刺”页面时，默认情况下不会展开冲刺。每个冲刺都必须手动展开。
+    definition_of_done: 完成的定义
+    definition_of_done_caption: 具有这些状态的工作包在积压工作视图和报告中会被视为已完成。
+    done_status: 已完成状态
+    sharing_description: 此项目可以共享自己的冲刺、接收共享的冲刺或独立处理冲刺（不共享）。
+    sharing: 共享
+    label_burndown_chart: 燃尽图
+    label_sprint_board: 冲刺面板
+    work_package_is_closed: 工作包已完成，当
+    label_is_done_status: 状态 %{status_name} 表示已完成
+    points_label:
+      other: 点
+    positions_could_not_be_rebuilt: 无法重建顺序
+    positions_rebuilt_successfully: 已成功重建顺序
+    rebuild: 重建
+    rebuild_positions: 重建顺序
+    remaining_hours: 剩余工时
+    show_burndown_chart: 燃尽图
+    story_points:
+      other: "%{count} 个故事点"
+    unassigned: 未指定
+    user_preference:
+      header_backlogs: 积压工作模块
+      button_update_backlogs: 更新积压工作模块
+    administration_blankslate:
+      title: 积压工作管理设置不断演进
+      text: 我们目前正在重新设计积压工作模块。冲刺和积压工作的管理设置不久后将显示在此处。项目级设置仍然可用。
+    bucket_component:
+      blankslate_title: 积压工作存储桶为空
+      blankslate_description: 将项目拖到此处添加。
+      label_actions: 积压工作存储桶操作
+      action_menu:
+        edit_backlog_bucket: 编辑积压工作存储桶
+        delete_backlog_bucket: 删除积压工作存储桶
+    backlog_bucket_destroy_modal_component:
+      title: 是否删除积压工作存储桶？
+      details: 积压工作存储桶“%{name}”将被删除，所有工作包将移至积压工作收件箱。不会删除任何工作包。
+    sprint_component:
+      blankslate_title: "%{name} 为空"
+      blankslate_description: 尚未计划条目。请将条目拖到此处以添加。
+      label_actions: 冲刺行动
+      label_start_sprint: 开始
+      label_complete_sprint: 完成
+      start_sprint_disabled_reason_active_sprint: 另一次冲刺已经开始。
+      start_sprint_disabled_reason_missing_dates: 必须设置开始和结束日期才能开始冲刺。
+      action_menu:
+        edit_sprint: 编辑冲刺
+        add_work_package: 添加工作包
+    inbox_component:
+      blankslate_title: 积压工作收件箱为空
+      blankslate_description: 此项目中所有未完成的工作包都会自动出现在此处。
+      show_more:
+        other: 显示其他 %{count} 个条目
+    inbox_menu_component:
+      action_menu:
+        copy_url_to_clipboard: 将 URL 复制到剪贴板
+        copy_work_package_id: 复制工作包 ID
+        move_menu: 移动
+      label_move_to_sprint: 移动到冲刺
+    move_to_sprint_dialog_component:
+      title: 移动到冲刺
+      label_sprint: 冲刺
+    sprints_component:
+      blankslate:
+        title: 还不存在冲刺
+        settings_link_text: 项目设置
+        receive_and_manage_description_html: 此项目从其他项目接收冲刺。请在%{settings_link}中管理此设置。
+        receive_description_text: 此项目从其他项目接收共享冲刺，但目前没有可用冲刺。
+        create_and_manage_description_html: 要开始计划冲刺，请在此处创建，或转到%{settings_link}从其他项目接收冲刺。
+        create_description_text: 要开始计划冲刺，请在此处创建。
+        manage_description_html: 要开始计划冲刺，请转到%{settings_link}从其他项目接收冲刺。
+        no_actions_description_text: 此项目还没有可用冲刺。
+    finish_sprint_dialog_component:
+      title: 有工作正在进行中的条目
+      body: "%{message} 您想对它们做什么？"
+      legend: 为未完成的工作包执行的操作
+      actions:
+        move_to_top_of_backlog: 将它们移动到积压工作顶部
+        move_to_bottom_of_backlog: 将它们移动到积压工作底部
+        move_to_sprint: 将它们移动到另一个冲刺
+      select_sprint_label: 选择冲刺
+      button_complete_sprint: 完成冲刺
+    story_menu_list_component:
+      action_menu:
+        copy_url_to_clipboard: 将 URL 复制到剪贴板
+        copy_work_package_id: 复制工作包 ID
+        move_menu: 移动
+        move_to_sprint: 移动到冲刺
+    burndown_chart:
+      show:
+        blankslate_title: 没有可用的燃尽数据
+        blankslate_description: 设置冲刺的开始和结束日期，以生成燃尽图。
+  burndown:
+    story_points: 故事点
+    story_points_ideal: 故事点（理想）
+  label_backlog: 积压工作
+  label_backlog_bucket_edit: 编辑积压工作存储桶
+  label_backlog_bucket_new: 新建积压工作存储桶
+  label_inbox: 收件箱
+  label_backlogs: 待办清单
+  label_burndown_chart: 燃尽图
+  label_sprint_board: 冲刺面板
+  label_points_burn_down: 减少
+  label_points_burn_up: 增加
+  label_sprint_edit: 编辑冲刺
+  label_sprint_new: 新冲刺
+  label_backlog_and_sprints: 积压工作和冲刺
+  label_task_board: 任务板
+  notice_successful_start: 该冲刺已开始。
+  notice_successful_finish: 该冲刺已完成。
+  notice_unsuccessful_start: 无法开始该冲刺。
+  notice_unsuccessful_start_with_reason: 无法开始该冲刺：%{reason}
+  notice_unsuccessful_finish: 无法完成该冲刺。
+  notice_unsuccessful_finish_with_reason: 无法完成该冲刺：%{reason}
+  permission_create_sprints: 创建冲刺
+  permission_manage_sprint_items: 管理冲刺条目
+  permission_select_done_statuses: 选择完成状态
+  permission_share_sprint: 共享冲刺
+  permission_start_complete_sprint: 开始/完成冲刺
+  permission_view_sprints: 查看冲刺
+  project_module_backlogs: 待办清单
+  projects:
+    settings:
+      backlog_sharing:
+        options:
+          no_sharing:
+            label: 不共享
+            caption: 在此项目中创建的冲刺将仅在此项目中可用和可见。这些冲刺对子项目也不可见。
+          receive_shared:
+            label: 接收共享冲刺
+            caption: 此项目只能使用其他项目共享的冲刺。
+            warning: 此项目只能使用其他项目共享的冲刺。之前在此项目中创建的未使用的冲刺将不再可见。
+          share_all_projects:
+            label: 所有项目
+            caption: 在此项目中创建的冲刺将可用于此实例中的所有项目。如果选择此选项，这些冲刺将不再可用于其他项目。
+            disabled_caption: 选项不可用，因为项目“%{name}”目前正在与所有项目共享，仅允许一个项目进行此操作。
+            disabled_caption_anonymous: 选项不可用，因为另一个项目目前正在与所有项目共享，仅允许一个项目进行此操作。
+          share_subprojects:
+            label: 子项目
+            caption: 在此项目中创建的冲刺将对当前项目的所有子项目可用。
+            info: 共享冲刺将在所有项目中共享名称、状态，以及开始和结束日期。无法在接收和使用这些冲刺的项目中修改这些内容。
+        sprint_sharing: 共享冲刺
+  remaining_hours: 剩余工时

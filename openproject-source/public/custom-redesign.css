@@ -1,0 +1,349 @@
+/* =============================================================
+   OpenProject UI Redesign
+   Injected via base.html.erb — no asset recompile needed
+   ============================================================= */
+
+/* ---------------------------------------------------------------
+   1. TOP HEADER / NAVBAR — blue → green
+--------------------------------------------------------------- */
+:root {
+  --header-bg-color: #1a7f4b !important;
+  --header-item-bg-hover-color: #15693e !important;
+  --header-border-bottom-color: #15693e !important;
+  --header-font-color: #ffffff !important;
+}
+
+#header,
+.op-app-header,
+.header-top-menu,
+.top-menu-items,
+body > header,
+[data-qa-selector="header"] {
+  background-color: #1a7f4b !important;
+  border-bottom-color: #15693e !important;
+}
+
+#header a,
+.op-app-header a,
+#header .op-app-menu--item,
+.top-menu-items a {
+  color: #ffffff !important;
+}
+
+#header .button,
+.op-app-header .button,
+#header--icon-user-avatar {
+  background-color: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #ffffff !important;
+}
+
+/* Search bar in header */
+#top-menu-search-input,
+.op-app-header input[type="search"],
+.op-app-header input[type="text"] {
+  background: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.3) !important;
+  color: #ffffff !important;
+}
+
+#top-menu-search-input::placeholder {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+/* + Add button (green becomes slightly lighter green) */
+#top-menu--add-button,
+.header--add-work-package-button {
+  background-color: #ffffff !important;
+  color: #1a7f4b !important;
+  border-color: #ffffff !important;
+}
+
+/* ---------------------------------------------------------------
+   2. SECTION HEADERS — remove uppercase, clean typography
+--------------------------------------------------------------- */
+.attributes-group--header,
+.attributes-group--header-text,
+.attributes-group--header-toggle,
+.attributes-group--header-toggle > span,
+.wp-attribute-group--header,
+wp-attribute-group .attributes-group--header {
+  text-transform: none !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  letter-spacing: 0 !important;
+}
+
+.attributes-group--header-container {
+  border-bottom: 1px solid #e8eaf0 !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 14px !important;
+}
+
+/* ---------------------------------------------------------------
+   3. FORM FIELDS — clean single border, rounded corners
+       Exclude title/header area inputs
+--------------------------------------------------------------- */
+.attributes-group .inline-edit--container,
+.work-packages--details .inline-edit--container,
+wp-single-view .inline-edit--container {
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  padding: 5px 10px !important;
+  min-height: 36px !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.attributes-group .inline-edit--container:hover,
+.work-packages--details .inline-edit--container:hover {
+  border-color: #9ca3af !important;
+}
+
+.attributes-group .inline-edit--container:focus-within,
+.work-packages--details .inline-edit--container:focus-within {
+  border-color: #1a7f4b !important;
+  box-shadow: 0 0 0 3px rgba(26,127,75,0.12) !important;
+  outline: none !important;
+}
+
+/* Select/dropdown inside attribute groups */
+.attributes-group .ng-select .ng-select-container,
+.work-packages--details .ng-select .ng-select-container {
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  min-height: 36px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+.attributes-group .ng-select.ng-select-focused .ng-select-container,
+.work-packages--details .ng-select.ng-select-focused .ng-select-container {
+  border-color: #1a7f4b !important;
+  box-shadow: 0 0 0 3px rgba(26,127,75,0.12) !important;
+}
+
+/* ---------------------------------------------------------------
+   4. TITLE AREA — "New Task" — no extra border box
+--------------------------------------------------------------- */
+.toolbar-title-input .inline-edit--container,
+.editable-toolbar-title .inline-edit--container,
+.wp-new-view--title-input .inline-edit--container,
+.inplace-editing--container .inline-edit--container,
+.work-packages--subject-header .inline-edit--container {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  min-height: unset !important;
+}
+
+/* Subject (title) input text style */
+.toolbar-title-input input,
+.editable-toolbar-title input,
+.wp-new-view--title-input input,
+.work-packages--subject-header input {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #1a1a2e !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  padding: 2px 0 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.toolbar-title-input input:focus,
+.editable-toolbar-title input:focus {
+  border-bottom-color: #1a7f4b !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* ---------------------------------------------------------------
+   5. ATTRIBUTE GROUP SECTIONS — white cards
+--------------------------------------------------------------- */
+.attributes-group {
+  margin-bottom: 16px !important;
+  padding: 18px 20px !important;
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+}
+
+.attributes-group--attribute {
+  margin-bottom: 14px !important;
+}
+
+/* ---------------------------------------------------------------
+   6. FIELD LABELS
+--------------------------------------------------------------- */
+.wp-attribute-group--attribute-key,
+.attributes-group--label,
+.wp-edit-field--label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #6b7280 !important;
+  text-transform: none !important;
+  margin-bottom: 4px !important;
+}
+
+/* ---------------------------------------------------------------
+   7. RICH TEXT EDITOR (Description)
+--------------------------------------------------------------- */
+.ck.ck-toolbar {
+  border: 1px solid #e5e7eb !important;
+  border-bottom: none !important;
+  border-radius: 6px 6px 0 0 !important;
+  background: #f9fafb !important;
+}
+
+.ck.ck-editor__editable {
+  border: 1px solid #e5e7eb !important;
+  border-top: none !important;
+  border-radius: 0 0 6px 6px !important;
+  min-height: 100px !important;
+  background: #fff !important;
+}
+
+.ck.ck-editor__editable:focus {
+  border-color: #1a7f4b !important;
+  box-shadow: 0 0 0 3px rgba(26,127,75,0.12) !important;
+}
+
+/* ---------------------------------------------------------------
+   8. ATTACHMENTS DROP ZONE
+--------------------------------------------------------------- */
+.op-attachment-list--drop-box,
+.attachment--drop-box,
+.drop-zone,
+[class*="drop-box"] {
+  border: 2px dashed #d1d5db !important;
+  border-radius: 8px !important;
+  background: #f9fafb !important;
+  color: #6b7280 !important;
+}
+
+/* ---------------------------------------------------------------
+   9. SAVE / CANCEL BUTTONS — green accent
+--------------------------------------------------------------- */
+.button.-highlight,
+.button[data-qa-selector*="save"],
+input[type="submit"].button.-highlight {
+  background-color: #1a7f4b !important;
+  border-color: #1a7f4b !important;
+  color: #fff !important;
+}
+
+.button.-highlight:hover {
+  background-color: #15693e !important;
+  border-color: #15693e !important;
+}
+
+/* ---------------------------------------------------------------
+   10. WORK PACKAGE PAGE BACKGROUND
+--------------------------------------------------------------- */
+.work-packages-full-view {
+  background: #f3f4f6 !important;
+}
+
+.work-packages-full-view--split-left,
+.work-packages-full-view--split-right,
+.work-packages--show-view {
+  background: #f3f4f6 !important;
+}
+
+/* ---------------------------------------------------------------
+   11. PROJECT CARDS GRID (fallback styles)
+--------------------------------------------------------------- */
+.op-project-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.op-project-card {
+  background: #ffffff;
+  border: 1px solid #e4e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.op-project-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  border-color: #c8d0e0;
+}
+
+.op-project-card--header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.op-project-card--name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.op-project-card--name a {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  text-decoration: none;
+}
+
+.op-project-card--name a:hover { color: #1a7f4b; }
+
+.op-project-card--badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.op-project-card--badge.-active   { background: #e8f8f0; color: #1a7f4b; }
+.op-project-card--badge.-closed   { background: #fdecea; color: #c0392b; }
+.op-project-card--badge.-inactive { background: #f2f3f5; color: #6b7280; }
+
+.op-project-card--badge-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.op-project-card--badge.-active   .op-project-card--badge-dot { background: #1a7f4b; }
+.op-project-card--badge.-closed   .op-project-card--badge-dot { background: #c0392b; }
+.op-project-card--badge.-inactive .op-project-card--badge-dot { background: #9ca3af; }
+
+.op-project-card--description {
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.55;
+}
+
+.op-project-card--actions { flex-shrink: 0; }
+
+@media (max-width: 1100px) { .op-project-cards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .op-project-cards-grid { grid-template-columns: 1fr; } }
+

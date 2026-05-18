@@ -1,0 +1,231 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+fr:
+  plugin_openproject_backlogs:
+    name: Backlogs OpenProject
+    description: Ce module ajoute des fonctionnalités permettant aux équipes agiles de travailler avec OpenProject dans le cadre de projets Scrum.
+  activerecord:
+    attributes:
+      project:
+        sprint_sharing: Partage de sprint
+      sprint:
+        duration: Durée
+        finish_date: Date de fin
+        goal: Objectif du sprint
+        name: Nom du sprint
+        sharing: Partage
+        statuses:
+          in_planning: En cours de planification
+          active: Actif
+          completed: Terminé
+      user_preference:
+        backlogs_versions_default_fold_state: Afficher les sprints repliés
+      work_package:
+        backlog_bucket: Bucket de backlog
+        backlogs_work_package_type: Type de backlog
+        position: Position
+        sprint: Sprint
+        story_points: Story points
+    errors:
+      messages:
+        must_be_in_planning: doit être en planification pour commencer.
+        only_one_active_sprint_allowed: un seul sprint actif est autorisé par projet.
+        dates_required: Les dates de début et de fin sont nécessaires pour lancer le sprint.
+      models:
+        project:
+          receiving_sprints: reçoit des sprints partagés. Il n'est pas possible de créer ses propres sprints.
+          attributes:
+            sprint_sharing:
+              share_all_projects_already_taken: ne peut pas être défini car le projet "%{name}" est déjà partagé avec tous les projets.
+              share_all_projects_already_taken_anonymous: ne peut pas être défini parce qu'un autre projet est déjà partagé avec tous les projets.
+        sprint:
+          attributes:
+            base:
+              unfinished_work_packages:
+                one: Il y a un lot de travaux qui n'a pas été achevé dans ce sprint.
+                other: Il y a %{count} lots de travaux qui n'ont pas été achevés dans ce sprint.
+              format: "%{message}"
+            status:
+              not_active: n'est pas actif et ne peut donc pas être fermé.
+        work_package:
+          backlog_bucket_xor_sprint: ne peut pas être affecté à la fois à un sprint et à un bucket de backlog.
+          attributes:
+            backlog_bucket:
+              backlog_bucket_from_another_project: doit appartenir au même projet que le lot de travaux.
+            blocks_ids:
+              can_only_contain_work_packages_of_current_sprint: ne peut contenir que des ID de lots de travaux du sprint actuel.
+              must_block_at_least_one_work_package: doit contenir l'ID d'au moins un ticket.
+            version_id:
+              task_version_must_be_the_same_as_story_version: doit être identique à la version de l'histoire parente.
+            sprint:
+              not_assignable: n'est pas assignable, car il est déjà terminée ou il n'est pas partagé avec le projet.
+              not_eligible_for_moving: n'est pas un sprint actif dans le projet qui contient le sprint duquel le lot de travaux est déplacé.
+    models:
+      sprint: Sprint
+  backlogs:
+    caption_sprints_default_fold_state: Les sprints ne sont pas développés par défaut lorsque vous consultez la page « Backlog et sprints ». Chacun d'entre eux doit être développé manuellement.
+    definition_of_done: Définition de Fait
+    definition_of_done_caption: Les lots de travaux ayant ces statuts sont traités comme terminés dans les vues du backlog et dans les rapports.
+    done_status: État terminé
+    sharing_description: Ce projet peut soit partager ses propres sprints, soit recevoir des sprints partagés, soit gérer les sprints de manière indépendante (sans partage).
+    sharing: Partage
+    label_burndown_chart: Graphique burndown
+    label_sprint_board: Tableau de sprint
+    work_package_is_closed: Le lot de travaux est fait lorsque
+    label_is_done_status: Le statut %{status_name} signifie fait
+    points_label:
+      one: point
+      other: points
+    positions_could_not_be_rebuilt: Les positions n'ont pu être reconstruites.
+    positions_rebuilt_successfully: Positions reconstruites avec succès.
+    rebuild: Reconstruire
+    rebuild_positions: Reconstruire les positions
+    remaining_hours: Travail restant
+    show_burndown_chart: Graphique burndown
+    story_points:
+      one: "%{count} story point"
+      other: "%{count} story points"
+    unassigned: Non assigné
+    user_preference:
+      header_backlogs: Module des backlogs
+      button_update_backlogs: Mettre à jour le module des backlogs
+    administration_blankslate:
+      title: Les paramètres d'administration du backlog évoluent
+      text: Nous sommes en train de redessiner le module Backlogs. Les paramètres d'administration pour les sprints et les backlogs seront visibles ici dans un futur proche. Les paramètres au niveau du projet restent disponibles.
+    bucket_component:
+      blankslate_title: Le backlog est vide
+      blankslate_description: Faites glisser les éléments ici pour les ajouter.
+      label_actions: Actions de la corbeille du backlog
+      action_menu:
+        edit_backlog_bucket: Modifier le backlog en attente
+        delete_backlog_bucket: Supprimer un bucket de backlog
+    backlog_bucket_destroy_modal_component:
+      title: Supprimer le bucket de backlog ?
+      details: Le bucket de backlog « %{name} » sera supprimé et tous les lots de travaux seront déplacés vers la boîte de réception des backlogs. Aucun lot de travaux ne sera supprimé.
+    sprint_component:
+      blankslate_title: "%{name} est vide"
+      blankslate_description: Aucun élément n'a encore été planifié. Faites glisser les éléments ici pour les ajouter.
+      label_actions: Actions du sprint
+      label_start_sprint: Commencer
+      label_complete_sprint: Finaliser
+      start_sprint_disabled_reason_active_sprint: Un autre sprint est déjà en cours.
+      start_sprint_disabled_reason_missing_dates: Les dates de début et de fin sont nécessaires pour lancer le sprint.
+      action_menu:
+        edit_sprint: Modifier le sprint
+        add_work_package: Ajouter un lot de travaux
+    inbox_component:
+      blankslate_title: La boîte de réception de backlog est vide
+      blankslate_description: Tous les lots de travaux ouverts dans ce projet apparaîtront automatiquement ici.
+      show_more:
+        one: Afficher un article supplémentaire
+        other: Afficher %{count} articles supplémentaires
+    inbox_menu_component:
+      action_menu:
+        copy_url_to_clipboard: Copier l'URL dans le presse-papier
+        copy_work_package_id: Copier l'ID du lot de travaux
+        move_menu: Déplacer
+      label_move_to_sprint: Déplacer vers le sprint
+    move_to_sprint_dialog_component:
+      title: Passer au sprint
+      label_sprint: Sprint
+    sprints_component:
+      blankslate:
+        title: Il n'y a pas encore de sprints
+        settings_link_text: paramètres du projet
+        receive_and_manage_description_html: Ce projet reçoit des sprints d'un autre projet. Gérez cela dans les %{settings_link}.
+        receive_description_text: Ce projet reçoit des sprints partagés d'un autre projet, mais aucun n'est disponible pour le moment.
+        create_and_manage_description_html: Pour commencer à planifier votre sprint, créez-en un ici ou rendez-vous sur %{settings_link} pour recevoir les sprints d'un autre projet.
+        create_description_text: Pour commencer à planifier votre sprint, créez-en un ici.
+        manage_description_html: Pour commencer à planifier votre sprint, accédez aux %{settings_link} pour trouver les sprints d'un autre projet.
+        no_actions_description_text: Il n'y a pas encore de sprints disponibles pour ce projet.
+    finish_sprint_dialog_component:
+      title: Il y a des travaux en cours
+      body: "%{message} Qu'aimeriez-vous faire avec cela ?"
+      legend: Action pour les lots de travaux inachevés
+      actions:
+        move_to_top_of_backlog: Déplacez-les en haut du backlog
+        move_to_bottom_of_backlog: Déplacez-les en bas du backlog
+        move_to_sprint: Déplacez-les vers un autre sprint
+      select_sprint_label: Sélectionnez le sprint
+      button_complete_sprint: Terminer le sprint
+    story_menu_list_component:
+      action_menu:
+        copy_url_to_clipboard: Copier l'URL dans le presse-papier
+        copy_work_package_id: Copier l'ID du lot de travaux
+        move_menu: Déplacer
+        move_to_sprint: Déplacer dans le sprint
+    burndown_chart:
+      show:
+        blankslate_title: Aucune donnée de burndown disponible
+        blankslate_description: Définissez les dates de début et de fin du sprint afin de générer un graphique burndown.
+  burndown:
+    story_points: Story points
+    story_points_ideal: Story points (idéal)
+  label_backlog: Backlog
+  label_backlog_bucket_edit: Modifier le bucket de backlog
+  label_backlog_bucket_new: Nouveau bucket de backlog
+  label_inbox: Boîte de réception
+  label_backlogs: Backlogs
+  label_burndown_chart: Graphique burndown
+  label_sprint_board: Tableau de sprint
+  label_points_burn_down: Vers le bas
+  label_points_burn_up: Vers le haut
+  label_sprint_edit: Modifier le sprint
+  label_sprint_new: Nouveau sprint
+  label_backlog_and_sprints: Backlog et sprints
+  label_task_board: Tableau des tâches
+  notice_successful_start: Le sprint a commencé.
+  notice_successful_finish: Le sprint est terminé.
+  notice_unsuccessful_start: Le sprint n'a pas pu être lancé.
+  notice_unsuccessful_start_with_reason: 'Le sprint n''a pas pu être démarré : %{reason}'
+  notice_unsuccessful_finish: Le sprint n'a pas pu être terminé.
+  notice_unsuccessful_finish_with_reason: 'Le sprint n''a pas pu être achevé : %{reason}'
+  permission_create_sprints: Créer des sprints
+  permission_manage_sprint_items: Gérer les éléments du sprint
+  permission_select_done_statuses: Sélectionner les statuts terminés
+  permission_share_sprint: Partager le sprint
+  permission_start_complete_sprint: Commencer/terminer le sprint
+  permission_view_sprints: Voir les sprints
+  project_module_backlogs: Backlogs
+  projects:
+    settings:
+      backlog_sharing:
+        options:
+          no_sharing:
+            label: Ne pas partager
+            caption: Les sprints créés dans ce projet ne seront disponibles et visibles que pour ce projet. Ils ne seront pas non plus visibles par les sous-projets.
+          receive_shared:
+            label: Recevoir des sprints partagés
+            caption: Ce projet ne peut utiliser que des sprints partagés par d'autres projets.
+            warning: Ce projet ne peut utiliser que des sprints partagés par d'autres projets. Les sprints inutilisés créés dans ce projet par le passé ne seront plus visibles.
+          share_all_projects:
+            label: Tous les projets
+            caption: Les sprints créés dans ce projet seront disponibles pour tous les projets de cette instance. Si vous sélectionnez cette option, les sprints ne seront plus disponibles pour les autres projets.
+            disabled_caption: L'option n'est pas disponible car le projet "%{name}" est actuellement partagé avec tous les projets et seul un projet peut le faire.
+            disabled_caption_anonymous: Option non disponible car un autre projet est actuellement en train de partager avec tous les projets et seul un projet peut le faire.
+          share_subprojects:
+            label: Sous-projets
+            caption: Les sprints créés dans ce projet seront disponibles pour tous les sous-projets du projet en cours.
+            info: Le partage d'un sprint entraîne le partage du nom, du statut et des dates de début et de fin dans tous les projets. Ceux-ci ne peuvent pas être modifiés dans les projets qui reçoivent et utilisent ces sprints.
+        sprint_sharing: Partager les sprints
+  remaining_hours: travail restant

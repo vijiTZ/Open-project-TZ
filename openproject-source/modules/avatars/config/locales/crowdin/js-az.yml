@@ -1,0 +1,15 @@
+#English strings go here
+---
+az:
+  js:
+    label_preview: İlkin baxılış
+    button_update: Yeniləmə
+    avatars:
+      label_choose_avatar: Avatar seçin
+      uploading_avatar: Avatarınız yüklənir
+      text_upload_instructions: |
+        128x128 piksel ölçüsündə öz fərdi avatarınızı yükləyin. Daha böyük faylların ölçüsü dəyişdiriləcək və uyğunlaşmaq üçün kəsiləcək.
+        Siz şəkil seçdikdən sonra, avatarınız yükləməzdən əvvəl sızə göstəriləcək
+      error_image_too_large: Şəkil çox böyükdür
+      wrong_file_format: İcazə verilən formatlar jpg, png, gif-dir
+      empty_file_error: Zəhmət olmasa düzgün şəkil yükləyin (jpg, png, gif)

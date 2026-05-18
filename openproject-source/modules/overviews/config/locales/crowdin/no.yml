@@ -1,0 +1,6 @@
+---
+'no':
+  overviews:
+    label_home: "%{workspace_type} home"
+    label_dashboard: Kontrollpanel
+    label_overview: Oversikt

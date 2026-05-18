@@ -1,0 +1,251 @@
+/* =============================================================
+   OpenProject Custom Redesign — v9
+   Scope: .tz-wp-redesign wrapper (New Work Package form only)
+   Strategy: targeted overrides only, no global width/flex changes
+   ============================================================= */
+
+/* ── 1. PAGE BACKGROUND ────────────────────────────────────────
+   Use :has() so background only fires when our wrapper is present.
+   This avoids coloring the page on every other route.            */
+#content-body:has(.tz-wp-redesign) {
+  background: #edf1f7 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* ── 2. UNCLIP SHADOWS ─────────────────────────────────────────
+   compiled CSS sets overflow-x:clip on split-left, which clips
+   card box-shadows. Unconditionally remove it.                   */
+.work-packages-full-view--split-left {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+/* ── 3. FORM CONTAINER ─────────────────────────────────────────
+   Center and constrain the Angular form mount area.              */
+.tz-wp-redesign .work-packages--new {
+  max-width: 1320px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 32px 48px 160px 48px !important;
+  box-sizing: border-box !important;
+}
+
+/* panel-inner gets padding reset so our card gutters are clean  */
+.tz-wp-redesign .work-packages--panel-inner {
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+/* ── 4. SECTION CARDS ──────────────────────────────────────────
+   White cards with visible shadow so they float on the gray bg. */
+.tz-wp-redesign .attributes-group {
+  background: #ffffff !important;
+  border: 1.5px solid #c5d5e8 !important;
+  border-radius: 18px !important;
+  box-shadow: 0 2px 8px rgba(15, 35, 75, 0.07),
+              0 8px 28px rgba(15, 35, 75, 0.11) !important;
+  margin: 0 0 20px 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* ── 5. SECTION HEADINGS ───────────────────────────────────────
+   Plain large bold text — no colored bar, no uppercase.          */
+.tz-wp-redesign .attributes-group--header {
+  background: transparent !important;
+  border-bottom: 1.5px solid #e8eef5 !important;
+  padding: 22px 32px 16px 32px !important;
+  margin: 0 !important;
+  border-radius: 18px 18px 0 0 !important;
+}
+
+.tz-wp-redesign .attributes-group--header-text {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: #1c2d44 !important;
+  line-height: 1.3 !important;
+}
+
+/* ── 6. SECTION BODY PADDING ───────────────────────────────────*/
+.tz-wp-redesign .attributes-group--content {
+  padding: 20px 32px 28px 32px !important;
+}
+
+/* ── 7. SUBJECT FIELD ──────────────────────────────────────────
+   compiled CSS locks height:40px / font-size:16px on this field. */
+.tz-wp-redesign .wp-new--subject-wrapper {
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--active-field.subject,
+.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--active-field {
+  width: 100% !important;
+}
+
+.tz-wp-redesign .wp-new--subject-wrapper input[type="text"],
+.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--active-field.subject .inline-edit--field,
+.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--field {
+  height: auto !important;
+  min-height: 52px !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: #1c2d44 !important;
+  border: 2px solid #ccd8e8 !important;
+  border-radius: 10px !important;
+  padding: 12px 18px !important;
+  background: #f8fafc !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.tz-wp-redesign .wp-new--subject-wrapper input[type="text"]:focus,
+.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--field:focus {
+  border-color: #3b7dd8 !important;
+  box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.18) !important;
+  background: #ffffff !important;
+  outline: none !important;
+}
+
+/* Subject card extra padding */
+.tz-wp-redesign .attributes-group:has(.wp-new--subject-wrapper) .attributes-group--content {
+  padding: 24px 32px 28px 32px !important;
+}
+
+/* ── 8. DESCRIPTION / EDITOR AREA ─────────────────────────────*/
+.tz-wp-redesign .ck-editor__editable,
+.tz-wp-redesign .op-ckeditor--wrapper .ck-content {
+  min-height: 180px !important;
+  border-radius: 0 0 8px 8px !important;
+  border-color: #ccd8e8 !important;
+}
+
+.tz-wp-redesign .ck-editor__top .ck-toolbar {
+  border-radius: 8px 8px 0 0 !important;
+  border-color: #ccd8e8 !important;
+  background: #f4f7fb !important;
+}
+
+/* ── 9. STANDARD INPUTS & SELECTS ─────────────────────────────
+   Target inline-edit fields and attribute inputs specifically.   */
+.tz-wp-redesign .inline-edit--field:not(.subject),
+.tz-wp-redesign .inline-edit--active-field:not(.subject) input:not([type="checkbox"]):not([type="radio"]),
+.tz-wp-redesign .inline-edit--active-field:not(.subject) select {
+  height: 42px !important;
+  border: 1.5px solid #ccd8e8 !important;
+  border-radius: 8px !important;
+  padding: 0 12px !important;
+  font-size: 14px !important;
+  background: #f8fafc !important;
+  color: #1c2d44 !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  box-sizing: border-box !important;
+}
+
+.tz-wp-redesign .inline-edit--field:not(.subject):focus,
+.tz-wp-redesign .inline-edit--active-field:not(.subject) input:not([type="checkbox"]):not([type="radio"]):focus {
+  border-color: #3b7dd8 !important;
+  box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.18) !important;
+  background: #ffffff !important;
+  outline: none !important;
+}
+
+/* ── 10. ATTRIBUTE LABELS ──────────────────────────────────────*/
+.tz-wp-redesign .attributes-group .wp-attribute-label,
+.tz-wp-redesign .attributes-group .inline-edit--label {
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #6b7e96 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  margin-bottom: 4px !important;
+}
+
+/* ── 11. STICKY FOOTER (Save / Cancel) ─────────────────────────
+   Glassmorphism bar pinned to bottom of viewport.                */
+.tz-wp-redesign ~ * .submit-notification-balloon,
+.tz-wp-redesign .work-package--new-submit-button,
+op-submit-bar,
+[class*="submitBar"],
+.tz-wp-redesign .edit-actions--save,
+.tz-wp-redesign .wp-toolbar--bar {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 200 !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-top: 1.5px solid #dce6f0 !important;
+  padding: 14px 32px !important;
+  border-radius: 0 !important;
+  box-shadow: 0 -4px 20px rgba(15, 35, 75, 0.10) !important;
+}
+
+/* Primary Save button */
+.tz-wp-redesign button[data-test-selector="wp-new-save-button"],
+.tz-wp-redesign .wp-toolbar--save-button,
+.tz-wp-redesign button.button.-highlight,
+.tz-wp-redesign a.button.-highlight {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 8px !important;
+  height: 42px !important;
+  padding: 0 24px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.tz-wp-redesign button[data-test-selector="wp-new-save-button"]:hover,
+.tz-wp-redesign button.button.-highlight:hover {
+  background: #1d4ed8 !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* Cancel / secondary button */
+.tz-wp-redesign button.button:not(.-highlight):not([data-test-selector="wp-new-save-button"]),
+.tz-wp-redesign a.button:not(.-highlight) {
+  background: transparent !important;
+  color: #4a6080 !important;
+  border: 1.5px solid #c5d5e8 !important;
+  border-radius: 8px !important;
+  height: 42px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease !important;
+}
+
+.tz-wp-redesign button.button:not(.-highlight):hover {
+  background: #f0f4fa !important;
+}
+
+/* ── 12. SCROLLBAR POLISH ──────────────────────────────────────*/
+.tz-wp-redesign *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.tz-wp-redesign *::-webkit-scrollbar-track {
+  background: transparent;
+}
+.tz-wp-redesign *::-webkit-scrollbar-thumb {
+  background: #c1cfe0;
+  border-radius: 4px;
+}
+.tz-wp-redesign *::-webkit-scrollbar-thumb:hover {
+  background: #9ab0c8;
+}
+
+/* ── 13. TYPE BADGE (Work Package type chip) ───────────────────*/
+.tz-wp-redesign .wp-type-icon,
+.tz-wp-redesign .-type-chooser {
+  border-radius: 6px !important;
+}

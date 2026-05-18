@@ -1,0 +1,9 @@
+<%= render(
+      Primer::Alpha::Dialog.new(
+        title: t("settings.project_attributes.label_new_section"),
+        size: :medium_portrait,
+        id: MODAL_ID
+      )
+    ) do %>
+    <%= render(Settings::ProjectCustomFieldSections::DialogBodyFormComponent.new) %>
+<% end %>

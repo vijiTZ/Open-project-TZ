@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat)",
+      "PowerShell(docker exec openproject-docker-web-1 ls /app/frontend/src/app/features/work-packages/ 2>$null)",
+      "PowerShell(docker exec openproject-docker-web-1 curl -s \"http://localhost:8080/health_checks/default\" --max-time 5)",
+      "PowerShell(docker exec openproject-docker-web-1 bash -c 'cd /app && bundle exec rails runner /tmp/inject_css.rb 2>&1')",
+      "PowerShell(docker exec openproject-docker-web-1 bash -c \"cat /app/app/views/layouts/_common_head.html.erb\")",
+      "PowerShell(docker exec openproject-docker-web-1 bash -c \"cat /app/app/views/layouts/_common_head.html.erb | grep -n 'custom_styles\\\\|turbo-prefetch\\\\|call_hook'\")",
+      "Bash(docker restart *)",
+      "Bash(docker cp *)",
+      "Bash(git add *)",
+      "PowerShell(docker exec openproject-docker-web-1 ls -la /app/public/custom-redesign.css)",
+      "PowerShell(docker exec openproject-docker-web-1 bash -c \"cat /app/app/models/enterprise_token.rb\" 2>&1)"
+    ]
+  }
+}

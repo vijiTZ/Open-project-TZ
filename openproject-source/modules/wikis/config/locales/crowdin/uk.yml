@@ -1,0 +1,103 @@
+---
+uk:
+  activerecord:
+    attributes:
+      wikis/page_link:
+        provider: Постачальник Wiki
+      wikis/xwiki_provider:
+        authentication_method: Метод автентифікації
+        authentication_methods:
+          oauth2_sso: Єдиний вхід через постачальника ідентифікаційних даних OpenID Connect
+          two_way_oauth2: Потік коду двосторонньої авторизації OAuth 2.0
+        name: Назва
+        token_exchange_scope: Область XWiki
+        universal_identifier: Універсальний ідентифікатор
+        url: URL-адреса екземпляра
+        wiki_audience: Аудиторія XWiki
+    errors: {}
+    models:
+      wikis/inline_page_link:
+        one: Вставлене посилання на сторінку
+        few: Вставлені посилання на сторінку
+        many: Вставлені посилання на сторінку
+        other: Вставлені посилання на сторінку
+      wikis/internal_provider: Внутрішній модуль Wiki
+      wikis/relation_page_link:
+        one: Посилання на пов’язану сторінку
+        few: Посилання на пов’язані сторінки
+        many: Посилання на пов’язані сторінки
+        other: Посилання на пов’язані сторінки
+      wikis/xwiki_provider: Постачальник XWiki
+  permission_manage_wiki_page_links: Керувати посиланнями на сторінки Wiki
+  project_module_wiki_platforms: Постачальники Wiki
+  wikis:
+    buttons:
+      connect_account: Підключити обліковий запис %{provider}
+      done_continue: Виконано, продовжити
+      save_and_continue: Зберегти та продовжити
+      wiki_page: Сторінка Wiki
+    work_package_wikis_tab_component:
+      inline_page_links: Вставлені посилання на сторінку
+      referencing_pages: Додано посилання в
+    page_link_component:
+      remove: Видалити посилання на сторінку
+    relation_page_links_component:
+      empty_heading: Немає пов’язаних сторінок
+      empty_text: Додайте посилання на інші пов’язані сторінки Wiki вручну.
+    oauth_login_component:
+      heading: Немає підключення до сервісу %{provider}
+      description: Увійдіть у сервіс %{provider}, щоб переглядати пов’язані сторінки Wiki й керувати ними із цього екземпляра OpenProject.
+      connect_button: Підключити обліковий запис %{provider}
+    admin:
+      destroy_confirmation_dialog_component:
+        title: Видалити постачальника Wiki
+        heading: Видалити постачальника Wiki?
+        warning_html: Ви збираєтеся видалити %{wiki_provider}. Ця дія є незворотною.
+      forms:
+        general_info_form_component:
+          xwiki_instance_description: Переконайтеся, що ви маєте права адміністратора у своєму екземплярі XWiki, перш ніж виконувати налаштування.
+        oauth_application_form_component:
+          application_id: Ідентифікатор застосунку
+          application_secret: Секрет застосунку
+        oauth_client_form_component:
+          client_id: Ідентифікатор клієнта
+      oauth_application_info_component:
+        confirm_replace_oauth_application: Ця дія призведе до скидання поточних облікових даних OAuth. Коли ви підтвердите дію, вам потрібно буде повторно ввести облікові дані у своєму екземплярі XWiki. У такому разі всім користувачам знадобиться знову пройти авторизацію. Продовжити?
+        label_pending: В обробці
+        replace_oauth_application: Замінити застосунок OpenProject OAuth
+      oauth_client_info_component:
+        confirm_replace_oauth_client: Ця дія призведе до скидання поточних облікових даних XWiki OAuth. Усім користувачам знадобиться знову пройти авторизацію в XWiki. Продовжити?
+        label_pending: В обробці
+        replace_oauth_client: Замінити застосунок XWiki OAuth
+      wiki_provider_list_component:
+        label_creation_time: Створено
+        label_name: Назва
+        label_provider: Постачальник
+        no_results_description: Додайте постачальника Wiki, і він з’явиться тут.
+        no_results_title: Ви ще не налаштували жодного постачальника Wiki.
+      wiki_providers:
+        index_description: Додайте зовнішній сервіс Wiki, щоб зв’язувати пакети робіт із наявними сторінками Wiki або створювати нові безпосередньо в OpenProject.
+        label_add_new: Додати нового постачальника Wiki
+        label_edit: Редагувати постачальника XWiki
+        label_new_xwiki_instance: Новий постачальник XWiki
+        label_wiki_platform: Постачальник Wiki
+        name_caption: Назвіть своє сховище, щоб користувачі могли відрізняти його від інших платформ Wiki.
+        name_placeholder: База знань XWiki
+        new_provider_html: Щоб дізнатися більше, перегляньте документацію про [налаштування інтеграції з XWiki](docs_url).
+        oauth:
+          openproject_oauth: OpenProject OAuth
+        sections:
+          general_information: Основна інформація
+          oauth_configuration: Конфігурація OAuth
+        url_caption: Додайте адресу хосту вашої платформи Wiki, не випускаючи https://. Її довжина не може перевищувати 255 символів.
+        xwiki_instance: Екземпляр XWiki
+        xwiki:
+          oauth:
+            openproject_oauth_description: Надайте XWiki доступ до даних OpenProject із використанням застосунку OAuth. Скопіюйте наведені нижче облікові дані у свій екземпляр XWiki.
+            provider_oauth: OAuth для XWiki
+            provider_oauth_description: Надайте OpenProject доступ до даних XWiki з використанням OAuth. Ідентифікатор клієнта для розпізнавання OpenProject в XWiki генерується автоматично — на стороні XWiki не доведеться вибирати налаштування вручну.
+          openproject_oauth_description: Надайте XWiki доступ до даних OpenProject за допомогою OAuth.
+          xwiki_oauth: OAuth для XWiki
+          xwiki_oauth_description: Надайте OpenProject доступ до даних XWiki за допомогою OAuth.
+    macro:
+      page_not_found: Зв’язана сторінка Wiki більше не доступна

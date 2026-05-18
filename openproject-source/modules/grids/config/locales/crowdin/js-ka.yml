@@ -1,0 +1,60 @@
+---
+ka:
+  js:
+    grid:
+      add_widget: ვიჯეტის დამატება
+      widget_menu_label: Show menu options for %{widgetName} widget
+      remove: ვიჯეტის წაშლა
+      configure: Configure widget
+      widgets:
+        missing_permission: You don't have the necessary permissions to view this widget.
+        not_available: This widget is currently unavailable.
+        custom_text:
+          title: მომხმარებლის ტექსტი
+        documents:
+          title: დოკუმენტები
+          no_results: No documents yet.
+        members:
+          title: წევრები
+        news:
+          title: სიახლეები
+        project_description:
+          title: Description
+        project_status:
+          title: Status
+          not_started: დაწყებული არაა
+          on_track: გეგმის მიხედვით
+          off_track: შეჩერებულია
+          at_risk: რისკის ქვეშ
+          not_set: არ არის დაყენებული
+          finished: დასრულებულია
+          discontinued: დასრულდა
+        subprojects:
+          title: Subitems
+        project_favorites:
+          title: Favorite projects
+          no_results: You currently have no favorite projects. Click on the star icon in the project dashboard to add one to your favorites.
+        time_entries_current_user:
+          title: ჩემი დახარჯული დრო
+          displayed_days: 'Days displayed in the widget:'
+        time_entries_list:
+          title: Spent time (last 7 days)
+          no_results: No time entries for the last 7 days.
+        work_packages_accountable:
+          title: Work packages I am accountable for
+        work_packages_assigned:
+          title: Work packages assigned to me
+        work_packages_created:
+          title: Work packages created by me
+        work_packages_watched:
+          title: Work packages watched by me
+        work_packages_table:
+          title: Work packages table
+        work_packages_graph:
+          title: Work packages graph
+          summary: "%{chartType} chart showing work packages which are %{description}."
+        work_packages_calendar:
+          title: კალენდარი
+        work_packages_overview:
+          title: Work packages overview
+          placeholder: Click to edit ...

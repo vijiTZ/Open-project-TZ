@@ -1,0 +1,23 @@
+{
+  "id": "10242",
+  "key": "DYX",
+  "name": "Zombie Engine",
+  "self": "https://jira-software.local/rest/api/2/project/10242",
+  "expand": "description,lead,createdAt,createdBy,lastUpdatedAt,lastUpdatedBy,url,projectKeys",
+  "archived": false,
+  "avatarUrls": {
+    "16x16": "https://jira-software.local/secure/projectavatar?size=xsmall&avatarId=10324",
+    "24x24": "https://jira-software.local/secure/projectavatar?size=small&avatarId=10324",
+    "32x32": "https://jira-software.local/secure/projectavatar?size=medium&avatarId=10324",
+    "48x48": "https://jira-software.local/secure/projectavatar?avatarId=10324"
+  },
+  "description": "Test project created by jira_projects.rb script at 2026-02-13 09:32:25 UTC",
+  "projectKeys": ["DYX"],
+  "projectTypeKey": "software",
+  "projectCategory": {
+    "id": "10008",
+    "name": "Legacy",
+    "self": "https://jira-software.local/rest/api/2/projectCategory/10008",
+    "description": "Maintenance and migration projects"
+  }
+}

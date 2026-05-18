@@ -1,0 +1,53 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+.op-work-package-card
+  display: grid
+  grid-template-columns: 1fr auto
+  grid-template-rows: auto auto
+  grid-template-areas: "info_line menu" "subject subject"
+  align-items: center
+  margin-top: calc(-1 * var(--base-size-4))
+  margin-bottom: var(--base-size-4)
+
+.op-work-package-card_with-metric
+  grid-template-columns: 1fr minmax(2rem, max-content) auto
+  grid-template-areas: "info_line metric menu" "subject subject subject"
+
+.op-work-package-card--metric
+  margin-left: var(--stack-gap-normal)
+  font-variant-numeric: tabular-nums
+  text-align: right
+
+.op-work-package-card--menu
+  margin-left: var(--stack-gap-normal)
+
+.op-work-package-card--subject
+  align-self: start // Align to top of second row
+  word-wrap: break-word
+  overflow-wrap: break-word

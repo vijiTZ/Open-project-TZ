@@ -1,0 +1,60 @@
+---
+it:
+  js:
+    grid:
+      add_widget: Aggiungi widget
+      widget_menu_label: Mostra le opzioni del menu per il widget %{widgetName}
+      remove: Rimuovi widget
+      configure: Configura il widget
+      widgets:
+        missing_permission: Non hai i permessi necessari per visualizzare questo widget.
+        not_available: Questo widget non è attualmente disponibile.
+        custom_text:
+          title: Testo personalizzato
+        documents:
+          title: Documenti
+          no_results: Nessun documento ancora.
+        members:
+          title: Membri
+        news:
+          title: Notizie
+        project_description:
+          title: Descrizione
+        project_status:
+          title: Stato
+          not_started: Non iniziato
+          on_track: Nei limiti
+          off_track: Fuori limite
+          at_risk: A rischio
+          not_set: Non impostato
+          finished: Terminato
+          discontinued: Interrotto
+        subprojects:
+          title: Sottoelementi
+        project_favorites:
+          title: Progetti preferiti
+          no_results: Al momento non hai progetti preferiti. Clicca sull'icona della stella nella dashboard del progetto per aggiungerne uno ai tuoi preferiti.
+        time_entries_current_user:
+          title: Il mio tempo trascorso
+          displayed_days: 'Giorni visualizzati nel widget:'
+        time_entries_list:
+          title: Tempo trascorso (ultimi 7 giorni)
+          no_results: Nessuna voce sul tempo per gli ultimi 7 giorni.
+        work_packages_accountable:
+          title: Macro-attività di cui sono responsabile del risultato
+        work_packages_assigned:
+          title: Macro-attività assegnate a me
+        work_packages_created:
+          title: Pacchetti di lavoro creati da me
+        work_packages_watched:
+          title: Pacchetti di lavoro visti da me
+        work_packages_table:
+          title: Tabella delle macro-attività
+        work_packages_graph:
+          title: Grafico delle macro-attività
+          summary: Grafico %{chartType} che mostra le macro-attività che sono %{description}.
+        work_packages_calendar:
+          title: Calendario
+        work_packages_overview:
+          title: Panoramica delle macro-attività
+          placeholder: Clicca per modificare ...

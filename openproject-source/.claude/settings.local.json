@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep -l \"module OpenProject\")",
+      "PowerShell(docker cp \"C:\\\\Users\\\\TZ\\\\OneDrive - Tamilzorous\\\\Desktop\\\\TZ WORKSPACE TOOL\\\\openproject-source\\\\app\\\\views\\\\layouts\\\\base.html.erb\" openproject-docker-web-1:/app/app/views/layouts/base.html.erb)",
+      "PowerShell(docker cp \"C:\\\\Users\\\\TZ\\\\OneDrive - Tamilzorous\\\\Desktop\\\\TZ WORKSPACE TOOL\\\\openproject-source\\\\public\\\\custom-redesign.css\" openproject-docker-web-1:/app/public/custom-redesign.css)",
+      "PowerShell(docker restart openproject-docker-web-1 openproject-docker-worker-1 openproject-docker-cron-1)",
+      "PowerShell(docker exec openproject-docker-web-1 bash -c \"cd /app && bundle exec rails runner 'puts EnterpriseToken.allows_to?\\(:portfolio_management\\)'\" 2>&1)"
+    ]
+  }
+}

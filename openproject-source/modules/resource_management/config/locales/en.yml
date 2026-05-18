@@ -1,0 +1,81 @@
+en:
+  activerecord:
+    attributes:
+      resource_planner:
+        name: "Name"
+        start_date: "Start date"
+        end_date: "Finish date"
+        default_view_class_name: "Default view"
+        public: "Public"
+        favorite: "Favorite"
+      resource_allocation:
+        entity: "Entity"
+        principal: "Assignee"
+        state: "State"
+        start_date: "Start date"
+        end_date: "Finish date"
+        allocated_time: "Allocated time"
+        user_filter: "User filter"
+    errors:
+      models:
+        resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: "must be after the start date."
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: "must be after the start date."
+
+  plugin_openproject_resource_management:
+    name: "OpenProject Resource Management"
+    description: "Provides resource management and capacity planning."
+
+  project_module_resource_management: "Resource management"
+  permission_view_resource_planners: "View resource planners"
+  permission_view_resource_planners_explanation: >
+    Allows users to access resource planners. It allows them to create and
+    manage their own resource planners and view public resource planners. It
+    does not allow users to view resource planners created by other users that
+    are not shared publicly.
+  permission_manage_public_resource_planners: "Manage public resource planners"
+  permission_manage_public_resource_planners_explanation: >
+    Allows users to create and manage public resource planners. It allows them
+    to view, create, manage and publish their own resource planners. It does not
+    allow users to view resource planners created by other users that are not
+    shared publicly.
+  permission_allocate_user_resources: "Allocate user resources"
+  permission_allocate_user_resources_explanation: >
+    Allows users to create, update, and delete resource allocations within
+    a resource planner. This includes assigning users (or user filters) to
+    a planner and adjusting the allocated time and date range.
+
+  label_resource_management: "Resource planning"
+  button_next: "Save" # TODO: This should be "Next" but we need to check the flow first
+
+  resource_management:
+    label_resource_planner: "Resource planner"
+    label_resource_planner_plural: "Resource planners"
+    label_new_resource_planner: "New resource planner"
+    public_caption: >
+      Make this view public to all members of the project. This does not affect
+      the visibility of work packages which still depends on each user
+      permission.
+    favorite_caption: >
+      Make this view a favorite to add it on the top section of the sidebar menu.
+    view_types:
+      UserCardView: "Users cards"
+    action:
+      favorite: "Add to favorites"
+      unfavorite: "Remove from favorites"
+      make_public: "Make public"
+      make_private: "Make private"
+      delete: "Delete"
+    sidebar:
+      public: "Public"
+      private: "Private"
+    blankslate:
+      title: "No resource planners yet"
+      desc: "Create a resource planner to start planning capacity for this project."
+    show:
+      placeholder: "The detailed view for this resource planner is coming soon."

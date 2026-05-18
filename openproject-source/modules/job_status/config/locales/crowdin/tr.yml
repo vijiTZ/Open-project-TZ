@@ -1,0 +1,21 @@
+---
+tr:
+  label_job_status_plural: İş durumu
+  plugin_openproject_job_status:
+    name: OpenProject İş durumu
+    description: Arka plan işlerinin durumu listeleniyor.
+  job_status_dialog:
+    download_starts: İndirme işlemi otomatik olarak başlayacaktır.
+    click_to_download: Or [click here](download_url) to download.
+    title: Arka plan iş durumu
+    redirect: Yönlendiriliyorsunuz.
+    redirect_link: Devam etmek için lütfen buraya tıklayın.
+    redirect_errors: Bu hatalar nedeniyle otomatik olarak yönlendirilmeyeceksiniz.
+    errors: Bir şeyler ters gitti
+    generic_messages:
+      not_found: Bu iş bulunamadı.
+      in_queue: İş sıraya alınmıştır ve kısa süre içinde işleme alınacaktır.
+      in_process: İş şu anda işlenmektedir.
+      error: İş tamamlanamadı.
+      cancelled: İş bir hata nedeniyle iptal edildi.
+      success: İş başarıyla tamamlandı.

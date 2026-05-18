@@ -1,0 +1,92 @@
+{
+  "id": "10100",
+  "key": "DYX-1",
+  "self": "https://jira-software.local/rest/api/2/issue/10100",
+  "fields": {
+    "summary": "Kanban cards represent work items",
+    "description": "*About Kanban*\n\nKanban is part of the Toyota Lean Manufacturing methodology.",
+    "created": "2026-02-04T09:51:03.000+0000",
+    "updated": "2026-03-10T12:00:59.000+0000",
+    "creator": {
+      "key": "JIRAUSER10000",
+      "name": "p.balashou",
+      "displayName": "Pavel Balashou",
+      "emailAddress": "p.balashou@openproject.com",
+      "active": true
+    },
+    "assignee": {
+      "key": "JIRAUSER10000",
+      "name": "p.balashou",
+      "displayName": "Pavel Balashou",
+      "emailAddress": "p.balashou@openproject.com",
+      "active": true
+    },
+    "issuetype": {
+      "id": "10100",
+      "name": "Task",
+      "description": "A task that needs to be done.",
+      "subtask": false
+    },
+    "status": {
+      "id": "3",
+      "name": "In Progress",
+      "description": "This issue is being actively worked on."
+    },
+    "priority": {
+      "id": "1",
+      "name": "Highest"
+    },
+    "comment": {
+      "total": 1,
+      "comments": [
+        {
+          "id": "10100",
+          "body": "Created 2 hours 36 minutes ago",
+          "author": {
+            "key": "JIRAUSER10000",
+            "name": "p.balashou",
+            "displayName": "Pavel Balashou",
+            "emailAddress": "p.balashou@openproject.com"
+          },
+          "created": "2026-02-04T09:51:03.503+0000",
+          "updated": "2026-02-04T09:51:03.503+0000"
+        }
+      ]
+    },
+    "attachment": [
+      {
+        "id": "10000",
+        "filename": "solid-color-image.png",
+        "content": "https://jira-software.local/secure/attachment/10000/solid-color-image.png",
+        "mimeType": "image/png",
+        "size": 38697,
+        "author": {
+          "key": "JIRAUSER10000",
+          "name": "p.balashou",
+          "displayName": "Pavel Balashou",
+          "emailAddress": "p.balashou@openproject.com"
+        },
+        "created": "2026-02-05T12:29:19.045+0000"
+      }
+    ]
+  },
+  "changelog": {
+    "total": 1,
+    "histories": [
+      {
+        "id": "10133",
+        "items": [
+          {
+            "field": "Attachment",
+            "toString": "solid-color-image.png"
+          }
+        ],
+        "author": {
+          "key": "JIRAUSER10000",
+          "name": "p.balashou"
+        },
+        "created": "2026-02-05T12:29:19.257+0000"
+      }
+    ]
+  }
+}

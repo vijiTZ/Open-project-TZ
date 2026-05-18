@@ -1,0 +1,17 @@
+---
+he:
+  plugin_openproject_xls_export:
+    name: OpenProject XLS Export
+    description: Export issue lists as Excel spreadsheets (.xls).
+  export_to_excel: ייצוא לXLS
+  print_with_description: הדפסת תצוגה מקדימה עם תיאור
+  sentence_separator_or: או
+  different_formats: פורמט שונה
+  export:
+    format:
+      xls: XLS
+      xls_with_descriptions: XLS עם תיאור
+      xls_with_relations: XLS עם תיאור
+  xls_export:
+    child_of: ילד (בן) של
+    parent_of: הורה (אב) של

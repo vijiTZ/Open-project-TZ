@@ -1,0 +1,60 @@
+---
+lt:
+  js:
+    grid:
+      add_widget: Pridėti valdiklį
+      widget_menu_label: Show menu options for %{widgetName} widget
+      remove: Išimti valdiklį
+      configure: Valdiklio nustatymai
+      widgets:
+        missing_permission: Jūs neturite teisų šio valdiklio peržiūrai.
+        not_available: This widget is currently unavailable.
+        custom_text:
+          title: Pritaikytas tekstas
+        documents:
+          title: Dokumentai
+          no_results: Dar nėra dokumentų.
+        members:
+          title: Nariai
+        news:
+          title: Naujienos
+        project_description:
+          title: Description
+        project_status:
+          title: Status
+          not_started: Nepradėta
+          on_track: Teisingame kelyje
+          off_track: Pasiklydęs
+          at_risk: Rizikingas
+          not_set: Nenustatyta
+          finished: Baigta
+          discontinued: Nutrauktas
+        subprojects:
+          title: Subitems
+        project_favorites:
+          title: Mėgstami projektai
+          no_results: Jūs šiuo metu neturite mėgiamų projektų. Spauskite žvaigždutės piktogramą projekto skydelyje, kad pridėtumėte prie jūsų mėgstamų.
+        time_entries_current_user:
+          title: Mano sugaištas laikas
+          displayed_days: 'Valdiklyje rodomos dienos:'
+        time_entries_list:
+          title: Sugaišta laiko (per paskutines 7 dienas)
+          no_results: Nėra laiko įrašų per paskutines 7 dienas.
+        work_packages_accountable:
+          title: Darbo paketai, už kuriuos aš atsakingas
+        work_packages_assigned:
+          title: Man priskirti darbų paketai
+        work_packages_created:
+          title: Mano sukurti darbo paketai
+        work_packages_watched:
+          title: Mano stebimi darbo paketai
+        work_packages_table:
+          title: Darbo paketų lentelė
+        work_packages_graph:
+          title: Darbo paketų grafas
+          summary: "%{chartType} chart showing work packages which are %{description}."
+        work_packages_calendar:
+          title: Kalendorius
+        work_packages_overview:
+          title: Darbo paketų apžvalga
+          placeholder: Spauskite keitimui...

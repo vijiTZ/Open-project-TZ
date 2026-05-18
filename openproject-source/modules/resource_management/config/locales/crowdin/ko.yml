@@ -1,0 +1,73 @@
+---
+ko:
+  activerecord:
+    attributes:
+      resource_planner:
+        name: 이름
+        start_date: 시작 날짜
+        end_date: 완료 날짜
+        default_view_class_name: 기본 보기
+        public: 공개
+        favorite: 즐겨찾기
+      resource_allocation:
+        entity: Entity
+        principal: Assignee
+        state: State
+        start_date: Start date
+        end_date: Finish date
+        allocated_time: Allocated time
+        user_filter: User filter
+    errors:
+      models:
+        resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: "- 시작 날짜 후여야 합니다."
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: must be after the start date.
+  plugin_openproject_resource_management:
+    name: OpenProject 리소스 관리
+    description: 리소스 관리 및 용량 계획을 제공합니다.
+  project_module_resource_management: 리소스 관리
+  permission_view_resource_planners: 리소스 플래너 보기
+  permission_view_resource_planners_explanation: '사용자가 리소스 플래너에 액세스하도록 허용합니다. 사용자는 고유한 리소스 플래너를 만들고 관리하며 공개 리소스 플래너를 볼 수 있습니다. 다른 사용자가 만든 공개적으로 공유되지 않은 리소스 플래너는 볼 수 없습니다.
+
+    '
+  permission_manage_public_resource_planners: 공개 리소스 플래너 관리
+  permission_manage_public_resource_planners_explanation: '사용자가 리소스 플래너를 만들고 관리하도록 허용합니다. 사용자는 고유한 리소스 플래너를 보고 만들고 관리하며 게시할 수 있습니다. 다른 사용자가 만든 공개적으로 공유되지 않은 리소스 플래너는 볼 수 없습니다.
+
+    '
+  permission_allocate_user_resources: Allocate user resources
+  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
+
+    '
+  label_resource_management: 리소스 계획
+  button_next: 저장
+  resource_management:
+    label_resource_planner: 리소스 플래너
+    label_resource_planner_plural: 리소스 플래너
+    label_new_resource_planner: 새로운 리소스 플래너
+    public_caption: '이 보기를 프로젝트의 모든 멤버에게 공개로 설정합니다. 이렇게 해도 여전히 각 사용자 권한에 따라 달라지는 작업 패키지의 표시 여부에는 영향을 미치지 않습니다.
+
+      '
+    favorite_caption: '이 보기를 즐겨찾기로 지정하여 사이드바 메뉴의 상단 섹션에 추가합니다.
+
+      '
+    view_types:
+      UserCardView: 사용자 카드
+    action:
+      favorite: 즐겨찾기에 추가
+      unfavorite: 즐겨찾기에서 제거
+      make_public: 공개로 설정
+      make_private: 비공개로 설정
+      delete: 삭제
+    sidebar:
+      public: 공개
+      private: 비공개
+    blankslate:
+      title: 아직 리소스 플래너 없음
+      desc: 리소스 플래너를 만들어 이 프로젝트의 용량 계획을 시작하세요.
+    show:
+      placeholder: 이 리소스 플래너에 대한 자세한 보기가 곧 제공될 예정입니다.

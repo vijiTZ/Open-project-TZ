@@ -1,0 +1,9 @@
+<widget-header
+  [name]="widgetName"
+  [editable]="isEditable">
+
+  <widget-menu slot="menu"
+    [resource]="resource" />
+</widget-header>
+
+<turbo-frame [id]="frameId" [src]="src" loading="lazy" />

@@ -1,0 +1,73 @@
+---
+de:
+  activerecord:
+    attributes:
+      resource_planner:
+        name: Name
+        start_date: Anfangstermin
+        end_date: Endtermin
+        default_view_class_name: Standardansicht
+        public: Öffentlich
+        favorite: Favorit
+      resource_allocation:
+        entity: Entity
+        principal: Assignee
+        state: State
+        start_date: Start date
+        end_date: Finish date
+        allocated_time: Allocated time
+        user_filter: User filter
+    errors:
+      models:
+        resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: muss nach dem Anfangstermin liegen.
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: must be after the start date.
+  plugin_openproject_resource_management:
+    name: OpenProject Ressourcenmanagement
+    description: Bietet Ressourcenmanagement und Kapazitätsplanung.
+  project_module_resource_management: Ressourcen Management
+  permission_view_resource_planners: Ressourcenplaner anzeigen
+  permission_view_resource_planners_explanation: 'Ermöglicht Benutzern den Zugang zu Ressourcenplanern. Sie können damit eigenen Ressourcenplaner erstellen, verwalten und öffentliche Ressourcenplaner einsehen. Es erlaubt Benutzern nicht, die von anderen Benutzern erstellten Ressourcenplaner, die nicht öffentlich freigegeben sind, einzusehen.
+
+    '
+  permission_manage_public_resource_planners: Öffentliche Ressourcenplaner verwalten
+  permission_manage_public_resource_planners_explanation: 'Ermöglicht Benutzern das Erstellen und Verwalten von öffentlichen Ressourcenplanern. Sie können damit ihre eigenen Ressourcenplaner anzeigen, erstellen, verwalten und veröffentlichen. Es erlaubt Benutzern nicht, die von anderen Benutzern erstellten Ressourcenplaner, die nicht öffentlich freigegeben sind, einzusehen.
+
+    '
+  permission_allocate_user_resources: Allocate user resources
+  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
+
+    '
+  label_resource_management: Ressourcenplanung
+  button_next: Speichern
+  resource_management:
+    label_resource_planner: Ressourcenplaner
+    label_resource_planner_plural: Ressourcenplaner
+    label_new_resource_planner: Ressourcenplaner erstellen
+    public_caption: 'Machen Sie diese Ansicht für alle Mitglieder des Projekts öffentlich. Dies hat keine Auswirkungen auf die Sichtbarkeit von Arbeitspaketen, die immer noch von den jeweiligen Benutzerrechten abhängt.
+
+      '
+    favorite_caption: 'Machen Sie diese Ansicht zu einem Favoriten, um sie im oberen Bereich des Seitenleistenmenüs hinzuzufügen.
+
+      '
+    view_types:
+      UserCardView: Benutzer-Karten
+    action:
+      favorite: Zu Favoriten hinzufügen
+      unfavorite: Aus Favoriten entfernen
+      make_public: Veröffentlichen
+      make_private: Als Privat festlegen
+      delete: Löschen
+    sidebar:
+      public: Öffentlich
+      private: Privat
+    blankslate:
+      title: Keine Ressourcenplaner vorhanden
+      desc: Erstellen Sie einen Ressourcenplaner, um Kapazitäten für dieses Projekt zu planen.
+    show:
+      placeholder: Die detaillierte Ansicht für diesen Ressourcenplaner wird in Kürze erscheinen.

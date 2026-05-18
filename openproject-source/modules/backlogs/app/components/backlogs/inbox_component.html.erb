@@ -1,0 +1,81 @@
+<%# -- copyright
+OpenProject is an open source project management software.
+Copyright (C) the OpenProject GmbH
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License version 3.
+
+OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+Copyright (C) 2006-2013 Jean-Philippe Lang
+Copyright (C) 2010-2013 the ChiliProject Team
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+See COPYRIGHT and LICENSE files for more details.
+
+++# %>
+
+<%= component_wrapper(tag: :section) do %>
+  <%= render(
+        OpenProject::Common::WorkPackageCardListComponent.new(
+          project:,
+          container: dom_target(:inbox, project),
+          drag_and_drop: {
+            target_id: "inbox",
+            allowed_drag_type: "story"
+          },
+          item_component_klass: Backlogs::WorkPackageCardListItemComponent,
+          params: all_backlogs_params,
+          current_user:,
+          data: { test_selector: "backlog-inbox" }
+        )
+      ) do |list| %>
+    <% list.with_empty_state(
+         title: t(".blankslate_title"),
+         description: t(".blankslate_description"),
+         icon: :"op-backlogs",
+         spacious: true
+       ) %>
+
+    <% visible_work_packages.each.with_index do |work_package, index| %>
+      <% list.with_work_package_item(work_package:) %>
+
+      <% if truncated? && index == TRUNCATE_MIDDLE - 1 %>
+        <% list.with_item(
+             scheme: :neutral,
+             classes: "op-work-package-card-list--show-more-row",
+             data: { draggable_id: last_omitted_id }
+           ) do %>
+          <%= render(
+                Primer::Beta::Button.new(
+                  id: show_more_id,
+                  scheme: :link,
+                  tag: :a,
+                  size: :large,
+                  block: true,
+                  align_content: :start,
+                  underline: true,
+                  href: project_backlogs_backlog_path(project, all: 1),
+                  data: {
+                    turbo_frame: "backlogs_container",
+                    turbo_action: :advance
+                  }
+                )
+              ) { show_more_label } %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,0 +1,69 @@
+#-- copyright
+#OpenProject is an open source project management software.
+#Copyright (C) the OpenProject GmbH
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License version 3.
+#OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+#Copyright (C) 2006-2013 Jean-Philippe Lang
+#Copyright (C) 2010-2013 the ChiliProject Team
+#This program is free software; you can redistribute it and/or
+#modify it under the terms of the GNU General Public License
+#as published by the Free Software Foundation; either version 2
+#of the License, or (at your option) any later version.
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#You should have received a copy of the GNU General Public License
+#along with this program; if not, write to the Free Software
+#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#See COPYRIGHT and LICENSE files for more details.
+#++
+---
+cs:
+  attributes:
+    additions_count: Počet přídavků
+    deletions_count: Počet výmazů
+    comments_count: Počet komentářů
+    github_html_url: URL pull requestu
+    github_app_owner_avatar_url: URL avataru vlastníka
+    review_comments_count: Počet recenzních komentářů
+    github: Identifikátor na GitHubu
+    github_avatar_url: URL avataru
+    github_updated_at: Aktualizováno
+    github_login: Přihlášení do GitHubu
+    host: Hostitel
+    labels: Štítky
+    repository: Repozitář
+    changed_files_count: Změněné soubory
+  button_add_deploy_target: Přidání cíle nasazení
+  label_deploy_target: Cíl nasazení
+  label_deploy_target_new: Nový cíl nasazení
+  label_deploy_target_plural: Cíle nasazení
+  label_github_integration: Integrace GitHubu
+  notice_deploy_target_created: Cíl nasazení byl vytvořen
+  notice_deploy_target_destroyed: Cíl nasazení odstraněn
+  label_github_comment_user: GitHub actor
+  label_github_webhook_secret: Webhook secret
+  text_github_comment_user_info: 'The OpenProject user whose API key must be used to authenticate incoming webhook requests. When set, requests authenticated with any other user''s credentials are rejected. This user also posts automated deploy-status comments on work packages. Defaults to the system user when not set.
+
+    '
+  text_github_webhook_secret_missing_warning: 'No webhook secret is configured. Any request to the GitHub webhook endpoint will be accepted without verification, which may allow unauthorized actors to forge events. It is strongly recommended to set a secret.
+
+    '
+  text_github_webhook_secret_info: 'A secret token shared with GitHub when configuring the webhook. When set, OpenProject verifies the X-Hub-Signature-256 header on every incoming request, rejecting payloads that do not match. Leave blank to skip verification (not recommended).
+
+    '
+  plugin_openproject_github_integration:
+    name: OpenProject GitHub integrace
+    description: Integruje OpenProject a GitHub pro lepší workflow
+  project_module_github: GitHub
+  permission_show_github_content: Zobrazit GitHub obsah
+  permission_introspection: Přečíst verzi jádra OpenProject a build SHA
+  text_deploy_target_type_info: 'Zatím podporujeme pouze samotný OpenProject
+
+    '
+  text_deploy_target_api_key_info: 'OpenProject [klíč API](docs_url) patřící uživateli, který má globální oprávnění k introspekci obsahu.
+
+    '
+  text_pull_request_deployed_to: "%{pr_link} nasazení na adrese %{deploy_target_link}"

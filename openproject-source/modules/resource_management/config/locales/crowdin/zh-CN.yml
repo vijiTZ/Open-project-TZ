@@ -1,0 +1,73 @@
+---
+zh-CN:
+  activerecord:
+    attributes:
+      resource_planner:
+        name: 名称
+        start_date: 开始日期
+        end_date: 结束日期
+        default_view_class_name: 默认视图
+        public: 公开
+        favorite: 收藏夹
+      resource_allocation:
+        entity: Entity
+        principal: Assignee
+        state: State
+        start_date: Start date
+        end_date: Finish date
+        allocated_time: Allocated time
+        user_filter: User filter
+    errors:
+      models:
+        resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: 必须在开始日期之后。
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: must be after the start date.
+  plugin_openproject_resource_management:
+    name: OpenProject 资源管理
+    description: 提供资源管理和能力规划。
+  project_module_resource_management: 资源管理
+  permission_view_resource_planners: 查看资源规划工具
+  permission_view_resource_planners_explanation: '允许用户访问资源规划工具。用户可以创建和管理自己的资源规划工具，并查看公开的资源规划工具，但不可以查看其他用户创建的未公开共享的资源规划工具。
+
+    '
+  permission_manage_public_resource_planners: 管理公开的资源规划工具
+  permission_manage_public_resource_planners_explanation: '允许用户创建和管理公开的资源规划工具。用户可以查看、创建、管理和发布自己的资源规划工具，但不可以查看其他用户创建的未公开共享的资源规划工具。
+
+    '
+  permission_allocate_user_resources: Allocate user resources
+  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
+
+    '
+  label_resource_management: 资源规划
+  button_next: 保存
+  resource_management:
+    label_resource_planner: 资源规划工具
+    label_resource_planner_plural: 资源规划工具
+    label_new_resource_planner: 新建资源规划工具
+    public_caption: '向该项目的所有成员公开此视图。这不会影响工作包的可见性，工作包的可见性仍然取决于每位用户的权限。
+
+      '
+    favorite_caption: '将此视图标记为收藏项，并添加到边栏菜单的顶部。
+
+      '
+    view_types:
+      UserCardView: 用户卡
+    action:
+      favorite: 添加至收藏夹
+      unfavorite: 取消收藏
+      make_public: 设为公开
+      make_private: 设为私有
+      delete: 删除
+    sidebar:
+      public: 公开
+      private: 私用
+    blankslate:
+      title: 暂无资源规划工具
+      desc: 创建资源规划工具以开始规划此项目的容量。
+    show:
+      placeholder: 此资源规划工具的详细视图即将发布。

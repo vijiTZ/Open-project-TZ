@@ -1,0 +1,97 @@
+---
+ja:
+  activerecord:
+    attributes:
+      wikis/page_link:
+        provider: Wiki Provider
+      wikis/xwiki_provider:
+        authentication_method: Authentication method
+        authentication_methods:
+          oauth2_sso: Single-Sign-On through OpenID Connect Identity Provider
+          two_way_oauth2: Two-way OAuth 2.0 authorization code flow
+        name: Name
+        token_exchange_scope: XWiki Scope
+        universal_identifier: Universal identifier
+        url: Instance URL
+        wiki_audience: XWiki Audience
+    errors: {}
+    models:
+      wikis/inline_page_link:
+        other: Inline page links
+      wikis/internal_provider: Internal wiki
+      wikis/relation_page_link:
+        other: Relation page links
+      wikis/xwiki_provider: XWiki provider
+  permission_manage_wiki_page_links: Manage Wiki Page Links
+  project_module_wiki_platforms: Wiki providers
+  wikis:
+    buttons:
+      connect_account: Connect %{provider} account
+      done_continue: Done, continue
+      save_and_continue: Save and continue
+      wiki_page: Wiki page
+    work_package_wikis_tab_component:
+      inline_page_links: Inline page links
+      referencing_pages: Referenced in
+    page_link_component:
+      remove: Remove page link
+    relation_page_links_component:
+      empty_heading: No related pages
+      empty_text: Manually add links to other related wiki pages.
+    oauth_login_component:
+      heading: Not connected to %{provider}
+      description: Log in to %{provider} to view and manage related wiki pages from this OpenProject instance.
+      connect_button: Connect %{provider} account
+    admin:
+      destroy_confirmation_dialog_component:
+        title: Delete wiki provider
+        heading: Delete wiki provider?
+        warning_html: You are about to delete %{wiki_provider}. This action is irreversible.
+      forms:
+        general_info_form_component:
+          xwiki_instance_description: Please make sure you have administration privileges in your XWiki instance before doing the setup.
+        oauth_application_form_component:
+          application_id: Application ID
+          application_secret: Application secret
+        oauth_client_form_component:
+          client_id: Client ID
+      oauth_application_info_component:
+        confirm_replace_oauth_application: This action will reset the current OAuth credentials. After confirming you will have to reenter the credentials in your XWiki instance and all users will have to reauthorize. Are you sure you want to proceed?
+        label_pending: Pending
+        replace_oauth_application: Replace OpenProject OAuth application
+      oauth_client_info_component:
+        confirm_replace_oauth_client: This action will reset the current XWiki OAuth credentials. All users will need to reauthorize against XWiki. Are you sure you want to proceed?
+        label_pending: Pending
+        replace_oauth_client: Replace XWiki OAuth application
+      wiki_provider_list_component:
+        label_creation_time: Created
+        label_name: Name
+        label_provider: Provider
+        no_results_description: Add a wiki provider to see them here.
+        no_results_title: You don't have any wiki providers set up yet.
+      wiki_providers:
+        index_description: Add an external wiki service to link work packages to existing wiki pages or create new ones directly from OpenProject.
+        label_add_new: Add new wiki provider
+        label_edit: Edit XWiki provider
+        label_new_xwiki_instance: New XWiki provider
+        label_wiki_platform: Wiki provider
+        name_caption: Give your storage a name so that users can differentiate between multiple wiki platforms.
+        name_placeholder: XWiki knowledge base
+        new_provider_html: Read our documentation on [setting up an XWiki integration](docs_url) for more information.
+        oauth:
+          openproject_oauth: OpenProject OAuth
+        sections:
+          general_information: Basic details
+          oauth_configuration: OAuth configuration
+        url_caption: Please add the host address of your wiki platform including the https://. It should not be longer than 255 characters.
+        xwiki_instance: XWiki Instance
+        xwiki:
+          oauth:
+            openproject_oauth_description: Allow XWiki to access OpenProject data using an OAuth application. Copy the credentials below into your XWiki instance.
+            provider_oauth: XWiki OAuth
+            provider_oauth_description: Allow OpenProject to access XWiki data using OAuth. A client ID is automatically generated to identify OpenProject to XWiki — no manual configuration is needed on the XWiki side.
+          openproject_oauth_description: Allow XWiki to access OpenProject data using an OAuth.
+          xwiki_oauth: XWiki OAuth
+          xwiki_oauth_description: Allow OpenProject to access XWiki data using an OAuth.
+    macro:
+      page_not_found: Linked wiki page no longer available

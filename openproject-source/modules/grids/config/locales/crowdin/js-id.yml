@@ -1,0 +1,60 @@
+---
+id:
+  js:
+    grid:
+      add_widget: Tambahkan widget
+      widget_menu_label: Show menu options for %{widgetName} widget
+      remove: Hapus widget
+      configure: Konfigurasi Widget
+      widgets:
+        missing_permission: Anda tidak memiliki izin yang diperlukan untuk melihat widget ini.
+        not_available: This widget is currently unavailable.
+        custom_text:
+          title: Teks bebas
+        documents:
+          title: Dokumen
+          no_results: Belum ada dokumen.
+        members:
+          title: Member
+        news:
+          title: News
+        project_description:
+          title: Deskripsi
+        project_status:
+          title: Status
+          not_started: Belum mulai
+          on_track: Di jalur
+          off_track: Keluar dari jalur
+          at_risk: Berisiko
+          not_set: Belum diatur
+          finished: Selesai
+          discontinued: Dihentikan
+        subprojects:
+          title: Subitem
+        project_favorites:
+          title: Proyek favorit
+          no_results: Saat ini, Anda tidak memiliki proyek favorit. Klik ikon bintang di dasbor proyek untuk menambahkan proyek ke daftar favorit Anda.
+        time_entries_current_user:
+          title: Waktu yang saya habiskan
+          displayed_days: 'Hari yang ditampilkan di widget:'
+        time_entries_list:
+          title: Waktu yang dihabiskan (7 hari terakhir)
+          no_results: Tidak ada entri waktu untuk 7 hari terakhir.
+        work_packages_accountable:
+          title: Paket kerja yang menjadi tanggung jawab saya
+        work_packages_assigned:
+          title: Paket-Penugasan yang saya kerjakan
+        work_packages_created:
+          title: Paket kerja yang saya buat
+        work_packages_watched:
+          title: Paket kerja yang saya awasi
+        work_packages_table:
+          title: Tabel paket kerja
+        work_packages_graph:
+          title: Grafik paket kerja
+          summary: Bagan %{chartType} menampilkan paket kerja yang %{description}.
+        work_packages_calendar:
+          title: Kalender
+        work_packages_overview:
+          title: Ikhtisar paket kerja
+          placeholder: Klik untk menyunting ...

@@ -1,0 +1,97 @@
+---
+ko:
+  activerecord:
+    attributes:
+      wikis/page_link:
+        provider: 위키 공급자
+      wikis/xwiki_provider:
+        authentication_method: 인증 방법
+        authentication_methods:
+          oauth2_sso: OpenID Connect ID 공급자를 통한 Single-Sign-On
+          two_way_oauth2: 양방향 OAuth 2.0 인증 코드 흐름
+        name: 이름
+        token_exchange_scope: XWiki 범위
+        universal_identifier: 범용 식별자
+        url: 인스턴스 URL
+        wiki_audience: XWiki 오디언스
+    errors: {}
+    models:
+      wikis/inline_page_link:
+        other: 인라인 페이지 링크
+      wikis/internal_provider: 내부 위키
+      wikis/relation_page_link:
+        other: 관련 페이지 링크
+      wikis/xwiki_provider: XWiki 공급자
+  permission_manage_wiki_page_links: 위키 페이지 링크 관리
+  project_module_wiki_platforms: 위키 공급자
+  wikis:
+    buttons:
+      connect_account: "%{provider} 계정 연결"
+      done_continue: 완료, 계속
+      save_and_continue: 저장 및 계속
+      wiki_page: 위키 페이지
+    work_package_wikis_tab_component:
+      inline_page_links: 인라인 페이지 링크
+      referencing_pages: '다음에서 참조됨:'
+    page_link_component:
+      remove: 페이지 링크 제거
+    relation_page_links_component:
+      empty_heading: 관련 페이지 없음
+      empty_text: 다른 관련 위키 페이지에 대한 링크를 수동으로 추가합니다.
+    oauth_login_component:
+      heading: "%{provider}에 연결되지 않음"
+      description: "%{provider}에 로그인하여 이 OpenProject 인스턴스의 관련 위키 페이지를 보고 관리합니다."
+      connect_button: "%{provider} 계정 연결"
+    admin:
+      destroy_confirmation_dialog_component:
+        title: 위키 공급자 삭제
+        heading: 위키 공급자를 삭제하시겠습니까?
+        warning_html: "%{wiki_provider}을(를) 삭제하려고 합니다. 이 작업은 되돌릴 수 없습니다."
+      forms:
+        general_info_form_component:
+          xwiki_instance_description: 설정을 수행하기 전에 XWiki 인스턴스에서 관리 권한이 있는지 확인하세요.
+        oauth_application_form_component:
+          application_id: 애플리케이션 ID
+          application_secret: 애플리케이션 비밀번호
+        oauth_client_form_component:
+          client_id: 클라이언트 ID
+      oauth_application_info_component:
+        confirm_replace_oauth_application: 이 작업은 현재 OAuth 자격 증명을 재설정합니다. 확인 후 XWiki 인스턴스에서 자격 증명을 다시 입력해야 하며 모든 사용자가 다시 인증해야 합니다. 계속하시겠습니까?
+        label_pending: 대기 중
+        replace_oauth_application: OpenProject OAuth 애플리케이션 바꾸기
+      oauth_client_info_component:
+        confirm_replace_oauth_client: 이 작업은 현재 XWiki OAuth 자격 증명을 재설정합니다. 모든 사용자는 XWiki에 대해 다시 인증해야 합니다. 계속하시겠습니까?
+        label_pending: 대기 중
+        replace_oauth_client: XWiki OAuth 애플리케이션 바꾸기
+      wiki_provider_list_component:
+        label_creation_time: 생성됨
+        label_name: 이름
+        label_provider: 공급자
+        no_results_description: 여기에서 보려면 위키 공급자를 추가합니다.
+        no_results_title: 아직 설정한 위키 공급자가 없습니다.
+      wiki_providers:
+        index_description: 외부 위키 서비스를 추가하여 작업 패키지를 기존 위키 페이지에 링크하거나 OpenProject에서 직접 새로운 위키 페이지를 만듭니다.
+        label_add_new: 새로운 위키 공급자 추가
+        label_edit: XWiki 공급자 편집
+        label_new_xwiki_instance: 새로운 XWiki 공급자
+        label_wiki_platform: 위키 공급자
+        name_caption: 사용자가 여러 위키 플랫폼 간에 구분할 수 있도록 저장소에 이름을 지정하세요.
+        name_placeholder: XWiki 지식 베이스
+        new_provider_html: 자세한 내용은 [XWiki 통합 설정] 관련 문서(docs_url)를 참조하세요.
+        oauth:
+          openproject_oauth: OpenProject OAuth
+        sections:
+          general_information: 기본 세부 정보
+          oauth_configuration: OAuth 구성
+        url_caption: https://를 포함하여 위키 플랫폼의 호스트 주소를 추가하세요. 255자 이하여야 합니다.
+        xwiki_instance: XWiki 인스턴스
+        xwiki:
+          oauth:
+            openproject_oauth_description: XWiki가 OAuth 애플리케이션을 사용하여 OpenProject 데이터에 액세스하도록 허용합니다. 아래 자격 증명을 XWiki 인스턴스에 복사합니다.
+            provider_oauth: XWiki OAuth
+            provider_oauth_description: OpenProject가 OAuth를 사용하여 XWiki 데이터에 액세스하도록 허용합니다. XWiki에 대해 OpenProject를 식별하기 위한 클라이언트 ID가 자동으로 생성되므로, XWiki 측에서 수동으로 구성할 필요가 없습니다.
+          openproject_oauth_description: XWiki가 OAuth를 사용하여 OpenProject 데이터에 액세스하도록 허용합니다.
+          xwiki_oauth: XWiki OAuth
+          xwiki_oauth_description: OpenProject가 OAuth를 사용하여 XWiki 데이터에 액세스하도록 허용합니다.
+    macro:
+      page_not_found: 링크된 위키 페이지를 더 이상 사용할 수 없음

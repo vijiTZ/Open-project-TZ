@@ -1,0 +1,51 @@
+name: brakeman
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - release/*
+    paths:
+      - '**.rb'
+  schedule:
+    - cron: '10 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  brakeman-scan:
+    permissions:
+      contents: read  # for actions/checkout to fetch code
+      security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
+    if: github.repository == 'opf/openproject'
+    name: Brakeman Scan
+    runs-on: ubuntu-latest
+    env:
+      RUBY_GC_HEAP_INIT_SLOTS: 100000
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@c4e5b1316158f92e3d49443a9d58b31d25ac0f8f # v1
+
+      - name: Setup Brakeman
+        run: |
+          gem install brakeman
+
+      - name: Scan
+        run: |
+          brakeman \
+            --ignore-config config/brakeman.ignore \
+            --no-exit-on-warn \
+            --no-exit-on-error \
+            --format sarif \
+            --output output.sarif.json
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@e46ed2cbd01164d986452f91f178727624ae40d7 # v4
+        with:
+          sarif_file: output.sarif.json

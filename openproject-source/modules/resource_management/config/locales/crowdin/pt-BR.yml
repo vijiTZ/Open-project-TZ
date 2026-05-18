@@ -1,0 +1,73 @@
+---
+pt-BR:
+  activerecord:
+    attributes:
+      resource_planner:
+        name: Nome
+        start_date: Data de início
+        end_date: Data de término
+        default_view_class_name: Visualização padrão
+        public: Público
+        favorite: Favorito
+      resource_allocation:
+        entity: Entity
+        principal: Assignee
+        state: State
+        start_date: Start date
+        end_date: Finish date
+        allocated_time: Allocated time
+        user_filter: User filter
+    errors:
+      models:
+        resource_planner:
+          attributes:
+            end_date:
+              greater_than_start_date: deve ser após a data de início.
+        resource_allocation:
+          attributes:
+            end_date:
+              greater_than_start_date: must be after the start date.
+  plugin_openproject_resource_management:
+    name: Gerenciamento de recursos do OpenProject
+    description: Fornece gerenciamento de recursos e planejamento de capacidade.
+  project_module_resource_management: Gerenciamento de recursos
+  permission_view_resource_planners: Ver planejadores de recursos
+  permission_view_resource_planners_explanation: 'Permite que os usuários acessem planejadores de recursos. Permite criar e gerenciar seus próprios planejadores de recursos e visualizar planejadores de recursos públicos. Não permite visualizar planejadores de recursos criados por outros usuários que não estejam compartilhados publicamente.
+
+    '
+  permission_manage_public_resource_planners: Gerenciar planejadores de recursos públicos
+  permission_manage_public_resource_planners_explanation: 'Permite que os usuários criem e gerenciem planejadores de recursos públicos. Permite visualizar, criar, gerenciar e publicar seus próprios planejadores de recursos. Não permite visualizar planejadores de recursos criados por outros usuários que não estejam compartilhados publicamente.
+
+    '
+  permission_allocate_user_resources: Allocate user resources
+  permission_allocate_user_resources_explanation: 'Allows users to create, update, and delete resource allocations within a resource planner. This includes assigning users (or user filters) to a planner and adjusting the allocated time and date range.
+
+    '
+  label_resource_management: Planejamento de recursos
+  button_next: Salvar
+  resource_management:
+    label_resource_planner: Planejador de recursos
+    label_resource_planner_plural: Planejadores de recursos
+    label_new_resource_planner: Novo planejador de recursos
+    public_caption: 'Tornar esta visualização pública para todos os membros do projeto. Isso não afeta a visibilidade dos pacotes de trabalho, que ainda depende das permissões de cada usuário.
+
+      '
+    favorite_caption: 'Adicionar esta visualização aos favoritos para exibi-la na seção superior do menu lateral.
+
+      '
+    view_types:
+      UserCardView: Cartões de usuários
+    action:
+      favorite: Adicionar aos favoritos
+      unfavorite: Remover dos favoritos
+      make_public: Tornar público
+      make_private: Tornar privado
+      delete: Excluir
+    sidebar:
+      public: Público
+      private: Privado
+    blankslate:
+      title: Ainda não há planejadores de recursos
+      desc: Criar um planejador de recursos para iniciar o planejamento de capacidade deste projeto.
+    show:
+      placeholder: A visualização detalhada deste planejador de recursos estará disponível em breve.
