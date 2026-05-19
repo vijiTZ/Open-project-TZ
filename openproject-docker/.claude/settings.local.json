@@ -11,7 +11,9 @@
       "Bash(docker cp *)",
       "Bash(git add *)",
       "PowerShell(docker exec openproject-docker-web-1 ls -la /app/public/custom-redesign.css)",
-      "PowerShell(docker exec openproject-docker-web-1 bash -c \"cat /app/app/models/enterprise_token.rb\" 2>&1)"
+      "PowerShell(docker exec openproject-docker-web-1 bash -c \"cat /app/app/models/enterprise_token.rb\" 2>&1)",
+      "Bash(docker compose *)",
+      "PowerShell(docker exec openproject-docker-web-1 cat /app/config/initializers/ee_unlock.rb)"
     ]
   }
 }

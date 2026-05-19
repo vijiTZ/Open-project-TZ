@@ -1,0 +1,21 @@
+# Mounts our CSS file and enterprise unlock initializer persistently.
+
+services:
+  web:
+    volumes:
+      - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+
+  worker:
+    volumes:
+      - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+
+  cron:
+    volumes:
+      - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+
+  seeder:
+    volumes:
+      - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
