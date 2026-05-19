@@ -38,6 +38,7 @@ Rails.application.config.after_initialize do
           conditional_highlighting
           date_alerts
           progress_tracking
+          portfolio_management
         ])
       end
     end

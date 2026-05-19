@@ -27,6 +27,135 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 <% html_title(t(:label_project_plural)) -%>
+
+<style>
+/* ── Projects page: table → card grid (always applied, no compile needed) ── */
+
+/* Hide column headers */
+.project-list-page table.generic-table thead,
+.project-list-page colgroup { display: none !important; }
+
+/* Remove table display from outer table element */
+.project-list-page table.generic-table {
+  display: block !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* tbody = 3-column grid */
+.project-list-page table.generic-table tbody {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  padding: 16px 0 !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+/* Each row = a white card */
+.project-list-page table.generic-table tbody tr {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+  gap: 6px !important;
+  min-height: 100px !important;
+}
+
+.project-list-page table.generic-table tbody tr:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12) !important;
+  border-color: #c0cfe0 !important;
+}
+
+/* Reset all td */
+.project-list-page table.generic-table tbody tr td {
+  display: block !important;
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Hide irrelevant columns */
+.project-list-page table.generic-table tbody tr td.hierarchy,
+.project-list-page table.generic-table tbody tr td.public,
+.project-list-page table.generic-table tbody tr td.created_at,
+.project-list-page table.generic-table tbody tr td.latest_activity_at,
+.project-list-page table.generic-table tbody tr td.required_disk_space {
+  display: none !important;
+}
+
+/* Project name – bold, dark, 16px */
+.project-list-page table.generic-table tbody tr td.name a,
+.project-list-page table.generic-table tbody tr td.name .projects-table--name-text a {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  text-decoration: none !important;
+  display: block !important;
+  padding-right: 70px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+.project-list-page table.generic-table tbody tr td.name a:hover,
+.project-list-page table.generic-table tbody tr td.name .projects-table--name-text a:hover {
+  color: #1a7f4b !important;
+}
+
+/* Hide hierarchy indent icon */
+.project-list-page table.generic-table tbody tr td.name .projects-table--hierarchy-icon {
+  display: none !important;
+}
+
+/* Status */
+.project-list-page table.generic-table tbody tr td.project_status {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 6px !important;
+  font-size: 13px !important;
+  color: #4b5563 !important;
+}
+
+/* Favorite star – absolute top-right */
+.project-list-page table.generic-table tbody tr td.favorited {
+  position: absolute !important;
+  top: 14px !important;
+  right: 50px !important;
+  display: block !important;
+}
+
+/* Action menu – absolute top-right */
+.project-list-page table.generic-table tbody tr td.buttons {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  display: block !important;
+}
+
+/* Also style the op-project-card divs (if ViewComponent card template loads) */
+.op-project-cards-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  padding: 16px 0 !important;
+}
+
+@media (max-width: 1100px) {
+  .project-list-page table.generic-table tbody,
+  .op-project-cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  .project-list-page table.generic-table tbody,
+  .op-project-cards-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+
 <div class="project-list-page">
   <%= render(
         Projects::IndexPageHeaderComponent.new(

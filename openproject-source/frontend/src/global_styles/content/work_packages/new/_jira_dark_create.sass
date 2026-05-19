@@ -1,0 +1,392 @@
+// Jira-inspired dark theme for the "New Work Package" Primer dialog.
+// Targets: dialog#create-work-package-dialog
+// (rendered by WorkPackages::Dialogs::CreateDialogComponent)
+//
+// Design reference: Jira's dark "New task" modal
+//   – dark #2D2F31 background
+//   – dark inputs with subtle borders
+//   – blue #0C66E4 Create button
+//   – ghost outlined Cancel button
+//   – thin dark scrollbar
+
+// ── Palette ──────────────────────────────────────────────────────────────────
+$jira-bg:           #2D2F31
+$jira-input-bg:     #3B3C3D
+$jira-input-border: #5A5B5C
+$jira-input-focus:  #4C9AFF
+$jira-label:        #AAAAAA
+$jira-text:         #E5E5E5
+$jira-muted:        #8C8C8C
+$jira-divider:      #444546
+$jira-create-btn:   #0C66E4
+$jira-create-hover: #0055CC
+$jira-title:        #FFFFFF
+$jira-accent:       #4C9AFF
+$jira-hover-bg:     rgba(255, 255, 255, 0.08)
+$jira-danger:       #FF5630
+
+// ── Dialog root ───────────────────────────────────────────────────────────────
+dialog#create-work-package-dialog
+  // Override Primer's CSS variable for the overlay background
+  --overlay-bgColor: #{$jira-bg}
+  --bgColor-default: #{$jira-bg}
+  --bgColor-muted:   #{$jira-input-bg}
+  --borderColor-default: #{$jira-input-border}
+  --fgColor-default: #{$jira-text}
+  --fgColor-muted:   #{$jira-muted}
+
+  background-color: $jira-bg !important
+  color: $jira-text !important
+
+  // ── Header ─────────────────────────────────────────────────────────────────
+  .Overlay-header,
+  .Overlay-headerContentWrap
+    background-color: $jira-bg !important
+    border-bottom: 1px solid $jira-divider !important
+
+  .Overlay-title
+    color: $jira-title !important
+    font-size: 16px !important
+    font-weight: 600 !important
+
+  .Overlay-closeButton
+    color: $jira-muted !important
+    background: transparent !important
+    border: none !important
+    border-radius: 4px !important
+
+    &:hover
+      color: $jira-text !important
+      background-color: $jira-hover-bg !important
+
+    svg
+      color: $jira-muted !important
+
+  // ── Body ───────────────────────────────────────────────────────────────────
+  .Overlay-body
+    background-color: $jira-bg !important
+    color: $jira-text !important
+
+    // ── Primer FormControl (each field row) ──────────────────────────────────
+    .FormControl
+      margin-bottom: 14px
+
+    // Labels
+    .FormControl-label,
+    .FormControl-spacingWrapper > label
+      color: $jira-label !important
+      font-size: 12px !important
+      font-weight: 600 !important
+      margin-bottom: 4px !important
+      display: block
+
+    // Text / number / date inputs
+    .FormControl-input,
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="url"],
+    input[type="search"],
+    input[type="date"]
+      background-color: $jira-input-bg !important
+      border: 1px solid $jira-input-border !important
+      border-radius: 4px !important
+      color: $jira-text !important
+      height: 36px !important
+
+      &::placeholder
+        color: $jira-muted !important
+
+      &:focus
+        border-color: $jira-input-focus !important
+        box-shadow: 0 0 0 2px rgba(76, 154, 255, 0.2) !important
+        outline: none !important
+
+    // Textareas
+    textarea
+      background-color: $jira-input-bg !important
+      border: 1px solid $jira-input-border !important
+      border-radius: 4px !important
+      color: $jira-text !important
+
+      &::placeholder
+        color: $jira-muted !important
+
+      &:focus
+        border-color: $jira-input-focus !important
+        box-shadow: 0 0 0 2px rgba(76, 154, 255, 0.2) !important
+        outline: none !important
+
+    // Native selects
+    .FormControl-select,
+    .Select-module-Select,
+    select
+      background-color: $jira-input-bg !important
+      border: 1px solid $jira-input-border !important
+      border-radius: 4px !important
+      color: $jira-text !important
+      height: 36px !important
+
+      &:focus
+        border-color: $jira-input-focus !important
+        outline: none !important
+
+    // ng-select / autocomplete dropdowns
+    .ng-select-container,
+    .ng-select .ng-control
+      background-color: $jira-input-bg !important
+      border-color: $jira-input-border !important
+      color: $jira-text !important
+      border-radius: 4px !important
+
+    .ng-dropdown-panel
+      background-color: $jira-bg !important
+      border: 1px solid $jira-input-border !important
+      border-radius: 4px !important
+
+      .ng-option
+        background-color: $jira-bg !important
+        color: $jira-text !important
+
+        &.ng-option-marked,
+        &:hover
+          background-color: $jira-input-bg !important
+
+    // Primer action-menu / SelectPanel dropdown
+    .ActionList,
+    .SelectPanel
+      background-color: $jira-bg !important
+      border-color: $jira-input-border !important
+
+      .ActionListItem-label
+        color: $jira-text !important
+
+    // Caption / helper text under fields
+    .FormControl-caption,
+    .note,
+    small
+      color: $jira-muted !important
+      font-size: 11px !important
+
+    // Validation error text
+    .FormControl-inlineValidation,
+    .FormControl-validationMessage
+      color: $jira-danger !important
+      font-size: 12px !important
+
+    // ── Checkbox fields (e.g. Impediment / Flagged) ──────────────────────────
+    .FormControl-checkbox-wrap,
+    .FormControl-checkboxGroup
+      gap: 8px
+
+      input[type="checkbox"],
+      .FormControl-checkbox
+        accent-color: $jira-accent
+        width: 14px
+        height: 14px
+
+      .FormControl-label
+        color: $jira-text !important
+        font-size: 14px !important
+        font-weight: 400 !important
+
+      .FormControl-caption
+        color: $jira-muted !important
+
+    // ── Attachment drag-and-drop zone ────────────────────────────────────────
+    .op-attachment-list--upload-area,
+    .op-file-section--upload,
+    [class*="upload-area"],
+    .dragzone
+      background-color: rgba(255, 255, 255, 0.03) !important
+      border: 2px dashed $jira-divider !important
+      border-radius: 6px !important
+      color: $jira-muted !important
+      text-align: center
+      padding: 20px 16px !important
+
+      &:hover,
+      &.drag-active
+        border-color: $jira-accent !important
+        background-color: rgba(76, 154, 255, 0.06) !important
+
+      span, p
+        color: $jira-muted !important
+
+      // "Browse" button inside drop zone
+      .button:not(.Button--primary),
+      button:not([class*="primary"])
+        background-color: transparent !important
+        border: 1px solid $jira-input-border !important
+        border-radius: 4px !important
+        color: $jira-text !important
+        padding: 4px 14px !important
+        font-size: 13px !important
+
+        &:hover
+          background-color: $jira-hover-bg !important
+
+    // ── Generic links ────────────────────────────────────────────────────────
+    a:not([class*="Button"]):not(.Button)
+      color: $jira-accent !important
+
+      &:hover
+        text-decoration: underline
+
+    // ── Dividers / horizontal rules ──────────────────────────────────────────
+    hr,
+    .Overlay-divider
+      border-color: $jira-divider !important
+
+    // ── Box / card wrappers ──────────────────────────────────────────────────
+    .Box,
+    .Box-row
+      background-color: $jira-input-bg !important
+      border-color: $jira-divider !important
+      color: $jira-text !important
+
+  // ── Footer ─────────────────────────────────────────────────────────────────
+  .Overlay-footer,
+  .Overlay-footer--divided
+    background-color: $jira-bg !important
+    border-top: 1px solid $jira-divider !important
+    padding: 12px 20px !important
+
+    // Cancel / secondary button – ghost outlined
+    .Button--secondary,
+    .Button:not(.Button--primary):not(.Button--danger)
+      background-color: transparent !important
+      border: 1px solid $jira-input-border !important
+      border-radius: 4px !important
+      color: $jira-text !important
+      font-size: 14px !important
+
+      &:hover:not([disabled])
+        background-color: $jira-hover-bg !important
+        border-color: #6B6C6D !important
+
+    // Create / primary button – Jira blue
+    .Button--primary
+      background-color: $jira-create-btn !important
+      border: 1px solid $jira-create-btn !important
+      border-radius: 4px !important
+      color: #FFFFFF !important
+      font-size: 14px !important
+      font-weight: 500 !important
+
+      &:hover:not([disabled])
+        background-color: $jira-create-hover !important
+        border-color: $jira-create-hover !important
+
+      &[disabled],
+      &:disabled
+        opacity: 0.55 !important
+        cursor: not-allowed !important
+
+  // ── Thin dark scrollbar ──────────────────────────────────────────────────
+  *
+    scrollbar-width: thin
+    scrollbar-color: $jira-divider $jira-bg
+
+  ::-webkit-scrollbar
+    width: 7px
+    height: 7px
+
+  ::-webkit-scrollbar-track
+    background: $jira-bg
+
+  ::-webkit-scrollbar-thumb
+    background-color: $jira-divider
+    border-radius: 4px
+
+    &:hover
+      background-color: #666768
+
+// ── Also cover the split-view / full-page create (fallback) ──────────────────
+.work-packages--new
+  background-color: $jira-bg
+  color: $jira-text
+
+  .work-packages--details-content.-create-mode,
+  .work-package--new-state
+    background-color: $jira-bg
+    color: $jira-text
+
+  .wp-new--subject-wrapper
+    padding: 10px 20px 6px
+
+    input,
+    .inline-edit--display-field,
+    .inline-edit--field
+      background-color: transparent !important
+      border: none !important
+      border-bottom: 1px solid $jira-divider !important
+      border-radius: 0 !important
+      color: $jira-title !important
+      font-size: 16px !important
+      font-weight: 600 !important
+      padding: 6px 0 !important
+      box-shadow: none !important
+
+  .attributes-group--header-text
+    color: $jira-label !important
+    font-size: 11px !important
+    font-weight: 700 !important
+    text-transform: uppercase !important
+
+  .attributes-key-value
+    flex-direction: column !important
+    margin-bottom: 14px
+
+    .attributes-key-value--key
+      color: $jira-label !important
+      font-size: 12px !important
+      flex-basis: auto !important
+      padding: 0 0 4px 0 !important
+
+    .attributes-key-value--value-container
+      flex-basis: auto !important
+      padding: 0 !important
+
+      .inline-edit--display-field
+        background-color: $jira-input-bg !important
+        border: 1px solid $jira-input-border !important
+        border-radius: 4px !important
+        color: $jira-text !important
+        padding: 6px 10px !important
+        min-height: 36px !important
+
+  .work-packages--details-toolbar-container
+    background-color: $jira-bg !important
+    border-top: 1px solid $jira-divider !important
+    padding: 12px 20px !important
+
+    #work-packages--edit-actions-save
+      background-color: $jira-create-btn !important
+      border: 1px solid $jira-create-btn !important
+      border-radius: 4px !important
+      color: #FFFFFF !important
+      font-size: 14px !important
+      font-weight: 500 !important
+      padding: 6px 18px !important
+
+      .button--icon
+        display: none !important
+
+      &:hover:not([disabled])
+        background-color: $jira-create-hover !important
+        border-color: $jira-create-hover !important
+
+    #work-packages--edit-actions-cancel
+      background-color: transparent !important
+      border: 1px solid $jira-input-border !important
+      border-radius: 4px !important
+      color: $jira-text !important
+      font-size: 14px !important
+      padding: 6px 18px !important
+
+      .button--icon
+        display: none !important
+
+      &:hover
+        background-color: $jira-hover-bg !important

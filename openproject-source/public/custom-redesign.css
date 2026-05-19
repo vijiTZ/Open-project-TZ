@@ -259,26 +259,103 @@ input[type="submit"].button.-highlight {
 }
 
 /* ---------------------------------------------------------------
-   11. PROJECT CARDS GRID (fallback styles)
+   11. PROJECT CARDS GRID — Active Projects page
+   Matches the card layout in the reference design image
 --------------------------------------------------------------- */
+.project-list-page--table .op-project-cards-grid,
 .op-project-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 16px 0;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  padding: 16px 0 !important;
+}
+
+@media (max-width: 1100px) {
+  .op-project-cards-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  .op-project-cards-grid { grid-template-columns: 1fr !important; }
 }
 
 .op-project-card {
-  background: #ffffff;
-  border: 1px solid #e4e8f0;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  position: relative !important;
 }
+
+.op-project-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10) !important;
+  border-color: #c8d0e0 !important;
+}
+
+.op-project-card--header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+}
+
+.op-project-card--name-wrap {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.op-project-card--name a {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #1a1a2e !important;
+  text-decoration: none !important;
+}
+
+.op-project-card--name a:hover { color: #1f77b8 !important; }
+
+.op-project-card--badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.op-project-card--badge.-active  { background: #e8f8f0 !important; color: #1a7f4b !important; }
+.op-project-card--badge.-closed  { background: #fdecea !important; color: #c0392b !important; }
+.op-project-card--badge.-inactive { background: #f2f3f5 !important; color: #6b7280 !important; }
+
+.op-project-card--badge-dot {
+  width: 7px !important;
+  height: 7px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+.op-project-card--badge.-active  .op-project-card--badge-dot { background: #1a7f4b !important; }
+.op-project-card--badge.-closed  .op-project-card--badge-dot { background: #c0392b !important; }
+.op-project-card--badge.-inactive .op-project-card--badge-dot { background: #9ca3af !important; }
+
+.op-project-card--description {
+  font-size: 13px !important;
+  color: #6b7280 !important;
+  line-height: 1.55 !important;
+  min-height: 18px !important;
+}
+
+.op-project-card--actions { flex-shrink: 0 !important; }
 
 .op-project-card:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
@@ -346,4 +423,670 @@ input[type="submit"].button.-highlight {
 
 @media (max-width: 1100px) { .op-project-cards-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px)  { .op-project-cards-grid { grid-template-columns: 1fr; } }
+
+/* =============================================================
+   12. JIRA-STYLE DARK "NEW TASK" — FULL PAGE CREATE VIEW
+   Targets: /work_packages/new  (Angular full-page create)
+   Scope: body.router--work-packages-full-create (2-class specificity)
+   This beats section 10's single-class !important rules.
+   Design: Jira dark — #2D2F31 bg, dark inputs, blue Save btn
+   ============================================================= */
+
+/* -- Entire page background (beats section 10 via higher specificity) ------- */
+body.router--work-packages-full-create,
+body.router--work-packages-full-create #main-content,
+body.router--work-packages-full-create .content-body,
+body.router--work-packages-full-create .work-packages-full-view,
+body.router--work-packages-full-create .work-packages-full-view--split-left,
+body.router--work-packages-full-create .work-packages-full-view--split-right,
+body.router--work-packages-full-create .work-packages--show-view,
+body.router--work-packages-full-create .work-packages-page--ui-view {
+  background-color: #2D2F31 !important;
+  color: #E5E5E5 !important;
+}
+
+/* -- Create wrapper --------------------------------------------------------- */
+body.router--work-packages-full-create .work-packages--new,
+body.router--work-packages-full-create .work-package--new-state {
+  background-color: #2D2F31 !important;
+  color: #E5E5E5 !important;
+}
+
+/* -- Title / subject input -------------------------------------------------- */
+body.router--work-packages-full-create .wp-new--subject-wrapper input,
+body.router--work-packages-full-create .wp-new--subject-wrapper .inline-edit--field,
+body.router--work-packages-full-create .wp-new--subject-wrapper .inline-edit--display-field {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid #444546 !important;
+  border-radius: 0 !important;
+  color: #FFFFFF !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  padding: 4px 0 6px !important;
+  box-shadow: none !important;
+}
+
+body.router--work-packages-full-create .wp-new--subject-wrapper input:focus {
+  border-bottom-color: #4C9AFF !important;
+  outline: none !important;
+}
+
+body.router--work-packages-full-create .wp-new--subject-wrapper input::placeholder {
+  color: #8C8C8C !important;
+}
+
+/* -- Header / toolbar row --------------------------------------------------- */
+body.router--work-packages-full-create .toolbar,
+body.router--work-packages-full-create .title-container {
+  background-color: #2D2F31 !important;
+  border-bottom: 1px solid #444546 !important;
+  color: #E5E5E5 !important;
+}
+
+body.router--work-packages-full-create .toolbar h2,
+body.router--work-packages-full-create .toolbar h3 {
+  color: #FFFFFF !important;
+}
+
+/* -- Section group cards (PEOPLE, ESTIMATES, DETAILS…) ---------------------- */
+body.router--work-packages-full-create .attributes-group {
+  background: #33363A !important;
+  border: 1px solid #444546 !important;
+  border-radius: 8px !important;
+  padding: 16px 20px !important;
+  margin-bottom: 12px !important;
+  box-shadow: none !important;
+}
+
+body.router--work-packages-full-create .attributes-group--header-text {
+  color: #AAAAAA !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+body.router--work-packages-full-create .attributes-group--header-container {
+  border-bottom: 1px solid #444546 !important;
+}
+
+/* -- Field labels ----------------------------------------------------------- */
+body.router--work-packages-full-create .attributes-key-value--key,
+body.router--work-packages-full-create .attributes-key-value--key label {
+  color: #AAAAAA !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+/* -- Inline-edit display fields --------------------------------------------- */
+body.router--work-packages-full-create .inline-edit--container,
+body.router--work-packages-full-create .inline-edit--display-field {
+  background-color: #3B3C3D !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+  min-height: 36px !important;
+}
+
+body.router--work-packages-full-create .inline-edit--container:hover {
+  border-color: #6B6C6D !important;
+}
+
+body.router--work-packages-full-create .inline-edit--container:focus-within {
+  border-color: #4C9AFF !important;
+  box-shadow: 0 0 0 2px rgba(76,154,255,0.2) !important;
+}
+
+/* -- Active / edit-mode inputs ---------------------------------------------- */
+body.router--work-packages-full-create .inline-edit--field input,
+body.router--work-packages-full-create .inline-edit--field textarea,
+body.router--work-packages-full-create .inline-edit--field select {
+  background-color: #3B3C3D !important;
+  border: 1px solid #4C9AFF !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+}
+
+body.router--work-packages-full-create .inline-edit--field input::placeholder {
+  color: #8C8C8C !important;
+}
+
+/* -- Dropdowns (ng-select) -------------------------------------------------- */
+body.router--work-packages-full-create .ng-select-container {
+  background-color: #3B3C3D !important;
+  border-color: #5A5B5C !important;
+  color: #E5E5E5 !important;
+  border-radius: 4px !important;
+}
+
+body.router--work-packages-full-create .ng-dropdown-panel {
+  background-color: #2D2F31 !important;
+  border: 1px solid #5A5B5C !important;
+}
+
+body.router--work-packages-full-create .ng-option {
+  background-color: #2D2F31 !important;
+  color: #E5E5E5 !important;
+}
+
+body.router--work-packages-full-create .ng-option:hover,
+body.router--work-packages-full-create .ng-option.ng-option-marked {
+  background-color: #3B3C3D !important;
+}
+
+body.router--work-packages-full-create .ng-value-label {
+  color: #E5E5E5 !important;
+}
+
+/* -- CKEditor (Description field) ------------------------------------------ */
+body.router--work-packages-full-create .ck.ck-toolbar {
+  background: #33363A !important;
+  border-color: #5A5B5C !important;
+}
+
+body.router--work-packages-full-create .ck.ck-toolbar .ck-button {
+  color: #AAAAAA !important;
+}
+
+body.router--work-packages-full-create .ck.ck-toolbar .ck-button:hover {
+  background-color: #444546 !important;
+  color: #E5E5E5 !important;
+}
+
+body.router--work-packages-full-create .ck.ck-editor__editable {
+  background: #3B3C3D !important;
+  border-color: #5A5B5C !important;
+  color: #E5E5E5 !important;
+  min-height: 120px !important;
+}
+
+body.router--work-packages-full-create .ck.ck-editor__editable:focus {
+  border-color: #4C9AFF !important;
+  box-shadow: 0 0 0 2px rgba(76,154,255,0.2) !important;
+}
+
+/* -- Attachment drop zone --------------------------------------------------- */
+body.router--work-packages-full-create .op-attachment-list--drop-box,
+body.router--work-packages-full-create [class*="drop-box"],
+body.router--work-packages-full-create .attachment--drop-box {
+  background: rgba(255,255,255,0.03) !important;
+  border: 2px dashed #444546 !important;
+  border-radius: 6px !important;
+  color: #8C8C8C !important;
+}
+
+body.router--work-packages-full-create .op-attachment-list--drop-box:hover {
+  border-color: #4C9AFF !important;
+  background: rgba(76,154,255,0.06) !important;
+}
+
+body.router--work-packages-full-create a.icon-attachment {
+  color: #4C9AFF !important;
+}
+
+/* -- Project context notice ------------------------------------------------- */
+body.router--work-packages-full-create .wp-project-context--warning {
+  color: #AAAAAA !important;
+  background: rgba(76,154,255,0.08) !important;
+  border: 1px solid rgba(76,154,255,0.25) !important;
+  border-radius: 4px !important;
+  padding: 8px 12px !important;
+}
+
+/* -- Save (Jira blue) & Cancel (ghost) buttons ------------------------------ */
+body.router--work-packages-full-create .work-packages--edit-actions {
+  display: flex !important;
+  gap: 8px !important;
+  padding: 12px 0 !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-save {
+  background-color: #0C66E4 !important;
+  border: 1px solid #0C66E4 !important;
+  border-radius: 4px !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 6px 18px !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-save:hover {
+  background-color: #0055CC !important;
+  border-color: #0055CC !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-cancel {
+  background-color: transparent !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+  font-size: 14px !important;
+  padding: 6px 18px !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-cancel:hover {
+  background-color: rgba(255,255,255,0.08) !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-save .button--icon,
+body.router--work-packages-full-create #work-packages--edit-actions-cancel .button--icon {
+  display: none !important;
+}
+
+/* -- Dark scrollbar --------------------------------------------------------- */
+body.router--work-packages-full-create * {
+  scrollbar-width: thin;
+  scrollbar-color: #444546 #2D2F31;
+}
+
+body.router--work-packages-full-create ::-webkit-scrollbar { width: 7px; height: 7px; }
+body.router--work-packages-full-create ::-webkit-scrollbar-track { background: #2D2F31; }
+body.router--work-packages-full-create ::-webkit-scrollbar-thumb {
+  background-color: #444546;
+  border-radius: 4px;
+}
+
+/* =============================================================
+   13. JIRA-STYLE DARK "NEW TASK" CREATE DIALOG
+   Targets: dialog#create-work-package-dialog (Primer Alpha Dialog)
+   Design: Jira dark modal — #2D2F31 bg, dark inputs, blue Create btn
+   ============================================================= */
+
+/* -- Dialog root ------------------------------------------------------------ */
+dialog#create-work-package-dialog {
+  --overlay-bgColor: #2D2F31;
+  --bgColor-default: #2D2F31;
+  --bgColor-muted: #3B3C3D;
+  --borderColor-default: #5A5B5C;
+  --fgColor-default: #E5E5E5;
+  --fgColor-muted: #8C8C8C;
+  background-color: #2D2F31 !important;
+  color: #E5E5E5 !important;
+}
+
+/* -- Header ----------------------------------------------------------------- */
+dialog#create-work-package-dialog .Overlay-header,
+dialog#create-work-package-dialog .Overlay-headerContentWrap {
+  background-color: #2D2F31 !important;
+  border-bottom: 1px solid #444546 !important;
+}
+
+dialog#create-work-package-dialog .Overlay-title,
+dialog#create-work-package-dialog .Overlay-titleWrap h1,
+dialog#create-work-package-dialog .Overlay-titleWrap h2 {
+  color: #FFFFFF !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+dialog#create-work-package-dialog .Overlay-closeButton,
+dialog#create-work-package-dialog button.Overlay-closeButton {
+  color: #AAAAAA !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 4px !important;
+}
+
+dialog#create-work-package-dialog .Overlay-closeButton:hover {
+  color: #E5E5E5 !important;
+  background-color: rgba(255,255,255,0.08) !important;
+}
+
+dialog#create-work-package-dialog .Overlay-closeButton svg {
+  color: #AAAAAA !important;
+  fill: #AAAAAA !important;
+}
+
+/* -- Body ------------------------------------------------------------------- */
+dialog#create-work-package-dialog .Overlay-body {
+  background-color: #2D2F31 !important;
+  color: #E5E5E5 !important;
+}
+
+/* Labels */
+dialog#create-work-package-dialog .FormControl-label,
+dialog#create-work-package-dialog .FormControl-spacingWrapper > label,
+dialog#create-work-package-dialog label {
+  color: #AAAAAA !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+/* Text / number / date / url inputs */
+dialog#create-work-package-dialog input[type="text"],
+dialog#create-work-package-dialog input[type="email"],
+dialog#create-work-package-dialog input[type="number"],
+dialog#create-work-package-dialog input[type="url"],
+dialog#create-work-package-dialog input[type="search"],
+dialog#create-work-package-dialog input[type="date"],
+dialog#create-work-package-dialog .FormControl-input {
+  background-color: #3B3C3D !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+  height: 36px !important;
+}
+
+dialog#create-work-package-dialog input::placeholder {
+  color: #8C8C8C !important;
+}
+
+dialog#create-work-package-dialog input:focus,
+dialog#create-work-package-dialog .FormControl-input:focus {
+  border-color: #4C9AFF !important;
+  box-shadow: 0 0 0 2px rgba(76,154,255,0.2) !important;
+  outline: none !important;
+}
+
+/* Textareas */
+dialog#create-work-package-dialog textarea {
+  background-color: #3B3C3D !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+}
+
+dialog#create-work-package-dialog textarea::placeholder {
+  color: #8C8C8C !important;
+}
+
+dialog#create-work-package-dialog textarea:focus {
+  border-color: #4C9AFF !important;
+  box-shadow: 0 0 0 2px rgba(76,154,255,0.2) !important;
+  outline: none !important;
+}
+
+/* Native selects */
+dialog#create-work-package-dialog select,
+dialog#create-work-package-dialog .FormControl-select,
+dialog#create-work-package-dialog .Select-module-Select {
+  background-color: #3B3C3D !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+  height: 36px !important;
+}
+
+dialog#create-work-package-dialog select:focus {
+  border-color: #4C9AFF !important;
+  outline: none !important;
+}
+
+/* ng-select / autocomplete containers */
+dialog#create-work-package-dialog .ng-select-container {
+  background-color: #3B3C3D !important;
+  border-color: #5A5B5C !important;
+  color: #E5E5E5 !important;
+  border-radius: 4px !important;
+}
+
+dialog#create-work-package-dialog .ng-dropdown-panel {
+  background-color: #2D2F31 !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+}
+
+dialog#create-work-package-dialog .ng-option {
+  background-color: #2D2F31 !important;
+  color: #E5E5E5 !important;
+}
+
+dialog#create-work-package-dialog .ng-option:hover,
+dialog#create-work-package-dialog .ng-option.ng-option-marked {
+  background-color: #3B3C3D !important;
+}
+
+/* Caption / helper / note text */
+dialog#create-work-package-dialog .FormControl-caption,
+dialog#create-work-package-dialog .note,
+dialog#create-work-package-dialog small {
+  color: #8C8C8C !important;
+  font-size: 11px !important;
+}
+
+/* Validation errors */
+dialog#create-work-package-dialog .FormControl-inlineValidation,
+dialog#create-work-package-dialog .FormControl-validationMessage {
+  color: #FF5630 !important;
+}
+
+/* Checkbox labels */
+dialog#create-work-package-dialog .FormControl-checkbox-wrap .FormControl-label,
+dialog#create-work-package-dialog .FormControl-checkboxGroup .FormControl-label {
+  color: #E5E5E5 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+dialog#create-work-package-dialog input[type="checkbox"] {
+  accent-color: #4C9AFF;
+}
+
+/* Attachment drag-and-drop zone */
+dialog#create-work-package-dialog .op-attachment-list--drop-box,
+dialog#create-work-package-dialog .op-file-section--upload,
+dialog#create-work-package-dialog [class*="upload-area"],
+dialog#create-work-package-dialog .dragzone {
+  background-color: rgba(255,255,255,0.03) !important;
+  border: 2px dashed #444546 !important;
+  border-radius: 6px !important;
+  color: #8C8C8C !important;
+}
+
+dialog#create-work-package-dialog .op-attachment-list--drop-box:hover,
+dialog#create-work-package-dialog .dragzone:hover {
+  border-color: #4C9AFF !important;
+  background-color: rgba(76,154,255,0.06) !important;
+}
+
+/* Links */
+dialog#create-work-package-dialog a:not([class*="Button"]):not(.Button) {
+  color: #4C9AFF !important;
+}
+
+/* Box / card wrappers */
+dialog#create-work-package-dialog .Box,
+dialog#create-work-package-dialog .Box-row {
+  background-color: #3B3C3D !important;
+  border-color: #444546 !important;
+  color: #E5E5E5 !important;
+}
+
+/* Dividers */
+dialog#create-work-package-dialog hr {
+  border-color: #444546 !important;
+}
+
+/* -- Footer ----------------------------------------------------------------- */
+dialog#create-work-package-dialog .Overlay-footer,
+dialog#create-work-package-dialog [class*="Overlay-footer"] {
+  background-color: #2D2F31 !important;
+  border-top: 1px solid #444546 !important;
+  padding: 12px 20px !important;
+}
+
+/* Cancel / secondary button */
+dialog#create-work-package-dialog .Button--secondary,
+dialog#create-work-package-dialog .Button:not(.Button--primary):not(.Button--danger):not([class*="invisible"]) {
+  background-color: transparent !important;
+  border: 1px solid #5A5B5C !important;
+  border-radius: 4px !important;
+  color: #E5E5E5 !important;
+  font-size: 14px !important;
+}
+
+dialog#create-work-package-dialog .Button--secondary:hover {
+  background-color: rgba(255,255,255,0.08) !important;
+  border-color: #6B6C6D !important;
+}
+
+/* Create / primary button — Jira blue */
+dialog#create-work-package-dialog .Button--primary {
+  background-color: #0C66E4 !important;
+  border: 1px solid #0C66E4 !important;
+  border-radius: 4px !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+dialog#create-work-package-dialog .Button--primary:hover:not([disabled]):not(:disabled) {
+  background-color: #0055CC !important;
+  border-color: #0055CC !important;
+}
+
+dialog#create-work-package-dialog .Button--primary[disabled],
+dialog#create-work-package-dialog .Button--primary:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+}
+
+/* -- Scrollbar —  dark Jira style ------------------------------------------ */
+dialog#create-work-package-dialog * {
+  scrollbar-width: thin;
+  scrollbar-color: #444546 #2D2F31;
+}
+
+dialog#create-work-package-dialog ::-webkit-scrollbar { width: 7px; height: 7px; }
+dialog#create-work-package-dialog ::-webkit-scrollbar-track { background: #2D2F31; }
+dialog#create-work-package-dialog ::-webkit-scrollbar-thumb {
+  background-color: #444546;
+  border-radius: 4px;
+}
+dialog#create-work-package-dialog ::-webkit-scrollbar-thumb:hover {
+  background-color: #666768;
+}
+
+/* =============================================================
+   14. PROJECT TABLE → CARD GRID (fallback CSS)
+   Scoped to body.controller-projects.action-index only.
+   Overrides table display so each <tr.op-project-row-component>
+   looks like a card. Works even when ViewComponent renders the
+   standard generic-table HTML structure.
+   ============================================================= */
+
+/* Hide thead — no column headers in card view */
+body.controller-projects.action-index .generic-table--container thead,
+body.controller-projects.action-index .generic-table--results-container thead {
+  display: none !important;
+}
+
+/* Remove table layout from the <table> itself */
+body.controller-projects.action-index .generic-table--results-container table.generic-table,
+body.controller-projects.action-index .generic-table--container table.generic-table {
+  display: block !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* tbody becomes a 3-column card grid */
+body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
+body.controller-projects.action-index .generic-table--container table.generic-table tbody {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  padding: 16px 0 !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+/* Each row becomes a card */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+}
+
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10) !important;
+  border-color: #c8d0e0 !important;
+}
+
+/* All tds: reset table layout */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td {
+  display: block !important;
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Hide irrelevant columns */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.hierarchy,
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.public,
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.created_at,
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.latest_activity_at,
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.required_disk_space {
+  display: none !important;
+}
+
+/* Favorite star — top-right corner */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.favorited {
+  position: absolute !important;
+  top: 14px !important;
+  right: 50px !important;
+  display: block !important;
+}
+
+/* Action buttons — top-right corner */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.buttons {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  display: block !important;
+}
+
+/* Project name — bold, dark */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.name .projects-table--name-text a {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #1a1a2e !important;
+  text-decoration: none !important;
+  display: block !important;
+  padding-right: 80px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.name .projects-table--name-text a:hover {
+  color: #1f77b8 !important;
+}
+
+/* Hide the hierarchy icon */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.name .projects-table--hierarchy-icon {
+  display: none !important;
+}
+
+/* Project status */
+body.controller-projects.action-index table.generic-table tbody tr.op-project-row-component td.project_status {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 12px !important;
+  color: #6b7280 !important;
+  margin-top: 4px !important;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1100px) {
+  body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
+  body.controller-projects.action-index .generic-table--container table.generic-table tbody {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
+  body.controller-projects.action-index .generic-table--container table.generic-table tbody {
+    grid-template-columns: 1fr !important;
+  }
+}
 
