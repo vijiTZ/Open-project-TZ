@@ -8,7 +8,7 @@ services:
     restart: "no"
     entrypoint: ["echo", "disabled"]
   upgrade:
-    restart: "yes"
+    restart: "no"
     build:
       context: ./control
     environment:
