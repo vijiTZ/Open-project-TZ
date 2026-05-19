@@ -55,3 +55,6 @@
 
 <%# Disable prefetching for now %>
 <meta name="turbo-prefetch" content="false">
+
+<%# Custom UI redesign stylesheet — cache-busted, no compilation needed %>
+<link rel="stylesheet" href="/custom-redesign.css?v=<%= File.mtime(Rails.root.join('public/custom-redesign.css')).to_i rescue 1 %>" type="text/css">

@@ -1,251 +1,633 @@
-/* =============================================================
-   OpenProject Custom Redesign — v9
-   Scope: .tz-wp-redesign wrapper (New Work Package form only)
-   Strategy: targeted overrides only, no global width/flex changes
-   ============================================================= */
+/* ================================================================
+   OPENPROJECT CUSTOM DESIGN SYSTEM
+   ----------------------------------------------------------------
+   File  : openproject-docker/openproject-custom.css
+   Served: /app/public/custom-redesign.css  (bind-mounted volume)
+   Apply : Edit this file → Ctrl+Shift+R in browser
+   ================================================================ */
 
-/* ── 1. PAGE BACKGROUND ────────────────────────────────────────
-   Use :has() so background only fires when our wrapper is present.
-   This avoids coloring the page on every other route.            */
-#content-body:has(.tz-wp-redesign) {
-  background: #edf1f7 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+
+/* ── 0. DESIGN TOKENS ───────────────────────────────────────────*/
+:root {
+  --op-blue:        #0C66E4;
+  --op-blue-hover:  #0055CC;
+  --op-green:       #1C6B3F;
+
+  /* Used only in dark-scoped sections below */
+  --op-bg:          #0A0B0D;
+  --op-surface-1:   #111318;
+  --op-surface-2:   #1A1D24;
+  --op-surface-3:   #22262E;
+  --op-surface-4:   #2A2F38;
+  --op-border-soft: #242830;
+  --op-border:      #363A44;
+  --op-border-focus:#4C9AFF;
+  --op-text:        #DCE0E6;
+  --op-text-muted:  #7A8290;
+  --op-text-dim:    #454C58;
+  --op-info:        #4C9AFF;
+  --op-success:     #22A06B;
+  --op-warning:     #CF9F02;
+  --op-danger:      #C9372C;
 }
 
-/* ── 2. UNCLIP SHADOWS ─────────────────────────────────────────
-   compiled CSS sets overflow-x:clip on split-left, which clips
-   card box-shadows. Unconditionally remove it.                   */
-.work-packages-full-view--split-left {
-  overflow-x: visible !important;
-  overflow-y: visible !important;
+
+/* ── 1. TOP BAR (GREEN) ─────────────────────────────────────────
+   Background color only — no functional changes                 */
+#header,
+.op-app-header,
+#top-menu,
+.header-container {
+  background-color: var(--op-green) !important;
 }
 
-/* ── 3. FORM CONTAINER ─────────────────────────────────────────
-   Center and constrain the Angular form mount area.              */
-.tz-wp-redesign .work-packages--new {
-  max-width: 1320px !important;
-  width: 100% !important;
-  margin: 0 auto !important;
-  padding: 32px 48px 160px 48px !important;
-  box-sizing: border-box !important;
+#top-menu-search .search-bar--input {
+  background-color: rgba(0,0,0,0.22) !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
+  color: #fff !important;
+  border-radius: 5px !important;
 }
+#top-menu-search .search-bar--input::placeholder { color: rgba(255,255,255,0.45) !important; }
 
-/* panel-inner gets padding reset so our card gutters are clean  */
-.tz-wp-redesign .work-packages--panel-inner {
-  padding: 0 !important;
-  width: 100% !important;
-}
-
-/* ── 4. SECTION CARDS ──────────────────────────────────────────
-   White cards with visible shadow so they float on the gray bg. */
-.tz-wp-redesign .attributes-group {
-  background: #ffffff !important;
-  border: 1.5px solid #c5d5e8 !important;
-  border-radius: 18px !important;
-  box-shadow: 0 2px 8px rgba(15, 35, 75, 0.07),
-              0 8px 28px rgba(15, 35, 75, 0.11) !important;
-  margin: 0 0 20px 0 !important;
-  overflow: visible !important;
-  position: relative !important;
-}
-
-/* ── 5. SECTION HEADINGS ───────────────────────────────────────
-   Plain large bold text — no colored bar, no uppercase.          */
-.tz-wp-redesign .attributes-group--header {
+#header .button, #header button,
+.op-app-header .button {
+  color: rgba(255,255,255,0.85) !important;
   background: transparent !important;
-  border-bottom: 1.5px solid #e8eef5 !important;
-  padding: 22px 32px 16px 32px !important;
-  margin: 0 !important;
-  border-radius: 18px 18px 0 0 !important;
+}
+#header .button:hover, .op-app-header .button:hover {
+  background-color: rgba(0,0,0,0.15) !important;
+  color: #fff !important;
 }
 
-.tz-wp-redesign .attributes-group--header-text {
+
+/* ── 2. ACTIVE PROJECTS PAGE → CARD GRID ───────────────────────
+   Scope: body.controller-projects.action-index                 */
+body.controller-projects.action-index .generic-table--container thead,
+body.controller-projects.action-index .generic-table--results-container thead,
+body.controller-projects.action-index table.generic-table colgroup {
+  display: none !important;
+}
+
+body.controller-projects.action-index .generic-table--results-container table.generic-table,
+body.controller-projects.action-index .generic-table--container table.generic-table {
+  display: block !important;
+  width: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  border-collapse: unset !important;
+}
+
+/* 3-column card grid */
+body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
+body.controller-projects.action-index .generic-table--container table.generic-table tbody {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 18px !important;
+  padding: 16px 0 !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+/* Each tr = a white card */
+body.controller-projects.action-index table.generic-table tbody tr {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 14px !important;
+  padding: 22px 20px !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s !important;
+  gap: 8px !important;
+  min-height: 110px !important;
+  cursor: pointer !important;
+}
+body.controller-projects.action-index table.generic-table tbody tr:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12) !important;
+  border-color: #b0c4de !important;
+  transform: translateY(-2px) !important;
+}
+
+body.controller-projects.action-index table.generic-table tbody tr td {
+  display: block !important;
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  vertical-align: unset !important;
+}
+
+/* Hide unwanted columns */
+body.controller-projects.action-index table.generic-table tbody tr td.hierarchy,
+body.controller-projects.action-index table.generic-table tbody tr td.public,
+body.controller-projects.action-index table.generic-table tbody tr td.created_at,
+body.controller-projects.action-index table.generic-table tbody tr td.latest_activity_at,
+body.controller-projects.action-index table.generic-table tbody tr td.required_disk_space {
+  display: none !important;
+}
+
+body.controller-projects.action-index table.generic-table tbody tr td.name .projects-table--name-text a,
+body.controller-projects.action-index table.generic-table tbody tr td.name a {
   font-size: 16px !important;
   font-weight: 700 !important;
-  text-transform: none !important;
-  letter-spacing: 0 !important;
-  color: #1c2d44 !important;
-  line-height: 1.3 !important;
+  color: #1a202c !important;
+  text-decoration: none !important;
+  display: block !important;
+  padding-right: 72px !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.35 !important;
+}
+body.controller-projects.action-index table.generic-table tbody tr td.name .projects-table--name-text a:hover,
+body.controller-projects.action-index table.generic-table tbody tr td.name a:hover {
+  color: #2563eb !important;
 }
 
-/* ── 6. SECTION BODY PADDING ───────────────────────────────────*/
-.tz-wp-redesign .attributes-group--content {
-  padding: 20px 32px 28px 32px !important;
+body.controller-projects.action-index table.generic-table tbody tr td.name .projects-table--hierarchy-icon {
+  display: none !important;
 }
 
-/* ── 7. SUBJECT FIELD ──────────────────────────────────────────
-   compiled CSS locks height:40px / font-size:16px on this field. */
-.tz-wp-redesign .wp-new--subject-wrapper {
+body.controller-projects.action-index table.generic-table tbody tr td.project_status {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-top: 6px !important;
+  font-size: 13px !important;
+  color: #4b5563 !important;
+}
+
+body.controller-projects.action-index table.generic-table tbody tr td.favorited {
+  position: absolute !important;
+  top: 14px !important; right: 48px !important;
+  display: block !important;
+}
+body.controller-projects.action-index table.generic-table tbody tr td.buttons {
+  position: absolute !important;
+  top: 10px !important; right: 10px !important;
+  display: block !important;
+}
+
+body.controller-projects.action-index .generic-table--container_height-100 { height: auto !important; }
+body.controller-projects.action-index .generic-table--container_visible-overflow { overflow: visible !important; }
+body.controller-projects.action-index .project-list-page { padding: 0 8px !important; }
+
+@media (max-width: 1100px) {
+  body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
+  body.controller-projects.action-index .generic-table--container table.generic-table tbody {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 640px) {
+  body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
+  body.controller-projects.action-index .generic-table--container table.generic-table tbody {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+
+/* ── 3. PRIMER DIALOG — CREATE WP MODAL ────────────────────────
+   dialog#create-work-package-dialog                            */
+dialog#create-work-package-dialog {
+  --overlay-bgColor: var(--op-surface-1) !important;
+  background-color: var(--op-surface-1) !important;
+  color: var(--op-text) !important;
+}
+dialog#create-work-package-dialog .Overlay-header,
+dialog#create-work-package-dialog .Overlay-headerContentWrap {
+  background-color: var(--op-surface-1) !important;
+  border-bottom: 1px solid var(--op-border-soft) !important;
+}
+dialog#create-work-package-dialog .Overlay-title {
+  color: #fff !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+dialog#create-work-package-dialog .Overlay-body {
+  background-color: var(--op-surface-1) !important;
+  color: var(--op-text) !important;
+}
+dialog#create-work-package-dialog .Overlay-footer,
+dialog#create-work-package-dialog .Overlay-footer--divided {
+  background-color: var(--op-surface-1) !important;
+  border-top: 1px solid var(--op-border-soft) !important;
+  padding: 12px 20px !important;
+}
+dialog#create-work-package-dialog .Overlay-closeButton {
+  color: var(--op-text-muted) !important;
+  background: transparent !important;
+  border: none !important;
+}
+dialog#create-work-package-dialog .Overlay-closeButton:hover {
+  background-color: rgba(255,255,255,0.08) !important;
+  color: var(--op-text) !important;
+}
+dialog#create-work-package-dialog .Button--primary {
+  background-color: var(--op-blue) !important;
+  border-color: var(--op-blue) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  border-radius: 5px !important;
+}
+dialog#create-work-package-dialog .Button--primary:hover:not([disabled]) {
+  background-color: var(--op-blue-hover) !important;
+}
+dialog#create-work-package-dialog .Button--secondary,
+dialog#create-work-package-dialog .Button:not(.Button--primary):not(.Button--danger) {
+  background-color: transparent !important;
+  border: 1px solid var(--op-border) !important;
+  color: var(--op-text) !important;
+  border-radius: 5px !important;
+}
+dialog#create-work-package-dialog .FormControl-label,
+dialog#create-work-package-dialog label {
+  color: var(--op-text-muted) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+dialog#create-work-package-dialog input,
+dialog#create-work-package-dialog select,
+dialog#create-work-package-dialog .ng-select-container {
+  background-color: var(--op-surface-3) !important;
+  border: 1px solid var(--op-border) !important;
+  border-radius: 5px !important;
+  color: var(--op-text) !important;
+}
+dialog#create-work-package-dialog .ng-dropdown-panel {
+  background-color: var(--op-surface-2) !important;
+  border: 1px solid var(--op-border) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5) !important;
+}
+dialog#create-work-package-dialog .ng-option {
+  background-color: transparent !important;
+  color: var(--op-text) !important;
+}
+dialog#create-work-package-dialog .ng-option:hover,
+dialog#create-work-package-dialog .ng-option.ng-option-marked {
+  background-color: var(--op-surface-3) !important;
+}
+
+
+/* ── 4. CREATE WORK PACKAGE — FULL PAGE ────────────────────────
+   Scope: body.router--work-packages-full-create                */
+
+/* Green top bar on this page */
+body.router--work-packages-full-create #header,
+body.router--work-packages-full-create .op-app-header,
+body.router--work-packages-full-create #top-menu,
+body.router--work-packages-full-create .header-container {
+  background-color: var(--op-green) !important;
+}
+
+/* White page background */
+body.router--work-packages-full-create,
+body.router--work-packages-full-create #main-content,
+body.router--work-packages-full-create .content-body,
+body.router--work-packages-full-create .work-packages-full-view,
+body.router--work-packages-full-create .work-packages-full-view--split-left,
+body.router--work-packages-full-create .work-packages-full-view--split-right,
+body.router--work-packages-full-create .work-packages-page--ui-view,
+body.router--work-packages-full-create .work-packages--show-view,
+body.router--work-packages-full-create .work-packages--panel-inner,
+body.router--work-packages-full-create .work-packages--panel-container,
+body.router--work-packages-full-create .work-package--details-content,
+body.router--work-packages-full-create .op-scrollable-tabs--content,
+body.router--work-packages-full-create .work-packages--storages,
+body.router--work-packages-full-create op-attachments,
+body.router--work-packages-full-create .op-attachment-list,
+body.router--work-packages-full-create .attachments {
+  background-color: #ffffff !important;
+  color: #1a202c !important;
+}
+
+body.router--work-packages-full-create .work-packages--new,
+body.router--work-packages-full-create .work-package--new-state {
+  background-color: #ffffff !important;
+  color: #1a202c !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
+  padding: 20px 28px 32px !important;
+}
+
+/* ─ 2-Column Grid ─────────────────────────────────────────────── */
+body.router--work-packages-full-create .work-package--single-view {
+  display: grid !important;
+  grid-template-columns: 1fr 320px !important;
+  gap: 14px 16px !important;
+  align-items: start !important;
+  width: 100% !important;
+}
+
+body.router--work-packages-full-create .work-package--single-view > .wp-new--subject-wrapper {
+  grid-column: 1 / -1 !important;
+}
+
+body.router--work-packages-full-create .wp-info-wrapper,
+body.router--work-packages-full-create .work-package--single-view > .wp-info-wrapper,
+body.router--work-packages-full-create .wp-new--type-selector,
+body.router--work-packages-full-create .work-package--type-selector {
+  display: none !important;
+}
+
+/* Project context chip — hide */
+body.router--work-packages-full-create .work-package--single-view > .attributes-group.-project-context {
+  display: none !important;
+}
+
+/* Description — left column, fixed min-height, no ghost box */
+body.router--work-packages-full-create .work-package--single-view > .attributes-group.description-group {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+  align-self: start !important;
+  min-height: 480px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+}
+
+/* CKEditor fills the description card */
+body.router--work-packages-full-create .attributes-group.description-group .attributes-group--content {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
   padding: 0 !important;
+}
+body.router--work-packages-full-create .attributes-group.description-group .op-ckeditor--wrapper,
+body.router--work-packages-full-create .attributes-group.description-group .ck-editor {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+body.router--work-packages-full-create .attributes-group.description-group .ck-editor__main,
+body.router--work-packages-full-create .attributes-group.description-group .ck-editor__editable {
+  flex: 1 !important;
+  min-height: 380px !important;
+}
+
+body.router--work-packages-full-create .work-package--single-view > .attributes-group:not(.description-group):not(.-project-context) {
+  grid-column: 2 !important;
+  margin: 0 !important;
+}
+
+/* Stray non-group items (attachments) — full width at bottom */
+body.router--work-packages-full-create .work-package--single-view > *:not(.wp-new--subject-wrapper):not(.wp-info-wrapper):not(.attributes-group) {
+  grid-column: 1 / -1 !important;
+  order: 100 !important;
+}
+
+/* ─ Subject input — card style ────────────────────────────────── */
+body.router--work-packages-full-create .wp-new--subject-wrapper {
+  background: #ffffff !important;
+  border: 1px solid #dde3ed !important;
+  border-radius: 10px !important;
+  padding: 14px 18px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07) !important;
   margin-bottom: 0 !important;
 }
-
-.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--active-field.subject,
-.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--active-field {
-  width: 100% !important;
-}
-
-.tz-wp-redesign .wp-new--subject-wrapper input[type="text"],
-.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--active-field.subject .inline-edit--field,
-.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--field {
-  height: auto !important;
-  min-height: 52px !important;
-  font-size: 22px !important;
-  font-weight: 600 !important;
-  line-height: 1.3 !important;
-  color: #1c2d44 !important;
-  border: 2px solid #ccd8e8 !important;
-  border-radius: 10px !important;
-  padding: 12px 18px !important;
-  background: #f8fafc !important;
-  box-sizing: border-box !important;
-  width: 100% !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
-}
-
-.tz-wp-redesign .wp-new--subject-wrapper input[type="text"]:focus,
-.tz-wp-redesign .wp-new--subject-wrapper .inline-edit--field:focus {
-  border-color: #3b7dd8 !important;
-  box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.18) !important;
-  background: #ffffff !important;
-  outline: none !important;
-}
-
-/* Subject card extra padding */
-.tz-wp-redesign .attributes-group:has(.wp-new--subject-wrapper) .attributes-group--content {
-  padding: 24px 32px 28px 32px !important;
-}
-
-/* ── 8. DESCRIPTION / EDITOR AREA ─────────────────────────────*/
-.tz-wp-redesign .ck-editor__editable,
-.tz-wp-redesign .op-ckeditor--wrapper .ck-content {
-  min-height: 180px !important;
-  border-radius: 0 0 8px 8px !important;
-  border-color: #ccd8e8 !important;
-}
-
-.tz-wp-redesign .ck-editor__top .ck-toolbar {
-  border-radius: 8px 8px 0 0 !important;
-  border-color: #ccd8e8 !important;
-  background: #f4f7fb !important;
-}
-
-/* ── 9. STANDARD INPUTS & SELECTS ─────────────────────────────
-   Target inline-edit fields and attribute inputs specifically.   */
-.tz-wp-redesign .inline-edit--field:not(.subject),
-.tz-wp-redesign .inline-edit--active-field:not(.subject) input:not([type="checkbox"]):not([type="radio"]),
-.tz-wp-redesign .inline-edit--active-field:not(.subject) select {
-  height: 42px !important;
-  border: 1.5px solid #ccd8e8 !important;
-  border-radius: 8px !important;
-  padding: 0 12px !important;
-  font-size: 14px !important;
-  background: #f8fafc !important;
-  color: #1c2d44 !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
-  box-sizing: border-box !important;
-}
-
-.tz-wp-redesign .inline-edit--field:not(.subject):focus,
-.tz-wp-redesign .inline-edit--active-field:not(.subject) input:not([type="checkbox"]):not([type="radio"]):focus {
-  border-color: #3b7dd8 !important;
-  box-shadow: 0 0 0 3px rgba(59, 125, 216, 0.18) !important;
-  background: #ffffff !important;
-  outline: none !important;
-}
-
-/* ── 10. ATTRIBUTE LABELS ──────────────────────────────────────*/
-.tz-wp-redesign .attributes-group .wp-attribute-label,
-.tz-wp-redesign .attributes-group .inline-edit--label {
-  font-size: 12.5px !important;
-  font-weight: 600 !important;
-  color: #6b7e96 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.04em !important;
-  margin-bottom: 4px !important;
-}
-
-/* ── 11. STICKY FOOTER (Save / Cancel) ─────────────────────────
-   Glassmorphism bar pinned to bottom of viewport.                */
-.tz-wp-redesign ~ * .submit-notification-balloon,
-.tz-wp-redesign .work-package--new-submit-button,
-op-submit-bar,
-[class*="submitBar"],
-.tz-wp-redesign .edit-actions--save,
-.tz-wp-redesign .wp-toolbar--bar {
-  position: sticky !important;
-  bottom: 0 !important;
-  z-index: 200 !important;
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border-top: 1.5px solid #dce6f0 !important;
-  padding: 14px 32px !important;
-  border-radius: 0 !important;
-  box-shadow: 0 -4px 20px rgba(15, 35, 75, 0.10) !important;
-}
-
-/* Primary Save button */
-.tz-wp-redesign button[data-test-selector="wp-new-save-button"],
-.tz-wp-redesign .wp-toolbar--save-button,
-.tz-wp-redesign button.button.-highlight,
-.tz-wp-redesign a.button.-highlight {
-  background: #2563eb !important;
-  color: #ffffff !important;
-  border: none !important;
-  border-radius: 8px !important;
-  height: 42px !important;
-  padding: 0 24px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  transition: background 0.15s ease, box-shadow 0.15s ease !important;
-}
-
-.tz-wp-redesign button[data-test-selector="wp-new-save-button"]:hover,
-.tz-wp-redesign button.button.-highlight:hover {
-  background: #1d4ed8 !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
-}
-
-/* Cancel / secondary button */
-.tz-wp-redesign button.button:not(.-highlight):not([data-test-selector="wp-new-save-button"]),
-.tz-wp-redesign a.button:not(.-highlight) {
+body.router--work-packages-full-create .wp-new--subject-wrapper input,
+body.router--work-packages-full-create .wp-new--subject-wrapper .inline-edit--field,
+body.router--work-packages-full-create .wp-new--subject-wrapper .inline-edit--display-field {
   background: transparent !important;
-  color: #4a6080 !important;
-  border: 1.5px solid #c5d5e8 !important;
-  border-radius: 8px !important;
-  height: 42px !important;
-  padding: 0 20px !important;
-  font-size: 14px !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: #1a202c !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.3px !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  width: 100% !important;
+}
+body.router--work-packages-full-create .wp-new--subject-wrapper input::placeholder {
+  color: #a0aec0 !important;
+}
+body.router--work-packages-full-create .wp-new--subject-wrapper input:focus {
+  outline: none !important;
+}
+
+/* ─ Attribute group cards — white, shadowed ───────────────────── */
+body.router--work-packages-full-create .attributes-group {
+  background: #ffffff !important;
+  border: 1px solid #dde3ed !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.03) !important;
+}
+body.router--work-packages-full-create .attributes-group--header {
+  background: #f7f9fc !important;
+  border-bottom: 1px solid #e8edf4 !important;
+  padding: 11px 18px !important;
+  margin: 0 !important;
+}
+body.router--work-packages-full-create .attributes-group--header-text {
+  color: #5a6478 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+}
+body.router--work-packages-full-create .attributes-group--content,
+body.router--work-packages-full-create .attributes-group--content-inner {
+  padding: 14px 18px 18px !important;
+}
+
+/* ─ Field labels ──────────────────────────────────────────────── */
+body.router--work-packages-full-create .attributes-key-value--key,
+body.router--work-packages-full-create .wp-attribute-label,
+body.router--work-packages-full-create .inline-edit--label {
+  color: #64748b !important;
+  font-size: 12px !important;
   font-weight: 500 !important;
+}
+
+/* ─ Inline-edit fields ────────────────────────────────────────── */
+body.router--work-packages-full-create .inline-edit--display-field {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 5px !important;
+  color: #1a202c !important;
+  padding: 6px 10px !important;
+  min-height: 32px !important;
+  font-size: 13px !important;
   cursor: pointer !important;
-  transition: background 0.15s ease !important;
+  transition: border-color 0.15s !important;
+}
+body.router--work-packages-full-create .inline-edit--display-field:hover {
+  border-color: var(--op-blue) !important;
+}
+body.router--work-packages-full-create .inline-edit--field,
+body.router--work-packages-full-create .inline-edit--active-field input:not([type="checkbox"]):not([type="radio"]),
+body.router--work-packages-full-create .inline-edit--active-field select,
+body.router--work-packages-full-create .inline-edit--active-field textarea {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e0 !important;
+  border-radius: 5px !important;
+  color: #1a202c !important;
+  font-size: 13px !important;
+}
+body.router--work-packages-full-create .inline-edit--active-field input:focus {
+  border-color: var(--op-blue) !important;
+  box-shadow: 0 0 0 2px rgba(12,102,228,0.12) !important;
+  outline: none !important;
 }
 
-.tz-wp-redesign button.button:not(.-highlight):hover {
-  background: #f0f4fa !important;
+/* ─ ng-select ─────────────────────────────────────────────────── */
+body.router--work-packages-full-create .ng-select .ng-select-container,
+body.router--work-packages-full-create .ng-select-container {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e0 !important;
+  border-radius: 5px !important;
+  color: #1a202c !important;
+  min-height: 32px !important;
 }
-
-/* ── 12. SCROLLBAR POLISH ──────────────────────────────────────*/
-.tz-wp-redesign *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+body.router--work-packages-full-create .ng-select.ng-select-focused .ng-select-container {
+  border-color: var(--op-blue) !important;
+  box-shadow: 0 0 0 2px rgba(12,102,228,0.12) !important;
 }
-.tz-wp-redesign *::-webkit-scrollbar-track {
-  background: transparent;
-}
-.tz-wp-redesign *::-webkit-scrollbar-thumb {
-  background: #c1cfe0;
-  border-radius: 4px;
-}
-.tz-wp-redesign *::-webkit-scrollbar-thumb:hover {
-  background: #9ab0c8;
-}
-
-/* ── 13. TYPE BADGE (Work Package type chip) ───────────────────*/
-.tz-wp-redesign .wp-type-icon,
-.tz-wp-redesign .-type-chooser {
+body.router--work-packages-full-create .ng-select .ng-value-label { color: #1a202c !important; }
+body.router--work-packages-full-create .ng-select .ng-placeholder { color: #a0aec0 !important; }
+body.router--work-packages-full-create .ng-dropdown-panel {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 6px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+body.router--work-packages-full-create .ng-dropdown-panel .ng-option {
+  background-color: transparent !important;
+  color: #1a202c !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+}
+body.router--work-packages-full-create .ng-dropdown-panel .ng-option:hover,
+body.router--work-packages-full-create .ng-dropdown-panel .ng-option.ng-option-marked {
+  background-color: #f1f5f9 !important;
+}
+body.router--work-packages-full-create .ng-dropdown-panel .ng-option.ng-option-selected {
+  background-color: #eff6ff !important;
+  color: var(--op-blue) !important;
+}
+
+/* ─ CKEditor ──────────────────────────────────────────────────── */
+body.router--work-packages-full-create .ck-editor__editable,
+body.router--work-packages-full-create .op-ckeditor--wrapper .ck-content {
+  background-color: #ffffff !important;
+  color: #1a202c !important;
+  border-color: #e2e8f0 !important;
+  min-height: 340px !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+}
+body.router--work-packages-full-create .ck-toolbar,
+body.router--work-packages-full-create .op-ckeditor--wrapper .ck-toolbar {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+body.router--work-packages-full-create .ck-toolbar .ck-button { color: #64748b !important; }
+body.router--work-packages-full-create .ck-toolbar .ck-button:hover {
+  background-color: #e2e8f0 !important;
+  color: #1a202c !important;
+}
+body.router--work-packages-full-create .ck-toolbar .ck-button.ck-on {
+  background-color: var(--op-blue) !important;
+  color: #fff !important;
+}
+
+/* ─ Save / Cancel — inline, right-aligned after attachments ──── */
+body.router--work-packages-full-create .work-packages--details-toolbar-container,
+body.router--work-packages-full-create .work-packages--edit-actions {
+  background-color: transparent !important;
+  border-top: none !important;
+  padding: 20px 0 8px !important;
+  position: static !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-save,
+body.router--work-packages-full-create button[data-test-selector="wp-new-save-button"] {
+  background-color: var(--op-blue) !important;
+  border: 1px solid var(--op-blue) !important;
+  border-radius: 5px !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  padding: 8px 24px !important;
+  cursor: pointer !important;
+  order: 2 !important;
+}
+body.router--work-packages-full-create #work-packages--edit-actions-save:hover,
+body.router--work-packages-full-create button[data-test-selector="wp-new-save-button"]:hover {
+  background-color: var(--op-blue-hover) !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-cancel {
+  background-color: transparent !important;
+  border: 1px solid #cbd5e0 !important;
+  border-radius: 5px !important;
+  color: #4a5568 !important;
+  font-size: 14px !important;
+  padding: 8px 24px !important;
+  cursor: pointer !important;
+  order: 1 !important;
+}
+body.router--work-packages-full-create #work-packages--edit-actions-cancel:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+}
+
+body.router--work-packages-full-create #work-packages--edit-actions-save .button--icon,
+body.router--work-packages-full-create #work-packages--edit-actions-cancel .button--icon {
+  display: none !important;
+}
+
+/* ─ Attachment section — no top gap ──────────────────────────── */
+body.router--work-packages-full-create .work-packages--storages,
+body.router--work-packages-full-create op-attachments,
+body.router--work-packages-full-create .op-attachment-list {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+body.router--work-packages-full-create .op-attachment-list--header,
+body.router--work-packages-full-create .attachments--header {
+  color: #5a6478 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.07em !important;
+  padding: 6px 0 6px !important;
+  background: transparent !important;
+}
+body.router--work-packages-full-create .op-attachment-list--upload-area,
+body.router--work-packages-full-create .dragzone {
+  background-color: #ffffff !important;
+  border: 2px dashed #c8d0dc !important;
+  border-radius: 8px !important;
+  color: #94a3b8 !important;
+  transition: border-color 0.15s !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important;
+}
+body.router--work-packages-full-create .op-attachment-list--upload-area:hover,
+body.router--work-packages-full-create .dragzone.drag-active {
+  border-color: var(--op-blue) !important;
+  background-color: #eff6ff !important;
+}
+body.router--work-packages-full-create .op-attachment-list--attach-file-link {
+  color: var(--op-blue) !important;
+}
+
+/* ─ Responsive — sidebar hidden on this page, collapse at 700px  */
+@media (max-width: 700px) {
+  body.router--work-packages-full-create .work-package--single-view {
+    grid-template-columns: 1fr !important;
+  }
+  body.router--work-packages-full-create .work-package--single-view > .attributes-group:not(.description-group):not(.-project-context),
+  body.router--work-packages-full-create .work-package--single-view > .attributes-group.description-group {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
 }
