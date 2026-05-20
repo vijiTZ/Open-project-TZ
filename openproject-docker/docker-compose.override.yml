@@ -1,21 +1,26 @@
-# Mounts our CSS file and enterprise unlock initializer persistently.
+# Mounts our CSS file, enterprise unlock initializer, and the CSS-injector
+# middleware that adds <link href="/custom-redesign.css"> to every HTML response.
 
 services:
   web:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
   worker:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
   cron:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
   seeder:
     volumes:
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
