@@ -180,10 +180,12 @@
     });
     pageHeaderObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Safety net — stop after 10s even if PageHeader never shows up,
+    // Safety net — stop after 30s even if PageHeader never shows up,
     // so we don't leak a forever-running observer on pages where the
-    // header simply doesn't exist.
-    pageHeaderObserverTimer = setTimeout(stopWatching, 10000);
+    // header simply doesn't exist. 30s (was 10s) handles slower
+    // machines and heavier Turbo render loads where the PageHeader
+    // can land later than expected.
+    pageHeaderObserverTimer = setTimeout(stopWatching, 30000);
   }
 
   if (document.readyState === "loading") {
