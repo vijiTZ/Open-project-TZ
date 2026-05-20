@@ -73,9 +73,14 @@
   // back button — this adds one that calls history.back() (with a
   // sensible fallback URL per controller). Styled by section 15 of
   // the CSS (`button.tz-back-btn`).
+  //
+  // Returns true when the work is finished (button injected, already
+  // present, or this page isn't a target). Returns false when we need
+  // to retry — body or .PageHeader isn't in the DOM yet. The bootstrap
+  // observer below keeps retrying until this returns true (or times out).
   function injectBackButton() {
     var body = document.body;
-    if (!body) return;
+    if (!body) return false; // DOM not ready — keep watching
 
     // Which controllers should get the Back button.
     // Avatars pages have slashes in their class name (e.g.
@@ -94,25 +99,25 @@
     // Bail out early if this is the user-settings admin page — it
     // contains both "admin/settings" and "users_settings" in the
     // class but the user doesn't want a back button there.
-    if (classStr.indexOf("users_settings") !== -1) return;
+    if (classStr.indexOf("users_settings") !== -1) return true;
 
     var isAvatarsSettings = classStr.indexOf("avatars") !== -1 &&
                             classStr.indexOf("admin/settings") !== -1;
     var inTarget =
       TARGETS.some(function (c) { return clsList.contains(c); }) ||
       isAvatarsSettings;
-    if (!inTarget) return;
+    if (!inTarget) return true; // not a target page — stop watching
 
     // Index pages already have their own toolbar (Filter + Action button)
     // so they don't need a back button. Also exclude the permissions
     // report page (controller-roles + action-report) — the user
     // doesn't want a back button on it.
-    if (clsList.contains("action-index")) return;
-    if (clsList.contains("controller-roles") && clsList.contains("action-report")) return;
+    if (clsList.contains("action-index")) return true;
+    if (clsList.contains("controller-roles") && clsList.contains("action-report")) return true;
 
     var header = document.querySelector(".PageHeader");
-    if (!header) return;
-    if (header.querySelector(".tz-back-btn")) return; // idempotent
+    if (!header) return false; // PageHeader not rendered yet — keep watching
+    if (header.querySelector(".tz-back-btn")) return true; // idempotent
 
     // Fallback destination per controller — used only when the browser
     // has no history (e.g. page opened directly in a new tab).
@@ -138,11 +143,47 @@
     });
 
     header.appendChild(btn);
+    return true;
+  }
+
+  // Holds the MutationObserver that retries injectBackButton() when the
+  // PageHeader is rendered asynchronously after bootstrap fires. Tracked
+  // at module scope so each turbo navigation can tear down the previous
+  // one before starting a fresh watch.
+  var pageHeaderObserver = null;
+  var pageHeaderObserverTimer = null;
+
+  function stopWatching() {
+    if (pageHeaderObserver) {
+      pageHeaderObserver.disconnect();
+      pageHeaderObserver = null;
+    }
+    if (pageHeaderObserverTimer) {
+      clearTimeout(pageHeaderObserverTimer);
+      pageHeaderObserverTimer = null;
+    }
   }
 
   function bootstrap() {
     init();
-    injectBackButton();
+
+    // Tear down any retry watcher left over from the previous page.
+    stopWatching();
+
+    if (injectBackButton()) return;
+
+    // PageHeader wasn't in the DOM yet — OpenProject renders it after
+    // turbo:render in some flows. Watch the body subtree and retry on
+    // each mutation until injectBackButton() reports done.
+    pageHeaderObserver = new MutationObserver(function () {
+      if (injectBackButton()) stopWatching();
+    });
+    pageHeaderObserver.observe(document.body, { childList: true, subtree: true });
+
+    // Safety net — stop after 10s even if PageHeader never shows up,
+    // so we don't leak a forever-running observer on pages where the
+    // header simply doesn't exist.
+    pageHeaderObserverTimer = setTimeout(stopWatching, 10000);
   }
 
   if (document.readyState === "loading") {
