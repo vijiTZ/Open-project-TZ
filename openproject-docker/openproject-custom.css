@@ -1445,3 +1445,1865 @@ fieldset.advanced-filters--container {
     justify-self: end !important;
   }
 }
+
+/* ── 5. NEW USER PAGE → CARD FORM ───────────────────────────────
+   Scope: body.controller-users.action-new
+   Goal: match the "Add Purchase Details" mock — card-style
+   section, 3-column grid, asterisk on required, green primary.
+
+   Structure rendered by OpenProject's labelled_tabular_form_for:
+     <div class="form--field [-required]">
+       <label class="form--label">Field name</label>
+       <span class="form--field-container">
+         <span class="form--text-field-container -middle">
+           <input class="form--text-field" />
+         </span>
+       </span>
+     </div>
+   We override Foundation grid-block flex defaults so the label/
+   container stack vertically and fill the cell.                  */
+
+body.controller-users.action-new #content {
+  background: #f1f3f5 !important;
+  padding: 16px 18px 28px !important;
+}
+
+body.controller-users.action-new .PageHeader,
+body.controller-users.action-new .op-page-header {
+  margin-bottom: 14px !important;
+}
+
+/* Section card + 3-column grid container.
+   minmax(0, 1fr) lets columns shrink below content min-width
+   (critical — without it the inputs push the card past viewport). */
+body.controller-users.action-new section.form--section {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 10px !important;
+  padding: 20px 22px 24px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  column-gap: 18px !important;
+  row-gap: 16px !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+body.controller-users.action-new section.form--section::before {
+  content: "User Details" !important;
+  grid-column: 1 / -1 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #111827 !important;
+  margin: 0 0 4px !important;
+  display: block !important;
+}
+
+/* Override Foundation .form--field (grid-block — flex-wrap row) → vertical stack */
+body.controller-users.action-new .form--field {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  flex-wrap: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  line-height: 1.4 !important;
+}
+
+/* Label above input, full width, no float, no min-width */
+body.controller-users.action-new .form--field .form--label {
+  float: none !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex-grow: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 6px !important;
+  text-align: left !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #111827 !important;
+  line-height: 1.3 !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+/* Red asterisk on required fields. Override OP's %required-star
+   (which has padding: 0 0.325rem) with a tighter inline asterisk. */
+body.controller-users.action-new .form--field.-required .form--label::after {
+  content: " *" !important;
+  color: #ef4444 !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+  margin-left: 2px !important;
+  background: none !important;
+  display: inline !important;
+  vertical-align: baseline !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Outer field container — block layout, full cell width */
+body.controller-users.action-new .form--field .form--field-container {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex-grow: 0 !important;
+  overflow: visible !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Inner type-specific containers — critical: override .-middle max-width:350px
+   from OP's _forms.sass so inputs fill the grid cell. */
+body.controller-users.action-new .form--field .form--text-field-container,
+body.controller-users.action-new .form--field .form--select-container,
+body.controller-users.action-new .form--field .form--text-field-container.-middle,
+body.controller-users.action-new .form--field .form--select-container.-middle,
+body.controller-users.action-new .form--field .form--text-field-container.-slim,
+body.controller-users.action-new .form--field .form--select-container.-slim,
+body.controller-users.action-new .form--field .form--text-field-container.-wide,
+body.controller-users.action-new .form--field .form--select-container.-wide {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: none !important;
+  padding: 0 !important;
+}
+
+/* Inputs and selects */
+body.controller-users.action-new .form--field input.form--text-field,
+body.controller-users.action-new .form--field select.form--select {
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  box-sizing: border-box !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  padding: 0 12px !important;
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+body.controller-users.action-new .form--field input.form--text-field:focus,
+body.controller-users.action-new .form--field select.form--select:focus {
+  border-color: var(--op-blue) !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.15) !important;
+  outline: none !important;
+}
+body.controller-users.action-new .form--field input.form--text-field::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Checkbox row — span all 3 columns. Checkbox container goes FIRST,
+   label SECOND, so visually we get [☐ Administrator] on one line.
+   The OpenProject markup is <label><field-container><checkbox/></field-container>,
+   so we flip order on the two flex children. */
+body.controller-users.action-new .form--field:has(input[type="checkbox"]) {
+  grid-column: 1 / -1 !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 2px !important;
+}
+body.controller-users.action-new .form--field:has(input[type="checkbox"]) .form--label {
+  order: 2 !important;
+  width: auto !important;
+  margin: 0 !important;
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  color: #111827 !important;
+}
+body.controller-users.action-new .form--field:has(input[type="checkbox"]):not(.-required) .form--label::after {
+  content: "" !important;
+}
+body.controller-users.action-new .form--field:has(input[type="checkbox"]) .form--field-container {
+  order: 1 !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
+body.controller-users.action-new .form--field:has(input[type="checkbox"]) .form--check-box-container {
+  width: auto !important;
+  max-width: none !important;
+  display: inline-block !important;
+  padding: 0 !important;
+}
+body.controller-users.action-new .form--field:has(input[type="checkbox"]) input[type="checkbox"].form--check-box {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+  accent-color: var(--op-green) !important;
+}
+
+/* Button row — green primary like the mock's Save */
+body.controller-users.action-new form > p:last-of-type {
+  display: flex !important;
+  gap: 10px !important;
+  margin: 4px 0 0 !important;
+  padding: 0 2px !important;
+}
+body.controller-users.action-new form > p:last-of-type button.-primary {
+  background-color: var(--op-green) !important;
+  border: 1px solid var(--op-green) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 18px !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+body.controller-users.action-new form > p:last-of-type button.-primary:hover {
+  background-color: #155032 !important;
+  border-color: #155032 !important;
+}
+body.controller-users.action-new form > p:last-of-type button.-primary .icon-checkmark {
+  display: none !important;
+}
+
+
+/* ── 6. TZ TABLE — REUSABLE STYLING FOR EVERY .generic-table ──────
+   OpenProject ships nearly every admin index page on the same markup:
+     <div class="generic-table--container">
+       <div class="generic-table--results-container">
+         <table class="generic-table">
+           <thead>...</thead><tbody>...</tbody>
+         </table>
+       </div>
+       <div class="pagination">...</div>
+     </div>
+   This block styles all of them in one place: Users, Roles, Groups,
+   Placeholder users, Permissions report, Enumerations, Work-package
+   types/statuses/priorities, Custom fields, OAuth apps, etc.
+
+   The projects-index page also uses .generic-table but section 2
+   above converts its tbody into a card grid — those rules have
+   higher specificity (body.controller-projects.action-index ...) and
+   continue to win there. No conflict.
+
+   To opt any custom table into the same look, give it the class
+   `tz-table` and these rules apply.                                 */
+
+.generic-table--container,
+.tz-table-container {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  margin: 4px 0 16px !important;
+}
+
+table.generic-table,
+table.tz-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  background: #ffffff !important;
+  font-size: 13.5px !important;
+  color: #1a202c !important;
+}
+
+/* Header row — title case, not uppercase. Matches reference mock. */
+table.generic-table thead,
+table.tz-table thead {
+  background: #f9fafb !important;
+}
+table.generic-table thead th,
+table.tz-table thead th {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  padding: 14px 18px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  border-top: none !important;
+  background: transparent !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+}
+table.generic-table thead th a,
+table.tz-table thead th a {
+  color: #374151 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+}
+
+/* Drop OpenProject's per-column underline on each header cell wrapper.
+   _table.sass adds `border-bottom: 1px solid` to .generic-table--sort-header-outer
+   and .generic-table--header-outer, which renders as a short line under
+   each column title. We already have ONE clean line on `thead th` itself. */
+table.generic-table thead th .generic-table--sort-header-outer,
+table.generic-table thead th .generic-table--header-outer,
+table.generic-table thead th .generic-table--empty-header {
+  border-bottom: none !important;
+  background: transparent !important;
+}
+table.generic-table thead th .generic-table--sort-header-outer:hover,
+table.generic-table thead th .generic-table--header-outer:hover {
+  background: transparent !important;
+}
+
+/* Body rows */
+table.generic-table tbody tr,
+table.tz-table tbody tr {
+  background: #ffffff !important;
+  transition: background-color 0.12s !important;
+}
+table.generic-table tbody tr:hover,
+table.tz-table tbody tr:hover {
+  background: #f1f5f9 !important;
+}
+table.generic-table tbody tr td,
+table.tz-table tbody tr td {
+  padding: 16px 18px !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  border-top: none !important;
+  vertical-align: middle !important;
+  color: #1f2937 !important;
+  background: transparent !important;
+  font-size: 13.5px !important;
+}
+table.generic-table tbody tr:last-child td,
+table.tz-table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Links in cells — blue, underline on hover */
+table.generic-table tbody tr td a,
+table.tz-table tbody tr td a {
+  color: var(--op-blue) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+table.generic-table tbody tr td a:hover,
+table.tz-table tbody tr td a:hover {
+  text-decoration: underline !important;
+}
+
+/* Avatars (OpenProject uses .op-avatar / .principal-avatar) — round, 32px */
+table.generic-table tbody tr td .op-avatar,
+table.generic-table tbody tr td .principal-avatar,
+table.tz-table tbody tr td .op-avatar {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  vertical-align: middle !important;
+  margin-right: 10px !important;
+}
+
+/* Admin/yes-no/lock status — green text, no pill. Matches the mock. */
+table.generic-table tbody tr td.admin,
+table.generic-table tbody tr td.administrator,
+table.generic-table tbody tr td.is_admin {
+  color: #15803d !important;
+  font-weight: 600 !important;
+}
+/* OpenProject renders a checkmark icon for boolean true cells; show
+   text-only green "Yes" by hiding the icon background and keeping color. */
+table.generic-table tbody tr td.admin .icon,
+table.generic-table tbody tr td.administrator .icon,
+table.generic-table tbody tr td.is_admin .icon {
+  background: transparent !important;
+  color: #15803d !important;
+}
+/* Status / role column — also green plain text (override prior pill rule) */
+table.generic-table tbody tr td.status .icon-status,
+table.generic-table tbody tr td.lock,
+table.generic-table tbody tr td.status_dropdown .op-status-button {
+  display: inline-block !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: #15803d !important;
+  line-height: 1.4 !important;
+}
+
+/* Inverted styling for "locked" / "blocked" / "disabled" rows */
+table.generic-table tbody tr.locked td,
+table.generic-table tbody tr.invited td {
+  color: #94a3b8 !important;
+}
+
+/* Action column (three-dot menu, edit/delete icons) — push right, compact */
+table.generic-table tbody tr td.buttons,
+table.generic-table tbody tr td.actions,
+table.tz-table tbody tr td.actions {
+  text-align: right !important;
+  white-space: nowrap !important;
+  width: 1% !important;
+}
+table.generic-table tbody tr td.buttons a,
+table.generic-table tbody tr td.buttons button,
+table.generic-table tbody tr td.actions a,
+table.generic-table tbody tr td.actions button,
+table.tz-table tbody tr td.actions button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  margin: 0 2px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  color: #4b5563 !important;
+  background: #ffffff !important;
+  transition: background-color 0.12s, color 0.12s, border-color 0.12s !important;
+}
+table.generic-table tbody tr td.buttons a:hover,
+table.generic-table tbody tr td.buttons button:hover,
+table.generic-table tbody tr td.actions a:hover,
+table.generic-table tbody tr td.actions button:hover {
+  background: #f9fafb !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+  text-decoration: none !important;
+}
+
+/* Empty-state row */
+table.generic-table tbody tr.generic-table--empty-row td,
+table.tz-table tbody tr.tz-table--empty-row td {
+  text-align: center !important;
+  padding: 36px 14px !important;
+  color: #94a3b8 !important;
+  font-style: italic !important;
+}
+
+/* Pagination footer — green active page */
+.generic-table--container .pagination,
+.generic-table--container .op-pagination,
+.tz-table-container .pagination {
+  padding: 12px 14px !important;
+  background: #f8fafc !important;
+  border-top: 1px solid #e5e7eb !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  font-size: 13px !important;
+  color: #5a6478 !important;
+  margin: 0 !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+.generic-table--container .pagination ul,
+.generic-table--container .op-pagination--pages {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+.generic-table--container .pagination li,
+.generic-table--container .op-pagination--items li {
+  list-style: none !important;
+  margin: 0 !important;
+}
+.generic-table--container .pagination a,
+.generic-table--container .pagination .pagination--item,
+.generic-table--container .op-pagination--item {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  color: #1a202c !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  border: 1px solid transparent !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+.generic-table--container .pagination a:hover,
+.generic-table--container .op-pagination--item:hover {
+  background: #eef2f7 !important;
+  border-color: #e5e7eb !important;
+  text-decoration: none !important;
+}
+.generic-table--container .pagination .current,
+.generic-table--container .pagination .pagination--item.-active,
+.generic-table--container .op-pagination--item_current {
+  background: var(--op-green) !important;
+  color: #ffffff !important;
+  border-color: var(--op-green) !important;
+}
+.generic-table--container .pagination .disabled,
+.generic-table--container .op-pagination--item_disabled {
+  color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+}
+
+/* "Per page" selector + total count */
+.generic-table--container .pagination--range,
+.generic-table--container .pagination--options {
+  color: #5a6478 !important;
+}
+.generic-table--container .pagination--options select {
+  height: 30px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+}
+
+/* Toolbar / filters area above the table — keep on white card */
+.generic-table--container .generic-table--header-background,
+.generic-table--container .toolbar-container {
+  background: transparent !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 8px 14px !important;
+}
+
+
+/* ── 7. TZ TABLE — WORK-PACKAGE LIST ───────────────────────────────
+   The WP list view uses <table class="generic-table work-package-table">,
+   so all section 6 rules already apply to headers / rows / hover.
+   What's different: its outer wrapper is .work-package-table--container,
+   not .generic-table--container, so we need to wrap THAT in the rounded
+   card. We also avoid overflow:hidden because the WP table relies on
+   sticky <thead> + virtual scrolling; clipping breaks both.            */
+
+.work-package-table--container {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  margin: 4px 0 16px !important;
+  /* Do NOT set overflow:hidden here — would break sticky thead/scroll. */
+}
+
+/* The internal split container holds [table | timeline]. Keep it
+   transparent so the outer card's background shows through, but
+   ensure header/row borders align cleanly. */
+.work-package-table--container .work-packages-split-view--tabletimeline-content,
+.work-package-table--container .work-packages-tabletimeline--table-side {
+  background: transparent !important;
+}
+
+/* Sticky header — keep position:sticky working with our background */
+table.work-package-table thead.-sticky th {
+  background: #f9fafb !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2 !important;
+}
+
+/* The first/last cells should round with the card */
+table.work-package-table thead tr:first-child th:first-child {
+  border-top-left-radius: 12px !important;
+}
+table.work-package-table thead tr:first-child th:last-child {
+  border-top-right-radius: 12px !important;
+}
+
+/* WP "Type" cell — keep OpenProject's per-type color but drop the
+   chip background so it reads as flat colored text, matching the
+   "Yes" treatment in the Users-table reference mock.                */
+table.work-package-table tbody tr td.__hl_inline_type span,
+table.work-package-table tbody tr td.type span {
+  display: inline !important;
+  padding: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+}
+
+/* Status "dot + label" — keep the colored dot from OP, tighten spacing */
+table.work-package-table tbody tr td.status .op-status,
+table.work-package-table tbody tr td.__hl_inline_status .op-status {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-weight: 500 !important;
+  color: #1f2937 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 13px !important;
+}
+
+/* Assignee cell with avatar — keep avatar round, align name */
+table.work-package-table tbody tr td.assignee .op-avatar,
+table.work-package-table tbody tr td.assignee .op-principal {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Priority "dot + label" — same treatment as status */
+table.work-package-table tbody tr td.priority .op-priority,
+table.work-package-table tbody tr td.__hl_inline_priority {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-weight: 500 !important;
+  color: #1f2937 !important;
+}
+
+/* Footer pagination — WP uses a different markup: "(1 - 12/12)" + nav */
+.work-package-table--container .op-pagination,
+.work-packages-tabletimeline--table-side + .op-pagination,
+.op-wp-table-pagination,
+.wp--pagination {
+  padding: 12px 18px !important;
+  background: #f9fafb !important;
+  border-top: 1px solid #e5e7eb !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+  font-size: 13px !important;
+  color: #5a6478 !important;
+}
+
+/* Active page indicator → green */
+.op-pagination .op-pagination--item_current,
+.work-package-table--container .op-pagination--item_current {
+  background: var(--op-green) !important;
+  color: #ffffff !important;
+  border-color: var(--op-green) !important;
+}
+
+/* Filter / configure buttons row above the table — slight spacing */
+.work-packages--filter-container,
+.toolbar-container .filter-bar {
+  margin-bottom: 10px !important;
+}
+
+
+/* ── 8. USERS / GROUPS / PLACEHOLDER ADMIN INDEX PAGES ─────────────
+   Polishes the page chrome around the admin tables — toolbar with
+   the "+ User" button, the filter form (Status / Name / Apply /
+   Clear), and the legacy Previous/Next pagination — so the page
+   matches the professional UI of the reference mock.
+
+   Scope: any users / groups / placeholder_users / roles index page.
+   Applied via :is() so one rule covers all of them.                  */
+
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index #content {
+  background: #f1f3f5 !important;
+  padding: 16px 18px 28px !important;
+}
+
+/* Page header (h2.title + breadcrumbs) — give it room */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .title-container,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .PageHeader {
+  margin-bottom: 14px !important;
+}
+
+/* Top-right action button ("+ User" / "+ Group") — green primary */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .toolbar-items .button.-primary,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .toolbar-container .button.-primary,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index a.button.-alternative,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .toolbar a.button[href*="/new"] {
+  background-color: var(--op-green) !important;
+  border: 1px solid var(--op-green) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .toolbar a.button[href*="/new"]:hover,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .toolbar-items .button.-primary:hover {
+  background-color: #155032 !important;
+  border-color: #155032 !important;
+}
+
+/* Filter form — wrap the Status / Name / Apply / Clear row in a
+   clean card. OpenProject renders this as a <form> with
+   class "advanced-filters" or wraps fields in .form--field divs. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form.user-filter,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form.advanced-filters,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .toolbar + form,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index #content > form:first-of-type {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 18px 20px !important;
+  margin: 0 0 16px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  /* Make the form a single flex row that wraps if it needs to.
+     Every direct child (field group, buttons paragraph) sits on
+     the same baseline with consistent spacing.                  */
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 14px 20px !important;
+}
+
+/* Filter fields — flatten to a clean horizontal row.
+   Each .form--field is its own inline-flex group with label + input
+   sized to content and a tight gap.                                */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .form--field {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 auto !important;
+}
+/* Override every flex/sizing/padding/margin OpenProject puts on the
+   default .form--label so it shrinks to its text length. Otherwise
+   flex-grow:1, min-width:100px and padding-right:1rem from the
+   stock styles push the input way to the right.                    */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .form--field > .form--label {
+  float: none !important;
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+  flex-basis: auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  white-space: nowrap !important;
+  line-height: 1.4 !important;
+}
+/* Same tight sizing for the field-container wrappers — no flex
+   growth, no extra padding/margin between label and input. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .form--field > .form--field-container,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .form--field-container > .form--text-field-container,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .form--field-container > .form--select-container {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+/* All filter inputs/selects share the same width and styling
+   so the row reads as a uniform set of controls. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form input.form--text-field,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form select.form--select {
+  height: 36px !important;
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  padding: 0 10px !important;
+  font-size: 13.5px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  transition: border-color 0.12s, box-shadow 0.12s !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form input.form--text-field:focus,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form select.form--select:focus {
+  border-color: var(--op-blue) !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.12) !important;
+  outline: none !important;
+}
+
+/* Apply / Clear buttons row — sits at the END of the flex form,
+   so they wrap to the next line as a pair if all fields fill
+   the first row, or stay inline when there's space.            */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form p:last-of-type,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .buttons {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .button.-highlight,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form button[type="submit"],
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form input[type="submit"] {
+  background-color: var(--op-green) !important;
+  border: 1px solid var(--op-green) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  height: 36px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  box-shadow: none !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form .button.-highlight:hover,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form button[type="submit"]:hover {
+  background-color: #155032 !important;
+  border-color: #155032 !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form a.button {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #374151 !important;
+  border-radius: 8px !important;
+  padding: 8px 14px !important;
+  height: 36px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index form a.button:hover {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+
+/* Administrator "checkmark icon" → render as green "Yes" text.
+   OP renders <span class="icon icon-yes"></span> in the admin column.
+   Hide the icon glyph and inject "Yes" via ::after. */
+body.controller-users.action-index table.generic-table td.admin,
+body.controller-users.action-index table.generic-table td.administrator {
+  color: #15803d !important;
+  font-weight: 600 !important;
+}
+body.controller-users.action-index table.generic-table td.admin .icon-yes,
+body.controller-users.action-index table.generic-table td.administrator .icon-yes,
+body.controller-users.action-index table.generic-table td.admin span[title*="Yes"],
+body.controller-users.action-index table.generic-table td.administrator span[title*="Yes"] {
+  font-size: 0 !important;
+  background: transparent !important;
+  color: #15803d !important;
+}
+body.controller-users.action-index table.generic-table td.admin .icon-yes::before,
+body.controller-users.action-index table.generic-table td.administrator .icon-yes::before,
+body.controller-users.action-index table.generic-table td.admin span[title*="Yes"]::before,
+body.controller-users.action-index table.generic-table td.administrator span[title*="Yes"]::before {
+  content: "Yes" !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: #15803d !important;
+}
+
+/* Legacy pagination — Previous / 1 / Next / Per page: 20 100 */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination {
+  margin: 0 !important;
+  padding: 12px 18px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-top: none !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+  font-size: 13px !important;
+  color: #5a6478 !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination a,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination span {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+  color: #1f2937 !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  border: 1px solid transparent !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination a:hover {
+  background: #eef2f7 !important;
+  border-color: #e5e7eb !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .current {
+  background: var(--op-green) !important;
+  color: #ffffff !important;
+  border-color: var(--op-green) !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--range,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--summary {
+  background: transparent !important;
+  border: none !important;
+  color: #5a6478 !important;
+}
+/* "Per page: 20 100" — push to the right, style the active number */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--options {
+  margin-left: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--options a.pagination--per-page,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--options .pagination--per-page-link {
+  min-width: 36px !important;
+  height: 28px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--options .pagination--active-per-page,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .pagination .pagination--options span.pagination--per-page {
+  min-width: 36px !important;
+  height: 28px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  background: var(--op-blue) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+
+/* ── 9. USERS TABLE → SELECT-CHECKBOX COLUMN ────────────────────
+   Styles the leading :select column injected by the
+   users_table_checkbox.rb initializer. Compact width, centered
+   checkbox, no header text — matches the reference mock.        */
+
+body.controller-users.action-index table.generic-table thead th:first-child,
+body.controller-users.action-index table.generic-table tbody td.tz-select-cell {
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  text-align: center !important;
+  padding-left: 14px !important;
+  padding-right: 4px !important;
+}
+
+/* Center the master checkbox inside its header cell */
+body.controller-users.action-index table.generic-table thead th:first-child .generic-table--sort-header-outer,
+body.controller-users.action-index table.generic-table thead th:first-child .generic-table--sort-header,
+body.controller-users.action-index table.generic-table thead th:first-child .generic-table--sort-header > span {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+/* The checkbox itself — bigger hit target, green accent */
+body.controller-users.action-index input.tz-master-checkbox,
+body.controller-users.action-index input.tz-user-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  accent-color: var(--op-green) !important;
+  vertical-align: middle !important;
+}
+
+/* Hide any leftover icon glyph rendered by OP's checked_image helper
+   if it bleeds into the cell — defensive only. */
+body.controller-users.action-index td.tz-select-cell .icon-checkmark {
+  display: none !important;
+}
+
+
+/* ── 10. TZ TABLE COMPONENT (tz_table.js) → cell + footer helpers ─
+   Styling for the markup produced by TzTable.mount(). The outer
+   .tz-table-container and table.tz-table classes are already
+   styled in section 6. This block fills in the helper classes
+   (avatars, yes/no, badges, action buttons, footer pagination)
+   that the JS component emits.                                    */
+
+/* Avatar cell: circle initial + name */
+.tz-cell-avatar {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+.tz-avatar {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: #e5e7eb !important;
+  color: #374151 !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  flex: 0 0 32px !important;
+}
+
+/* Yes / No */
+.tz-cell-yes {
+  color: #15803d !important;
+  font-weight: 600 !important;
+}
+.tz-cell-no {
+  color: #9ca3af !important;
+  font-weight: 500 !important;
+}
+
+/* Badge */
+.tz-cell-badge {
+  display: inline-block !important;
+  padding: 3px 10px !important;
+  border-radius: 999px !important;
+  background: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+  color: #065f46 !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+/* Action icon buttons rendered by type:'actions' cells */
+.tz-action-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  margin: 0 2px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #4b5563 !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+.tz-action-btn:hover {
+  background: #f9fafb !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+/* Footer: summary + pager on a single light-gray row */
+.tz-table-container .tz-table-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 12px 18px !important;
+  background: #f9fafb !important;
+  border-top: 1px solid #e5e7eb !important;
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+  font-size: 13px !important;
+  color: #4b5563 !important;
+}
+.tz-table-summary {
+  color: #6b7280 !important;
+}
+.tz-table-pager {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+.tz-page-size {
+  height: 32px !important;
+  padding: 0 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid #e5e7eb !important;
+  background: #ffffff !important;
+  font-size: 13px !important;
+  color: #1f2937 !important;
+}
+.tz-page-prev,
+.tz-page-next {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #4b5563 !important;
+  font-size: 16px !important;
+  cursor: pointer !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+.tz-page-prev:hover:not(:disabled),
+.tz-page-next:hover:not(:disabled) {
+  background: #f9fafb !important;
+  border-color: #d1d5db !important;
+}
+.tz-page-prev:disabled,
+.tz-page-next:disabled {
+  color: #cbd5e1 !important;
+  cursor: not-allowed !important;
+}
+.tz-page-current {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 60px !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  border-radius: 6px !important;
+  background: var(--op-green) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+/* Master + per-row checkbox accent */
+.tz-master-checkbox,
+.tz-row-checkbox {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  accent-color: var(--op-green) !important;
+}
+
+
+/* ── 11. USERS & PERMISSIONS — PROFESSIONAL ADMIN PAGES ──────────
+   Covers every page reachable from the "Users and permissions"
+   admin sidebar: Users settings, Users, Placeholder users, Groups,
+   Roles and permissions, Permissions report, Avatars.
+
+   Scope is opt-in via body classes so we don't accidentally
+   restyle the project-level UI:
+     - body.controller-users:not(.action-new)/ .controller-groups / .controller-roles
+     - body.controller-placeholder_users:not(.action-index) / .controller-avatars
+     - body[class*="admin/settings"]  (Users settings,
+       Groups settings, etc — Rails slash→dash in body class)
+     - body[class*="controller-permissions"]    (Permissions report)
+   Index-page table styling is already handled in sections 6/8;
+   this block focuses on FORM / SETTINGS pages.                    */
+
+body.controller-users:not(.action-new):not(.action-index) #content,
+body.controller-groups:not(.action-index) #content,
+body.controller-roles:not(.action-index) #content,
+body.controller-placeholder_users:not(.action-index) #content,
+body.controller-avatars:not(.action-index) #content,
+body[class*="admin/settings"] #content,
+body[class*="controller-permissions"] #content {
+  background: #f1f3f5 !important;
+  padding: 16px 18px 28px !important;
+}
+
+/* Form sections rendered as white cards.
+   OpenProject uses <fieldset class="form--fieldset"> and
+   <section class="form--section"> interchangeably on settings
+   pages — style both the same way.                              */
+body.controller-users:not(.action-new):not(.action-index) fieldset.form--fieldset,
+body.controller-users:not(.action-new):not(.action-index) section.form--section,
+body.controller-groups:not(.action-index) fieldset.form--fieldset,
+body.controller-groups:not(.action-index) section.form--section,
+body.controller-roles:not(.action-index) fieldset.form--fieldset,
+body.controller-roles:not(.action-index) section.form--section,
+body.controller-placeholder_users:not(.action-index) fieldset.form--fieldset,
+body.controller-placeholder_users:not(.action-index) section.form--section,
+body.controller-avatars:not(.action-index) fieldset.form--fieldset,
+body.controller-avatars:not(.action-index) section.form--section,
+body[class*="admin/settings"] fieldset.form--fieldset,
+body[class*="admin/settings"] section.form--section,
+body[class*="controller-permissions"] fieldset.form--fieldset,
+body[class*="controller-permissions"] section.form--section {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 20px 24px !important;
+  margin: 0 0 16px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Section legend / title — replace the all-uppercase tiny label
+   with a clean bold dark heading.
+   To get the title INSIDE the card (not overlapping its top border),
+   we use absolute positioning: the fieldset reserves extra padding-
+   top for the title, then the legend is absolutely placed at the
+   top-left of the card content area. Float-based approaches pushed
+   the first form--field to the wrong place — absolute positioning
+   keeps siblings untouched.                                       */
+body.controller-users:not(.action-new):not(.action-index) fieldset.form--fieldset > legend,
+body.controller-groups:not(.action-index) fieldset.form--fieldset > legend,
+body.controller-roles:not(.action-index) fieldset.form--fieldset > legend,
+body.controller-placeholder_users:not(.action-index) fieldset.form--fieldset > legend,
+body.controller-avatars:not(.action-index) fieldset.form--fieldset > legend,
+body[class*="admin/settings"] fieldset.form--fieldset > legend,
+body[class*="controller-permissions"] fieldset.form--fieldset > legend {
+  position: absolute !important;
+  top: 18px !important;
+  left: 24px !important;
+  right: 24px !important;
+  width: auto !important;
+  float: none !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  display: block !important;
+}
+
+/* h3 section-title (for <section class="form--section">) — flows
+   naturally as a normal block, no absolute positioning needed. */
+body.controller-users:not(.action-new):not(.action-index) section.form--section > h3.form--section-title,
+body.controller-groups:not(.action-index) section.form--section > h3.form--section-title,
+body.controller-roles:not(.action-index) section.form--section > h3.form--section-title,
+body.controller-placeholder_users:not(.action-index) section.form--section > h3.form--section-title,
+body.controller-avatars:not(.action-index) section.form--section > h3.form--section-title,
+body[class*="admin/settings"] section.form--section > h3.form--section-title,
+body[class*="controller-permissions"] section.form--section > h3.form--section-title {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #111827 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  padding: 0 !important;
+  margin: 0 0 14px !important;
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+/* Make fieldset a positioning context and reserve room for the
+   absolutely-positioned legend. */
+body.controller-users:not(.action-new):not(.action-index) fieldset.form--fieldset,
+body.controller-groups:not(.action-index) fieldset.form--fieldset,
+body.controller-roles:not(.action-index) fieldset.form--fieldset,
+body.controller-placeholder_users:not(.action-index) fieldset.form--fieldset,
+body.controller-avatars:not(.action-index) fieldset.form--fieldset,
+body[class*="admin/settings"] fieldset.form--fieldset,
+body[class*="controller-permissions"] fieldset.form--fieldset {
+  position: relative !important;
+  padding-top: 56px !important;
+}
+
+/* Form field rows — labels left at a fixed width, inputs right.
+   Foundation grid-block default. Tighten the gap & alignment.    */
+body.controller-users:not(.action-new):not(.action-index) .form--field,
+body.controller-groups:not(.action-index) .form--field,
+body.controller-roles:not(.action-index) .form--field,
+body.controller-placeholder_users:not(.action-index) .form--field,
+body.controller-avatars:not(.action-index) .form--field,
+body[class*="admin/settings"] .form--field,
+body[class*="controller-permissions"] .form--field {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin: 0 0 14px !important;
+  padding: 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* Labels: fixed 220px column, dark + bold. Tightened from 260px so
+   the visual gap between short labels and their inputs/checkboxes
+   isn't jarring. The input column starts at 220 + 12 (gap) = 232px. */
+body.controller-users:not(.action-new):not(.action-index) .form--field > .form--label,
+body.controller-groups:not(.action-index) .form--field > .form--label,
+body.controller-roles:not(.action-index) .form--field > .form--label,
+body.controller-placeholder_users:not(.action-index) .form--field > .form--label,
+body.controller-avatars:not(.action-index) .form--field > .form--label,
+body[class*="admin/settings"] .form--field > .form--label,
+body[class*="controller-permissions"] .form--field > .form--label {
+  flex: 0 0 220px !important;
+  max-width: 220px !important;
+  min-width: 220px !important;
+  text-align: left !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  float: none !important;
+  line-height: 1.4 !important;
+}
+
+/* Required asterisk in red */
+body.controller-users:not(.action-new):not(.action-index) .form--field.-required > .form--label::after,
+body.controller-groups:not(.action-index) .form--field.-required > .form--label::after,
+body.controller-roles:not(.action-index) .form--field.-required > .form--label::after,
+body.controller-placeholder_users:not(.action-index) .form--field.-required > .form--label::after,
+body.controller-avatars:not(.action-index) .form--field.-required > .form--label::after,
+body[class*="admin/settings"] .form--field.-required > .form--label::after,
+body[class*="controller-permissions"] .form--field.-required > .form--label::after {
+  content: " *" !important;
+  color: #ef4444 !important;
+  background: none !important;
+  padding: 0 !important;
+  margin-left: 2px !important;
+  font-weight: 700 !important;
+}
+
+/* Field container fills the rest of the row */
+body.controller-users:not(.action-new):not(.action-index) .form--field > .form--field-container,
+body.controller-groups:not(.action-index) .form--field > .form--field-container,
+body.controller-roles:not(.action-index) .form--field > .form--field-container,
+body.controller-placeholder_users:not(.action-index) .form--field > .form--field-container,
+body.controller-avatars:not(.action-index) .form--field > .form--field-container,
+body[class*="admin/settings"] .form--field > .form--field-container,
+body[class*="controller-permissions"] .form--field > .form--field-container {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: 480px !important;
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Inputs & selects — consistent height, rounded, focus state */
+body.controller-users:not(.action-new):not(.action-index) .form--field input.form--text-field,
+body.controller-users:not(.action-new):not(.action-index) .form--field select.form--select,
+body.controller-groups:not(.action-index) .form--field input.form--text-field,
+body.controller-groups:not(.action-index) .form--field select.form--select,
+body.controller-roles:not(.action-index) .form--field input.form--text-field,
+body.controller-roles:not(.action-index) .form--field select.form--select,
+body.controller-placeholder_users:not(.action-index) .form--field input.form--text-field,
+body.controller-placeholder_users:not(.action-index) .form--field select.form--select,
+body.controller-avatars:not(.action-index) .form--field input.form--text-field,
+body.controller-avatars:not(.action-index) .form--field select.form--select,
+body[class*="admin/settings"] .form--field input.form--text-field,
+body[class*="admin/settings"] .form--field select.form--select,
+body[class*="controller-permissions"] .form--field input.form--text-field,
+body[class*="controller-permissions"] .form--field select.form--select {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  box-sizing: border-box !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  padding: 0 12px !important;
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+  font-size: 13.5px !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s, box-shadow 0.15s !important;
+}
+body.controller-users:not(.action-new):not(.action-index) .form--field input.form--text-field:focus,
+body.controller-users:not(.action-new):not(.action-index) .form--field select.form--select:focus,
+body.controller-groups:not(.action-index) .form--field input.form--text-field:focus,
+body.controller-groups:not(.action-index) .form--field select.form--select:focus,
+body.controller-roles:not(.action-index) .form--field input.form--text-field:focus,
+body.controller-roles:not(.action-index) .form--field select.form--select:focus,
+body.controller-placeholder_users:not(.action-index) .form--field input.form--text-field:focus,
+body.controller-placeholder_users:not(.action-index) .form--field select.form--select:focus,
+body.controller-avatars:not(.action-index) .form--field input.form--text-field:focus,
+body.controller-avatars:not(.action-index) .form--field select.form--select:focus,
+body[class*="admin/settings"] .form--field input.form--text-field:focus,
+body[class*="admin/settings"] .form--field select.form--select:focus,
+body[class*="controller-permissions"] .form--field input.form--text-field:focus,
+body[class*="controller-permissions"] .form--field select.form--select:focus {
+  border-color: var(--op-blue) !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.12) !important;
+  outline: none !important;
+}
+
+/* Inner field-type container — drop max-width:350px from -middle */
+body.controller-users:not(.action-new):not(.action-index) .form--field .form--text-field-container,
+body.controller-users:not(.action-new):not(.action-index) .form--field .form--select-container,
+body.controller-groups:not(.action-index) .form--field .form--text-field-container,
+body.controller-groups:not(.action-index) .form--field .form--select-container,
+body.controller-roles:not(.action-index) .form--field .form--text-field-container,
+body.controller-roles:not(.action-index) .form--field .form--select-container,
+body.controller-placeholder_users:not(.action-index) .form--field .form--text-field-container,
+body.controller-placeholder_users:not(.action-index) .form--field .form--select-container,
+body.controller-avatars:not(.action-index) .form--field .form--text-field-container,
+body.controller-avatars:not(.action-index) .form--field .form--select-container,
+body[class*="admin/settings"] .form--field .form--text-field-container,
+body[class*="admin/settings"] .form--field .form--select-container,
+body[class*="controller-permissions"] .form--field .form--text-field-container,
+body[class*="controller-permissions"] .form--field .form--select-container {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Checkboxes — green accent, sized for desktop */
+body.controller-users:not(.action-new):not(.action-index) .form--field input.form--check-box,
+body.controller-groups:not(.action-index) .form--field input.form--check-box,
+body.controller-roles:not(.action-index) .form--field input.form--check-box,
+body.controller-placeholder_users:not(.action-index) .form--field input.form--check-box,
+body.controller-avatars:not(.action-index) .form--field input.form--check-box,
+body[class*="admin/settings"] .form--field input.form--check-box,
+body[class*="controller-permissions"] .form--field input.form--check-box {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+  accent-color: var(--op-green) !important;
+}
+
+/* Helper text under fields (italic .form--field-instructions).
+   OpenProject's form helper often emits the helper text INSIDE the
+   .form--field element (alongside the input), so when .form--field
+   is flex it lands to the right of the input. We force it onto its
+   own row by giving it flex-basis: 100%, then indent its CONTENT
+   with padding-left so it aligns under the input column without
+   widening the field row.                                          */
+body.controller-users:not(.action-new):not(.action-index) .form--field-instructions,
+body.controller-groups:not(.action-index) .form--field-instructions,
+body.controller-roles:not(.action-index) .form--field-instructions,
+body.controller-placeholder_users:not(.action-index) .form--field-instructions,
+body.controller-avatars:not(.action-index) .form--field-instructions,
+body[class*="admin/settings"] .form--field-instructions,
+body[class*="controller-permissions"] .form--field-instructions {
+  flex-basis: 100% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 232px !important;
+  padding-right: 0 !important;
+  margin: 4px 0 8px 0 !important;
+  font-size: 12.5px !important;
+  color: #6b7280 !important;
+  font-style: normal !important;
+  line-height: 1.4 !important;
+}
+
+/* Save / primary buttons — green pill */
+body.controller-users:not(.action-new):not(.action-index) .button.-highlight,
+body.controller-groups:not(.action-index) .button.-highlight,
+body.controller-roles:not(.action-index) .button.-highlight,
+body.controller-placeholder_users:not(.action-index) .button.-highlight,
+body.controller-avatars:not(.action-index) .button.-highlight,
+body[class*="admin/settings"] .button.-highlight,
+body[class*="controller-permissions"] .button.-highlight {
+  background-color: var(--op-green) !important;
+  border: 1px solid var(--op-green) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 20px !important;
+  height: 38px !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+body.controller-users:not(.action-new):not(.action-index) .button.-highlight:hover,
+body.controller-groups:not(.action-index) .button.-highlight:hover,
+body.controller-roles:not(.action-index) .button.-highlight:hover,
+body.controller-placeholder_users:not(.action-index) .button.-highlight:hover,
+body.controller-avatars:not(.action-index) .button.-highlight:hover,
+body[class*="admin/settings"] .button.-highlight:hover,
+body[class*="controller-permissions"] .button.-highlight:hover {
+  background-color: #155032 !important;
+  border-color: #155032 !important;
+}
+
+/* Rich text editor (CKEditor used for consent text) — round the
+   editor container so it visually fits inside the white card. */
+body[class*="admin/settings"] .ck.ck-editor,
+body[class*="admin/settings"] .ck-editor__editable {
+  border-radius: 8px !important;
+}
+body[class*="admin/settings"] .ck.ck-toolbar {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+  background: #f9fafb !important;
+}
+body[class*="admin/settings"] .ck-editor__editable {
+  min-height: 180px !important;
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+/* Two consecutive sections sit cleanly with breathing room */
+body.controller-users:not(.action-new):not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
+body.controller-groups:not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
+body.controller-roles:not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
+body.controller-placeholder_users:not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
+body.controller-avatars:not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
+body[class*="admin/settings"] fieldset.form--fieldset + fieldset.form--fieldset,
+body[class*="controller-permissions"] fieldset.form--fieldset + fieldset.form--fieldset {
+  margin-top: 16px !important;
+}
+
+/* Page header (h2 / breadcrumb) — give it space above the cards */
+body.controller-users:not(.action-new):not(.action-index) .PageHeader,
+body.controller-groups:not(.action-index) .PageHeader,
+body.controller-roles:not(.action-index) .PageHeader,
+body.controller-placeholder_users:not(.action-index) .PageHeader,
+body.controller-avatars:not(.action-index) .PageHeader,
+body[class*="admin/settings"] .PageHeader,
+body[class*="controller-permissions"] .PageHeader {
+  margin-bottom: 14px !important;
+}
+
+/* "Permissions report" matrix table — keep it scrollable but
+   inside the white card. Avoid breaking sticky first-column. */
+body[class*="controller-permissions"] table.permissions-report,
+body[class*="controller-permissions"] table#permissions-report {
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+}
+body[class*="controller-permissions"] table.permissions-report th,
+body[class*="controller-permissions"] table#permissions-report th {
+  background: #f9fafb !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  padding: 10px 12px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+body[class*="controller-permissions"] table.permissions-report td,
+body[class*="controller-permissions"] table#permissions-report td {
+  padding: 10px 12px !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+}
+
+
+/* ── 12. ADMIN INDEX → "+ ACTION" BUTTON ON THE TITLE ROW ─────────
+   The PageHeader (with the title) and the SubHeader (with the
+   "+ User" / "+ Placeholder user" / "+ Group" action button) are
+   rendered as separate sibling components, so by default the button
+   sits on its own row below the title. We absolutely-position the
+   SubHeader's right-pane up onto the PageHeader's title row.
+
+   Primer SubHeader is CSS-Grid with areas:
+     "left middle right"
+     "bottom bottom bottom"
+   The action button lives in .SubHeader-rightPane (grid-area: right).
+   We make <sub-header> the positioning context, then offset the
+   right pane upward so it visually sits next to the page title.   */
+
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles, .controller-avatars).action-index sub-header.SubHeader {
+  position: relative !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles, .controller-avatars).action-index sub-header.SubHeader .SubHeader-rightPane {
+  position: absolute !important;
+  top: -56px !important;
+  right: 0 !important;
+  margin: 0 !important;
+  z-index: 5 !important;
+}
+
+/* Reserve room on the right of the PageHeader so the title doesn't
+   visually run under the absolutely-positioned button. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles, .controller-avatars).action-index .PageHeader,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles, .controller-avatars).action-index .PageHeader__titleContainer {
+  padding-right: 160px !important;
+}
+
+/* Strip any margin inside the right pane so the button hugs its edge. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles, .controller-avatars).action-index sub-header.SubHeader .SubHeader-rightPane > * {
+  margin: 0 !important;
+}
+
+
+/* ── 13. ADMIN INDEX → SIMPLE-FILTERS FORM ────────────────────────
+   The Status/Group/Name filter on /users, /placeholder_users and
+   similar admin pages uses a DIFFERENT class set than the rest of
+   OpenProject's forms:
+     <form>
+       <fieldset class="simple-filters--container">
+         <legend>Filters</legend>            (sr-only)
+         <ul class="simple-filters--filters">
+           <li class="simple-filters--filter">
+             <label class="simple-filters--filter-name">Status:</label>
+             <select class="simple-filters--filter-value">…</select>
+           </li>
+           …
+           <li class="simple-filters--controls">
+             <input type="submit"> <a class="button">Clear</a>
+           </li>
+         </ul>
+       </fieldset>
+     </form>
+   None of my .form--* selectors reach it; section 8 above was a
+   no-op for this exact form. This block restyles it directly.    */
+
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index fieldset.simple-filters--container {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  padding: 18px 20px !important;
+  margin: 0 0 16px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  position: relative !important;
+}
+
+/* Hide the legend "Filters" — keep it for screen readers only */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index fieldset.simple-filters--container > legend {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* The <ul> of filters becomes a single flex row that wraps. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index ul.simple-filters--filters {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 14px 20px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Each <li> filter row is a small inline-flex pair: label + control. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--filter {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+/* The label — bold, dark, sized to its text. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index label.simple-filters--filter-name {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  width: auto !important;
+  flex: 0 0 auto !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  white-space: nowrap !important;
+  line-height: 1.4 !important;
+}
+
+/* The select / input — uniform 220px wide, 36px tall, rounded. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index select.simple-filters--filter-value,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index input.simple-filters--filter-value,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .simple-filters--filter-value {
+  height: 36px !important;
+  width: 220px !important;
+  min-width: 220px !important;
+  max-width: 220px !important;
+  margin: 0 !important;
+  padding: 0 10px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  font-size: 13.5px !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.12s, box-shadow 0.12s !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index .simple-filters--filter-value:focus {
+  border-color: var(--op-blue) !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.12) !important;
+  outline: none !important;
+}
+
+/* Apply / Clear row — sits at the end of the flex .simple-filters--filters
+   list, wraps as a pair if the previous controls fill the row.
+   Important: OpenProject's stock CSS adds `margin-top: 1rem` to
+   .simple-filters--controls (a holdover from its old grid layout).
+   That margin breaks vertical centering in a flex row, so we zero
+   it out. The flex container's align-items: center handles the rest
+   without forcing row heights (which would collapse the card).    */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+/* Apply button (submit) — green primary, 36px tall to match inputs. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls input[type="submit"],
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls button[type="submit"] {
+  background-color: var(--op-green) !important;
+  border: 1px solid var(--op-green) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 0 18px !important;
+  height: 36px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  box-shadow: none !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls input[type="submit"]:hover,
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls button[type="submit"]:hover {
+  background-color: #155032 !important;
+  border-color: #155032 !important;
+}
+
+/* Clear link — white outlined secondary button. */
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls a.button {
+  background-color: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #374151 !important;
+  border-radius: 8px !important;
+  padding: 0 14px !important;
+  height: 36px !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls a.button:hover {
+  background-color: #f9fafb !important;
+  border-color: #9ca3af !important;
+  text-decoration: none !important;
+}
+
+
+/* ── 14. ROLES & PERMISSIONS LIST — SORT + DELETE BUTTONS ────────
+   The roles index uses reorder_links() (a span with 4 anchor tags
+   for "highest / higher / lower / lowest") and a separate "Delete"
+   anchor (`a.icon.icon-delete`). Stock styling is bare blue arrows
+   and a tiny trash icon — restyle as compact icon buttons.        */
+
+/* Sort column: 4-up icon-button cluster */
+body.controller-roles.action-index td span.reorder-icons {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+body.controller-roles.action-index td span.reorder-icons > a {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #4b5563 !important;
+  text-decoration: none !important;
+  transition: background-color 0.12s, border-color 0.12s, color 0.12s !important;
+}
+body.controller-roles.action-index td span.reorder-icons > a:hover {
+  background: #f3f4f6 !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+/* The actual icon glyph inside the link — sized small */
+body.controller-roles.action-index td span.reorder-icons > a > span.icon-context {
+  display: inline-flex !important;
+  width: 14px !important;
+  height: 14px !important;
+  font-size: 14px !important;
+  line-height: 14px !important;
+  background: none !important;
+}
+
+/* Delete column: trash-icon button (only the last <a class="icon icon-delete">
+   gets this treatment so we don't restyle other icon links). */
+body.controller-roles.action-index td.buttons a.icon-delete {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #6b7280 !important;
+  text-decoration: none !important;
+  transition: background-color 0.12s, border-color 0.12s, color 0.12s !important;
+}
+body.controller-roles.action-index td.buttons a.icon-delete:hover {
+  background: #fef2f2 !important;
+  border-color: #fca5a5 !important;
+  color: #dc2626 !important;
+}
+/* Make sure the trash glyph inside is visible at the right size */
+body.controller-roles.action-index td.buttons a.icon-delete::before {
+  font-size: 15px !important;
+  line-height: 1 !important;
+}
+
+
+/* ── 15. ADMIN SUB-PAGES → BACK BUTTON ───────────────────────────
+   The PageHeader on every admin sub-page under Users-and-Permissions
+   doesn't ship with a Back button. tz_bulk_select.js injects one
+   (a <button class="tz-back-btn">←  Back) into the page header at
+   load time on:
+     - controller-users          (except action-index)
+     - controller-placeholder_users (except action-index)
+     - controller-groups         (except action-index)
+     - controller-roles          (except action-index, incl. report)
+     - controller-avatars + slash-namespaced admin/settings/avatars
+     - admin/settings/users_settings (User settings page)
+   This block styles the button as a white outlined pill sitting
+   at the top-right of the header.                                  */
+
+.tz-back-btn,
+button.tz-back-btn,
+a.tz-back-btn {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+.tz-back-btn:hover,
+button.tz-back-btn:hover,
+a.tz-back-btn:hover {
+  background: #f9fafb !important;
+  border-color: #9ca3af !important;
+}
+.tz-back-btn .tz-back-arrow {
+  font-size: 16px !important;
+  line-height: 1 !important;
+}
+
+/* Make the PageHeader the positioning context wherever the back
+   button gets injected. Scoped to all the admin sub-pages the JS
+   targets — never matches on index pages, so safe.                */
+body:is(.controller-users, .controller-placeholder_users, .controller-groups, .controller-roles, .controller-avatars):not(.action-index) .PageHeader,
+body[class*="admin/settings"] .PageHeader,
+body[class*="users_settings"] .PageHeader,
+body[class*="controller-avatars"] .PageHeader {
+  position: relative !important;
+}
+
+
