@@ -3174,3 +3174,212 @@ body[class*="controller-avatars"] .PageHeader {
 }
 
 
+/* ── 16. PROJECT MEMBERS → ROW ACTIONS DROPDOWN ───────────────────
+   The "..." (three-dots) action menu on each row of the members
+   table is rendered with Primer's <action-menu> + ActionList
+   components. Two issues:
+     1. Without nowrap on the labels, "Manage roles" and "Remove
+        member" wrap onto two lines each in the right-anchored panel
+        and overlap.
+     2. Inside each item Primer renders a leading-icon <span> and a
+        label <span> side-by-side. The icon container's intrinsic
+        height + the SVG's default vertical-align can put the icon
+        slightly above or below the text baseline if the surrounding
+        line-box isn't normalised.
+
+   Design:
+     - The flex container is the LINK (.ActionList-content). It owns
+       the row's padding, gap, height and alignment.
+     - The label gets typography only — no display:flex, no width,
+       no padding. It just sits inside the flex row.
+     - The icon container gets a fixed 16×16 size and inline-flex
+       centering. The SVG inside is pinned to 16×16 explicitly so it
+       can't drift from the centerline due to inherited line-height.
+
+   Scoped to body.controller-members so this can't affect any other
+   Primer ActionMenu elsewhere in the app.                         */
+
+/* Popover panel — give it room to grow, suppress default browser
+   list bullets and indents from <ul>/<li>.                       */
+body.controller-members .ActionListWrap,
+body.controller-members .ActionList,
+body.controller-members [role="menu"]:has(.ActionList-item),
+body.controller-members [role="menu"]:has([role="menuitem"]) {
+  min-width: 200px !important;
+  padding: 6px !important;
+  margin: 0 !important;
+  list-style: none !important;
+  white-space: nowrap !important;
+}
+
+/* <li> wrappers — strip default list styling, no own padding (the
+   flex link below owns the row). Critical: no display:flex here,
+   no width override on the children.                              */
+body.controller-members .ActionList-item {
+  display: block !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* The clickable link / button inside the item — this is the ONE
+   element we make a flex row. Owns padding, gap, line-height,
+   colour and hover background.                                    */
+body.controller-members .ActionList-content,
+body.controller-members .ActionList-item > a,
+body.controller-members .ActionList-item > button,
+body.controller-members [role="menuitem"]:not(.ActionList-item) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-height: 32px !important;
+  padding: 6px 10px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: #1f2937 !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.12s, color 0.12s !important;
+}
+
+/* Hover / focus highlight on the link itself */
+body.controller-members .ActionList-content:hover,
+body.controller-members .ActionList-content:focus,
+body.controller-members .ActionList-content:focus-visible,
+body.controller-members .ActionList-item > a:hover,
+body.controller-members .ActionList-item > a:focus,
+body.controller-members .ActionList-item > button:hover,
+body.controller-members .ActionList-item > button:focus,
+body.controller-members [role="menuitem"]:not(.ActionList-item):hover,
+body.controller-members [role="menuitem"]:not(.ActionList-item):focus {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  outline: none !important;
+}
+
+/* Leading-icon container — fixed 16×16 box, centered. This is what
+   was misaligned before: the SVG's intrinsic baseline was pushing
+   the icon off-center relative to the text. Lock it down.        */
+body.controller-members .ActionList-item-visual,
+body.controller-members .ActionList-item-visual--leading,
+body.controller-members .ActionList-item-visual--trailing,
+body.controller-members .ActionList-item-action,
+body.controller-members .ActionList-content > svg:first-child,
+body.controller-members .ActionList-content > .octicon:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #6b7280 !important;
+}
+
+body.controller-members .ActionList-item-visual svg,
+body.controller-members .ActionList-item-visual--leading svg,
+body.controller-members .ActionList-item-visual--trailing svg,
+body.controller-members .ActionList-content > svg,
+body.controller-members .ActionList-content .octicon {
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px !important;
+  fill: currentColor !important;
+}
+
+/* Label — typography only. NO display:flex, NO width:100%, NO
+   padding. It just sits inside the flex row from .ActionList-content
+   and grows naturally to fit its text.                            */
+body.controller-members .ActionList-item-label,
+body.controller-members .ActionList-item-description {
+  display: inline !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13.5px !important;
+  line-height: 1.4 !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+/* Destructive item ("Remove member") — Primer marks it with
+   .ActionList-item--danger. Tint icon + text red, soft red hover. */
+body.controller-members .ActionList-item--danger > .ActionList-content,
+body.controller-members .ActionList-item--danger > a,
+body.controller-members .ActionList-item--danger > button {
+  color: #b91c1c !important;
+}
+body.controller-members .ActionList-item--danger .ActionList-item-visual,
+body.controller-members .ActionList-item--danger .ActionList-item-visual--leading {
+  color: #b91c1c !important;
+}
+body.controller-members .ActionList-item--danger > .ActionList-content:hover,
+body.controller-members .ActionList-item--danger > .ActionList-content:focus,
+body.controller-members .ActionList-item--danger > a:hover,
+body.controller-members .ActionList-item--danger > a:focus,
+body.controller-members .ActionList-item--danger > button:hover,
+body.controller-members .ActionList-item--danger > button:focus {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+}
+
+
+/* ── 17. PROJECT MEMBERS → FILTER FORM LABEL/FIELD GAP ────────────
+   The Filter form on the project Members page (body.controller-members)
+   shares its HTML structure with the admin simple-filters form
+   (see section 13): each filter row is a <li class="simple-filters--filter">
+   containing a <label class="simple-filters--filter-name"> ("Status:",
+   "Group:", "Role:", "Work package shares:", "Name:") followed by a
+   <select> / <input class="simple-filters--filter-value">.
+
+   Section 13's selectors are scoped to controller-users /
+   controller-groups / controller-placeholder_users / controller-roles
+   action-index pages only, so on the project-members filter form they
+   never match and OpenProject's default styling kicks in — which lays
+   the row out as a wide grid cell and pushes the field far to the
+   right of the label, leaving a big visual gap.
+
+   This block ONLY tightens that label-to-field gap. It does NOT
+   restyle the form container, inputs, buttons, or anything else on
+   the page — those keep OpenProject's default look so nothing else
+   regresses. Scoped to body.controller-members so it can't affect
+   any other filter form in the app.                                */
+
+body.controller-members li.simple-filters--filter,
+body.controller-members .simple-filters--filter {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+body.controller-members label.simple-filters--filter-name,
+body.controller-members .simple-filters--filter-name {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  line-height: 1.4 !important;
+}
