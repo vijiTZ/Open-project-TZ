@@ -58,3 +58,6 @@
 
 <%# Custom UI redesign stylesheet — cache-busted, no compilation needed %>
 <link rel="stylesheet" href="/custom-redesign.css?v=<%= File.mtime(Rails.root.join('public/custom-redesign.css')).to_i rescue 1 %>" type="text/css">
+
+<%# Custom UI redesign JS — external file, no CSP issues, update without restart %>
+<script defer src="/custom-redesign.js?v=<%= File.mtime(Rails.root.join('public/custom-redesign.js')).to_i rescue 1 %>"></script>
