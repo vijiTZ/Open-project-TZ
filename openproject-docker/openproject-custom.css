@@ -38,25 +38,80 @@
 .op-app-header,
 #top-menu,
 .header-container {
-  background-color: var(--op-green) !important;
+  /* White navbar — clean, modern */
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #e6ecf3 !important;
+  box-shadow: 0 1px 3px rgba(15, 35, 75, 0.05),
+              0 4px 12px rgba(15, 35, 75, 0.04) !important;
+  color: #1a202c !important;
+  align-items: center !important;
+
+  /* Header text token — dark slate so ng-select placeholder reads */
+  --header-item-font-color: #1f2937 !important;
+  --header-item-font-hover-color: #0c66e4 !important;
 }
 
-#top-menu-search .search-bar--input {
-  background-color: rgba(0,0,0,0.22) !important;
-  border: 1px solid rgba(255,255,255,0.18) !important;
-  color: #fff !important;
-  border-radius: 5px !important;
+/* All icons & action buttons in the header — slate, blue on hover */
+#header svg, .op-app-header svg,
+#header .octicon, .op-app-header .octicon,
+#header .op-icon, .op-app-header .op-icon,
+#header .spot-icon, .op-app-header .spot-icon,
+#header [class*="icon-"], .op-app-header [class*="icon-"],
+#header i[class^="icon"], .op-app-header i[class^="icon"] {
+  color: #4a5568 !important;
+  fill: currentColor !important;
 }
-#top-menu-search .search-bar--input::placeholder { color: rgba(255,255,255,0.45) !important; }
 
 #header .button, #header button,
-.op-app-header .button {
-  color: rgba(255,255,255,0.85) !important;
+.op-app-header .button, .op-app-header button {
+  color: #4a5568 !important;
   background: transparent !important;
+  border-radius: 8px !important;
+  transition: background 0.14s ease, color 0.14s ease !important;
 }
-#header .button:hover, .op-app-header .button:hover {
-  background-color: rgba(0,0,0,0.15) !important;
-  color: #fff !important;
+#header .button:hover, #header button:hover,
+.op-app-header .button:hover, .op-app-header button:hover {
+  background-color: rgba(12, 102, 228, 0.08) !important;
+  color: #0c66e4 !important;
+}
+
+/* Primary "+" / create button — solid blue pill */
+#header .button.-highlight, .op-app-header .button.-highlight,
+#header .button--primary, .op-app-header .button--primary,
+#header button.Button--primary, .op-app-header button.Button--primary {
+  background-color: #0c66e4 !important;
+  color: #ffffff !important;
+  border: 1px solid #0c66e4 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 2px rgba(12, 102, 228, 0.25) !important;
+}
+#header .button.-highlight:hover, .op-app-header .button.-highlight:hover,
+#header button.Button--primary:hover, .op-app-header button.Button--primary:hover {
+  background-color: #0055cc !important;
+  color: #ffffff !important;
+  border-color: #0055cc !important;
+  box-shadow: 0 4px 12px rgba(12, 102, 228, 0.30) !important;
+}
+#header .button.-highlight svg, .op-app-header .button.-highlight svg,
+#header .button.-highlight [class*="icon-"], .op-app-header .button.-highlight [class*="icon-"],
+#header button.Button--primary svg, .op-app-header button.Button--primary svg {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+#header .button.-highlight:hover svg, .op-app-header .button.-highlight:hover svg,
+#header button.Button--primary:hover svg, .op-app-header button.Button--primary:hover svg {
+  color: #ffffff !important;
+}
+
+/* Sidebar toggle icon */
+#main-menu-toggle, .main-menu-toggler {
+  color: #4a5568 !important;
+  border-radius: 8px !important;
+}
+#main-menu-toggle:hover, .main-menu-toggler:hover {
+  background-color: rgba(12, 102, 228, 0.08) !important;
+  color: #0c66e4 !important;
 }
 
 
@@ -64,24 +119,50 @@
    OpenProject renders the logo as a CSS background-image on
    .op-logo--link (desktop) and .op-logo--icon (mobile).        */
 
-.op-logo--link,
-a.op-logo--link,
+/* Local file served from /tz-assets/tamilzorous-logo.png (directory
+   bind-mount). Cache-busted at runtime by css_injector.rb via an
+   inline <style id="tz-logo-cachebust"> block.
+
+   OpenProject renders BOTH an .op-logo--link AND a second anchor with
+   classes "op-logo--icon op-logo--link" in the same container. To
+   avoid a duplicate, hide every variant except the desktop link.
+
+   No colorization filter — original brand colors (green Z, black
+   "Tamilzorous") render directly on the white navbar. */
+.op-logo {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
+  vertical-align: middle !important;
+}
+
+.op-logo--link:not(.op-logo--icon),
+a.op-logo--link:not(.op-logo--icon),
 .op-logo--link_high_contrast {
-  background-image: url("https://media.licdn.com/dms/image/v2/D560BAQHNk7otLtgabg/company-logo_200_200/company-logo_200_200/0/1732783262582/tamil_zorous_logo?e=2147483647&v=beta&t=bgSbOnby0dwL9bjVrTYtNc6D-j35IPQ8S8mgJJnWe_w") !important;
+  display: inline-block !important;
+  background-image: url("/tz-assets/tamilzorous-logo.png") !important;
   background-repeat: no-repeat !important;
   background-size: contain !important;
   background-position: left center !important;
-  width: 140px !important;
-  min-width: 140px !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  width: 130px !important;
+  min-width: 130px !important;
+  height: 28px !important;
+  box-sizing: border-box !important;
+  align-self: center !important;
+  vertical-align: middle !important;
 }
 
+/* Hide the icon-only (mobile) variant and the white-icon variant so
+   only one logo renders on desktop. */
 .op-logo--icon,
 a.op-logo--icon,
-.op-logo--icon_white {
-  background-image: url("https://media.licdn.com/dms/image/v2/D560BAQHNk7otLtgabg/company-logo_200_200/company-logo_200_200/0/1732783262582/tamil_zorous_logo?e=2147483647&v=beta&t=bgSbOnby0dwL9bjVrTYtNc6D-j35IPQ8S8mgJJnWe_w") !important;
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
+.op-logo--icon_white,
+.op-logo--link.op-logo--icon {
+  display: none !important;
 }
 
 
@@ -3382,4 +3463,197 @@ body.controller-members .simple-filters--filter-name {
   padding: 0 !important;
   white-space: nowrap !important;
   line-height: 1.4 !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   SIDEBAR (MAIN MENU) — LIGHT SKY-BLUE MODERN REDESIGN
+   ----------------------------------------------------------------
+   Reskins nav#main-menu by overriding OpenProject's design-token
+   CSS variables. No layout changes (width/flex/position) so the
+   resize handle and collapse JS keep working.
+   ══════════════════════════════════════════════════════════════ */
+nav#main-menu {
+  --main-menu-bg-color:            #eef4fa !important;
+  --main-menu-font-color:          #1e2a3f !important;
+  --main-menu-font-size:           13.5px !important;
+  --main-menu-item-height:         36px !important;
+  --main-menu-border-color:        #d5e3f1 !important;
+  --main-menu-hover-border-color:  transparent !important;
+  --main-menu-bg-selected-background: #0c66e4 !important;
+  --main-menu-bg-selected-border:     transparent !important;
+  --main-menu-selected-font-color:    #0c66e4 !important;
+  --control-transparent-bgColor-hover:    rgba(12, 102, 228, 0.08) !important;
+  --control-transparent-bgColor-selected: rgba(12, 102, 228, 0.13) !important;
+  --borderRadius-medium: 8px !important;
+
+  background: linear-gradient(180deg, #f0f6fc 0%, #e6eff8 100%) !important;
+  border-right: 1px solid #d5e3f1 !important;
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.5) !important;
+}
+
+/* Sticky top container (project picker area) */
+nav#main-menu .main-menu--top-container {
+  background: transparent !important;
+  padding-top: 6px !important;
+}
+nav#main-menu .main-menu--projects-divider {
+  background: #d5e3f1 !important;
+  margin: 12px 4px !important;
+  height: 1px !important;
+  border: none !important;
+}
+
+/* Project picker trigger button */
+nav#main-menu .op-project-select--trigger-button {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: #1a2236 !important;
+}
+
+/* Menu item rows */
+nav#main-menu ul .main-item-wrapper,
+nav#main-menu ul .main-menu-item {
+  margin-bottom: 3px !important;
+}
+
+/* Item link baseline */
+nav#main-menu ul li a:not(.Button) {
+  color: #1e2a3f !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease !important;
+}
+
+/* Icons inside menu items */
+nav#main-menu [class*="-menu-item"] .icon2,
+nav#main-menu [class*="-menu-item"] .menu-item--icon,
+nav#main-menu .main-menu-item .icon2 {
+  color: #54657d !important;
+  transition: color 0.14s ease !important;
+}
+
+/* Hover — light blue tint, blue text + icon */
+nav#main-menu ul li a:not(.Button):hover,
+nav#main-menu ul li a:not(.Button):focus,
+nav#main-menu ul li a:not(.Button):active,
+nav#main-menu ul li:hover > a:not(.Button) {
+  color: #0c66e4 !important;
+}
+nav#main-menu ul li a:not(.Button):hover [class*="-menu-item"] .icon2,
+nav#main-menu ul li a:not(.Button):hover [class*="-menu-item"] .menu-item--icon,
+nav#main-menu ul li:hover > a:not(.Button) [class*="-menu-item"] .icon2 {
+  color: #0c66e4 !important;
+}
+
+/* Selected (active) — bold + blue icon */
+nav#main-menu ul li a:not(.Button).selected,
+nav#main-menu ul li a:not(.Button).selected:hover {
+  font-weight: 600 !important;
+}
+nav#main-menu ul li a:not(.Button).selected [class*="-menu-item"] .icon2,
+nav#main-menu ul li a:not(.Button).selected [class*="-menu-item"] .menu-item--icon {
+  color: #0c66e4 !important;
+}
+
+/* Section headers ("WORK PACKAGES", "BOARDS", etc.) */
+nav#main-menu .main-menu--segment-header {
+  color: #54657d !important;
+  font-size: 10.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  padding: 14px 12px 6px !important;
+}
+
+/* Submenu children */
+nav#main-menu .main-menu--children {
+  padding: 4px 0 8px !important;
+}
+nav#main-menu .main-menu--children.unattached {
+  border-top: 1px solid #d5e3f1 !important;
+  margin-top: 6px !important;
+  padding-top: 8px !important;
+}
+
+/* Submenu header (project breadcrumb when drilled in) */
+nav#main-menu .main-menu--children-menu-header {
+  background: #eef4fa !important;
+  border-bottom: 1px solid #d5e3f1 !important;
+  padding: 6px 0 !important;
+}
+nav#main-menu a.main-menu--parent-node:not(.Button) {
+  color: #1a2236 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: -0.01em !important;
+}
+nav#main-menu .main-menu--arrow-left-to-project {
+  color: #54657d !important;
+  border-radius: 8px !important;
+}
+nav#main-menu .main-menu--arrow-left-to-project:hover {
+  background: rgba(12, 102, 228, 0.10) !important;
+  color: #0c66e4 !important;
+}
+
+/* Toggler chevron for items with children */
+nav#main-menu .toggler {
+  color: #7e8aa2 !important;
+  border-radius: 8px !important;
+  transition: background 0.14s ease, color 0.14s ease !important;
+}
+nav#main-menu .toggler:hover {
+  background: rgba(12, 102, 228, 0.10) !important;
+  color: #0c66e4 !important;
+}
+
+/* Resize handle — invisible until hover */
+.main-menu--resizer {
+  background: transparent !important;
+}
+.main-menu--resizer:hover {
+  border-right: 2px solid rgba(12, 102, 228, 0.35) !important;
+}
+.main-menu--resizer .main-menu--navigation-toggler {
+  color: #7e8aa2 !important;
+}
+.main-menu--resizer .main-menu--navigation-toggler:not(.open) {
+  color: #0c66e4 !important;
+}
+
+/* Thin custom scrollbar inside the menu */
+nav#main-menu #menu-sidebar::-webkit-scrollbar       { width: 6px !important; }
+nav#main-menu #menu-sidebar::-webkit-scrollbar-track { background: transparent !important; }
+nav#main-menu #menu-sidebar::-webkit-scrollbar-thumb {
+  background: #b8c8de !important;
+  border-radius: 4px !important;
+}
+nav#main-menu #menu-sidebar::-webkit-scrollbar-thumb:hover { background: #8aa3c4 !important; }
+
+/* Badges (BETA, EXPERIMENTAL, NEW) — modern blue pill */
+nav#main-menu .main-item--badge {
+  background: #d4e3f7 !important;
+  color: #0c4180 !important;
+  font-size: 9.5px !important;
+  font-style: normal !important;
+  padding: 2px 7px !important;
+  border-radius: 10px !important;
+  letter-spacing: 0.04em !important;
+  top: 0 !important;
+}
+
+/* Inner #sidebar widget area */
+nav#main-menu #sidebar a:not(.Button),
+nav#main-menu #sidebar a:not(.Button):link {
+  color: #1e2a3f !important;
+  text-decoration: none !important;
+}
+nav#main-menu #sidebar a:hover { color: #0c66e4 !important; }
+nav#main-menu #sidebar label   { color: #54657d !important; }
+
+/* Collapsed sidebar keeps the same surface */
+.hidden-navigation .main-menu {
+  background: linear-gradient(180deg, #f0f6fc 0%, #e6eff8 100%) !important;
+  border-right: 1px solid #d5e3f1 !important;
 }

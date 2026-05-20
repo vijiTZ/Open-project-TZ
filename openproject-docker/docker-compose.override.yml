@@ -1,5 +1,13 @@
-# Mounts our CSS file, enterprise unlock initializer, and the CSS-injector
-# middleware that adds <link href="/custom-redesign.css"> to every HTML response.
+# Bind-mounts custom CSS / JS / Ruby initializers + a directory of static
+# assets (the brand logo, etc.).
+#
+# IMPORTANT: assets/ is mounted as a *directory*, not a single file. On
+# Windows Docker Desktop, single-file bind-mounts break silently when the
+# host file is replaced (delete+create as opposed to in-place save) — the
+# inode changes and Docker loses its reference. A directory mount stays
+# stable through arbitrary file replacements inside it. Drop new versions
+# of tamilzorous-logo.png (or other static assets) into ./assets/ and
+# they will be live without restarting the container.
 
 services:
   web:
@@ -7,6 +15,7 @@ services:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
       - "./tz_table.js:/app/public/tz-table.js"
+      - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
@@ -15,6 +24,7 @@ services:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
       - "./tz_table.js:/app/public/tz-table.js"
+      - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
@@ -23,6 +33,7 @@ services:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
       - "./tz_table.js:/app/public/tz-table.js"
+      - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
