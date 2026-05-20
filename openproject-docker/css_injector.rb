@@ -8,6 +8,8 @@
 module CustomCssInjector
   CSS_URL  = "/custom-redesign.css".freeze
   CSS_FILE = "/app/public/custom-redesign.css".freeze
+  JS_URL   = "/custom-redesign.js".freeze
+  JS_FILE  = "/app/public/custom-redesign.js".freeze
 
   class Middleware
     def initialize(app)
@@ -24,12 +26,19 @@ module CustomCssInjector
       response.each { |chunk| body << chunk.to_s }
       response.close if response.respond_to?(:close)
 
+      modified = false
+
       if body.include?("</head>")
-        mtime = File.exist?(CSS_FILE) ? File.mtime(CSS_FILE).to_i : 0
-        tag   = %(<link rel="stylesheet" href="#{CSS_URL}?v=#{mtime}">)
-        body  = body.sub("</head>", "#{tag}\n</head>")
-        headers.delete_if { |k, _| %w[content-length etag].include?(k.to_s.downcase) }
+        css_mtime = File.exist?(CSS_FILE) ? File.mtime(CSS_FILE).to_i : 0
+        js_mtime  = File.exist?(JS_FILE)  ? File.mtime(JS_FILE).to_i  : 0
+        tags = []
+        tags << %(<link rel="stylesheet" href="#{CSS_URL}?v=#{css_mtime}">)
+        tags << %(<script src="#{JS_URL}?v=#{js_mtime}" defer></script>) if File.exist?(JS_FILE)
+        body = body.sub("</head>", "#{tags.join("\n")}\n</head>")
+        modified = true
       end
+
+      headers.delete_if { |k, _| %w[content-length etag].include?(k.to_s.downcase) } if modified
 
       [status, headers, [body]]
     rescue => e

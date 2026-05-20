@@ -631,3 +631,817 @@ body.router--work-packages-full-create .op-attachment-list--attach-file-link {
     grid-row: auto !important;
   }
 }
+
+
+/* ================================================================
+   BOARDS — KANBAN MODERN UI (v2)
+   A user-friendly redesign of OpenProject's board/kanban view.
+     · Soft-tinted columns with WIP-count badges
+     · Cards with clearer hierarchy, type chips, date pills
+     · Hover lift, focus rings, smooth scroll, drag affordances
+   Targets: .op-board-list (column), .op-wp-single-card (card),
+            .boards-list--container (outer strip).
+   ================================================================ */
+
+/* ── 0. Local tokens (scoped to body so they don't leak) ───────── */
+body {
+  --op-board-col-bg:        #f1f4f9;
+  --op-board-col-border:    rgba(15, 23, 42, 0.06);
+  --op-board-col-border-hi: rgba(15, 23, 42, 0.14);
+  --op-board-card-bg:       #ffffff;
+  --op-board-card-border:   #e5e9f0;
+  --op-board-card-shadow:   0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06);
+  --op-board-card-shadow-h: 0 6px 14px rgba(15, 23, 42, 0.07), 0 12px 28px rgba(15, 23, 42, 0.08);
+  --op-board-radius-col:    14px;
+  --op-board-radius-card:   10px;
+  --op-board-text-strong:   #1f2937;
+  --op-board-text-muted:    #64748b;
+  --op-board-text-dim:      #94a3b8;
+  --op-board-accent:        #0c66e4;
+  --op-board-overdue:       #c9372c;
+}
+
+
+/* ── 1. Outer strip: real gap between columns + breathing room ── */
+.boards-list--container {
+  gap: 18px !important;
+  padding: 12px 12px 20px 12px !important;
+  scroll-behavior: smooth !important;
+}
+
+.boards-list--item {
+  flex: 0 0 320px !important;
+  max-width: 320px !important;
+}
+.boards-list--item:first-of-type {
+  margin-left: 0 !important;
+}
+
+/* Drag handle (column reorder) — visible & friendly on hover */
+.boards-list-item-handle {
+  left: 6px !important;
+  top: 14px !important;
+  transition: opacity 0.15s ease !important;
+}
+.boards-list--item:hover .boards-list-item-handle {
+  opacity: 0.55 !important;
+}
+.boards-list-item-handle:hover {
+  opacity: 1 !important;
+}
+
+/* "+ Board" — add-column action becomes a friendly pill */
+.boards-list--add-item {
+  align-self: flex-start !important;
+  height: 56px !important;
+  line-height: 56px !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  border-radius: 12px !important;
+  padding: 0 4px !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+.boards-list--add-item:hover {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+  color: var(--op-board-text-strong) !important;
+}
+.boards-list--add-item .boards-list--add-item-text {
+  padding: 0 16px !important;
+}
+
+
+/* ── 2. Each column: soft-tinted card with rounded corners ────── */
+.op-board-list {
+  background: var(--op-board-col-bg) !important;
+  border: 1px solid var(--op-board-col-border) !important;
+  border-radius: var(--op-board-radius-col) !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease !important;
+  max-width: 320px !important;
+}
+.op-board-list:hover {
+  border-color: var(--op-board-col-border-hi) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07) !important;
+}
+
+/* Status color bar — flush, slightly thicker, top of column */
+.op-board-list--action-bar {
+  width: 100% !important;
+  height: 5px !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  opacity: 0.95 !important;
+}
+
+/* Column header */
+.op-board-list--header {
+  padding: 14px 16px 10px 16px !important;
+  max-height: 60px !important;
+  gap: 6px !important;
+}
+
+/* Hide redundant "Status" eyebrow label — the column color + name already convey it */
+.op-board-list--header .op-status-board-header h2.editable-toolbar-title--fixed small,
+.op-board-list--header .op-status-board-header h2.editable-toolbar-title--fixed br {
+  display: none !important;
+}
+
+/* Column title — clean, bold, modern */
+.op-board-list--header .op-status-board-header h2.editable-toolbar-title--fixed,
+.op-board-list--header editable-toolbar-title .editable-toolbar-title--fixed,
+.op-board-list--header editable-toolbar-title .editable-toolbar-title--input {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.01em !important;
+  color: var(--op-board-text-strong) !important;
+  text-transform: none !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Column kebab/menu — calmer hover */
+.op-board-list--menu {
+  border-radius: 6px !important;
+  transition: background-color 0.15s ease !important;
+}
+.op-board-list--menu:hover {
+  background-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+/* "+" add-card button — dashed-outline pill, fills on hover */
+.op-board-list--add-button {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  margin: 6px 14px 4px 14px !important;
+  border: 1px dashed rgba(15, 23, 42, 0.18) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  color: var(--op-board-text-muted) !important;
+  height: 34px !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease !important;
+}
+.op-board-list--add-button:hover {
+  background-color: #ffffff !important;
+  border-color: var(--op-board-accent) !important;
+  color: var(--op-board-accent) !important;
+}
+.op-board-list--add-button:active {
+  transform: scale(0.98) !important;
+}
+
+.op-board-list--button-container {
+  background-color: transparent !important;
+}
+
+/* Card list inside each column — matches rounded column bottom */
+.wp-cards-container.-vertical {
+  padding: 4px 14px 14px 14px !important;
+  border-radius: 0 0 var(--op-board-radius-col) var(--op-board-radius-col) !important;
+}
+
+
+/* ── 3. Cards: clearer hierarchy, hover lift, focus ring ──────── */
+.op-wp-single-card {
+  background: var(--op-board-card-bg) !important;
+  border: 1px solid var(--op-board-card-border) !important;
+  border-radius: var(--op-board-radius-card) !important;
+  padding: 12px 14px !important;
+  box-shadow: var(--op-board-card-shadow) !important;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+  cursor: pointer !important;
+}
+.op-wp-single-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(15, 23, 42, 0.18) !important;
+  box-shadow: var(--op-board-card-shadow-h) !important;
+}
+.op-wp-single-card:focus-visible {
+  outline: none !important;
+  border-color: var(--op-board-accent) !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.18), var(--op-board-card-shadow) !important;
+}
+
+/* Vertical (kanban) spacing */
+.op-wp-single-card_vertical {
+  margin-top: 12px !important;
+}
+.op-wp-single-card_vertical:first-of-type {
+  margin-top: 8px !important;
+}
+.op-wp-single-card_vertical:last-of-type {
+  margin-bottom: 4px !important;
+}
+
+/* Closed cards — calmer instead of gray */
+.op-wp-single-card_closed:not(.op-wp-single-card_selected) {
+  background-color: #f8fafc !important;
+  opacity: 0.85 !important;
+}
+
+/* Card top highlight bar (type/priority) */
+.op-wp-single-card--highlighting {
+  height: 3px !important;
+  border-radius: var(--op-board-radius-card) var(--op-board-radius-card) 0 0 !important;
+}
+
+
+/* ── 4. Card content — typography + layout polish ─────────────── */
+
+/* ID — small, muted, monospace-ish */
+.op-wp-single-card--content-id {
+  color: var(--op-board-text-dim) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+.op-wp-single-card--content-id:hover {
+  color: var(--op-board-accent) !important;
+  text-decoration: none !important;
+}
+
+/* Project name — muted breadcrumb feel */
+.op-wp-single-card--content-project-name {
+  color: var(--op-board-text-muted) !important;
+  font-style: normal !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+}
+
+/* Type label ("TASK", "BUG", "MILESTONE") — proper chip/badge */
+.op-wp-single-card--content-type {
+  display: inline-block !important;
+  padding: 2px 8px !important;
+  margin-right: 6px !important;
+  border-radius: 999px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  background-color: rgba(15, 23, 42, 0.07) !important;
+  line-height: 1.6 !important;
+  vertical-align: middle !important;
+}
+
+/* Subject — bolder, calmer color, comfortable line-height */
+.op-wp-single-card--content-subject {
+  color: var(--op-board-text-strong) !important;
+  font-weight: 500 !important;
+  font-size: 13.5px !important;
+  line-height: 1.45 !important;
+}
+
+/* Subject line wrap when type chip pushes it to a new line */
+.op-wp-single-card--content-subject-line {
+  display: block !important;
+  margin-top: 2px !important;
+}
+
+/* Assignee avatar — slightly more prominent */
+.op-wp-single-card--content-assignee {
+  margin-top: 6px !important;
+}
+.op-wp-single-card--content-assignee .op-principal--avatar,
+.op-wp-single-card--content-assignee .op-avatar {
+  width: 22px !important;
+  height: 22px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Dates — subtle gray pill */
+.op-wp-single-card--content-dates {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: var(--op-board-text-muted) !important;
+  background-color: rgba(15, 23, 42, 0.05) !important;
+  padding: 3px 8px !important;
+  border-radius: 999px !important;
+  margin-top: 6px !important;
+  white-space: nowrap !important;
+}
+/* Overdue dates — soft red pill */
+.op-wp-single-card--content-dates .__hl-date-overdue,
+.op-wp-single-card--content-dates.-overdue {
+  color: var(--op-board-overdue) !important;
+}
+
+
+/* ── 5. Inline action buttons (info / cancel) — modern hit area  */
+.op-wp-single-card--card-actions {
+  top: 8px !important;
+  right: 6px !important;
+}
+.op-wp-single-card--card-action {
+  border-radius: 6px !important;
+  padding: 2px 4px !important;
+  transition: background-color 0.15s ease !important;
+}
+.op-wp-single-card--card-action:hover {
+  background-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+
+/* ── 6. Empty column hint (when no cards present) ─────────────── */
+.op-board-list .wp-cards-container.-vertical:not(:has(wp-single-card)) {
+  min-height: 80px !important;
+  position: relative !important;
+}
+.op-board-list .wp-cards-container.-vertical:not(:has(wp-single-card))::before {
+  content: "No cards yet" !important;
+  position: absolute !important;
+  inset: 16px 0 0 0 !important;
+  text-align: center !important;
+  color: var(--op-board-text-dim) !important;
+  font-size: 12px !important;
+  font-style: italic !important;
+  pointer-events: none !important;
+}
+
+
+/* ── 7. Drag placeholder — clearer drop target ────────────────── */
+.op-wp-single-card.gu-mirror,
+.op-wp-single-card.cdk-drag-preview {
+  transform: rotate(2deg) !important;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18) !important;
+  opacity: 0.95 !important;
+}
+.cdk-drag-placeholder.op-wp-single-card {
+  background: rgba(12, 102, 228, 0.06) !important;
+  border: 2px dashed rgba(12, 102, 228, 0.35) !important;
+  box-shadow: none !important;
+}
+
+
+/* ── 8. STATUS BUTTON — "dot + text" design (matches dropdown) ──
+   The status pill on each card currently shows the status color as
+   a heavy fill (Developed, Specified, Rejected, …). We keep the
+   OpenProject-injected background-color but paint a white mask on
+   top using a radial-gradient, leaving only a small colored dot
+   visible — same look as the status picker dropdown menu items. */
+
+.op-wp-single-card .op-wp-status-button--button,
+.op-wp-single-card .op-wp-status-button_small .op-wp-status-button--button {
+  background-image: radial-gradient(
+    circle 4px at 10px center,
+    transparent 4px,
+    #ffffff 5px
+  ) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  border: 1px solid #e5e9f0 !important;
+  border-radius: 999px !important;
+  color: var(--op-board-text-strong, #1f2937) !important;
+  padding: 2px 8px 2px 22px !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+  height: auto !important;
+  min-height: 20px !important;
+  line-height: 1.4 !important;
+  max-width: 9rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+.op-wp-single-card .op-wp-status-button--button:hover:not(:disabled) {
+  border-color: rgba(15, 23, 42, 0.32) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+}
+
+.op-wp-single-card .op-wp-status-button--button:disabled {
+  opacity: 0.7 !important;
+  cursor: default !important;
+}
+
+/* Status text — calm dark color, ellipsis still works */
+.op-wp-single-card .op-wp-status-button--text {
+  color: inherit !important;
+  font-weight: 500 !important;
+  font-size: 11px !important;
+}
+
+/* Pulldown arrow — small, muted */
+.op-wp-single-card .op-wp-status-button--button .icon-pulldown {
+  margin-left: 2px !important;
+}
+.op-wp-single-card .op-wp-status-button--button .icon-pulldown::before {
+  font-size: 9px !important;
+  color: var(--op-board-text-dim, #94a3b8) !important;
+}
+
+/* Locked icon (read-only status) */
+.op-wp-single-card .op-wp-status-button--button .icon-locked::before {
+  font-size: 10px !important;
+  color: var(--op-board-text-dim, #94a3b8) !important;
+  margin-right: 4px !important;
+}
+
+/* Status pill sits in the bottom row — give it a tiny top margin */
+.op-wp-single-card--content-status-baseline {
+  margin-top: 4px !important;
+}
+
+
+/* ================================================================
+   9. FILTERS — MODERN PANEL + TRIGGER BUTTON
+   Used on board, table, gantt, calendar and team-planner views.
+     Trigger : .advanced-filters--toggle (toolbar button)
+     Panel   : fieldset.advanced-filters--container
+     Rows    : li.advanced-filters--filter
+   ================================================================ */
+
+/* ── Trigger button ("Filter 1" in toolbar) ────────────────────── */
+.advanced-filters--toggle.button {
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  font-weight: 500 !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e9f0 !important;
+  color: var(--op-board-text-strong, #1f2937) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.advanced-filters--toggle.button:hover {
+  background: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.22) !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+.advanced-filters--toggle.button.-active {
+  background: rgba(12, 102, 228, 0.08) !important;
+  border-color: rgba(12, 102, 228, 0.35) !important;
+  color: var(--op-board-accent, #0c66e4) !important;
+}
+.advanced-filters--toggle.button .icon-filter::before {
+  font-size: 13px !important;
+  margin-right: 4px !important;
+}
+
+/* Filter count badge inside the trigger */
+.advanced-filters--toggle .badge,
+[data-test-selector="wp-filter-button"] .badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 18px !important;
+  height: 18px !important;
+  padding: 0 6px !important;
+  margin-left: 6px !important;
+  background: var(--op-board-accent, #0c66e4) !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  border: none !important;
+}
+
+
+/* ── Filter panel (inline, COMPACT) ────────────────────────────
+   Goal: minimum vertical footprint while staying readable.
+   Single-line rows · slim label column · dense controls. */
+
+.advanced-filters--container,
+fieldset.advanced-filters--container {
+  background: #ffffff !important;
+  border: 1px solid #e5e9f0 !important;
+  border-radius: 10px !important;
+  padding: 8px 36px 8px 12px !important;
+  margin: 6px 0 10px 0 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  position: relative !important;
+}
+
+/* Hide the legend (the trigger button + close X convey the context) */
+.advanced-filters--container > legend {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+}
+
+/* Close X — compact top-right, in line with the panel padding */
+.advanced-filters--close {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  border-radius: 6px !important;
+  padding: 2px !important;
+  transition: background-color 0.15s ease !important;
+}
+.advanced-filters--close:hover {
+  background-color: rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Reset button — injected by custom-redesign.js into a toolbar at the
+   TOP of the filter panel. Normal flow, never overflows off-screen. */
+@keyframes op-reset-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+@keyframes op-reset-pop {
+  0%   { opacity: 0; transform: scale(0.9) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1)   translateY(0); }
+}
+
+/* Toolbar row inside the panel that hosts the Reset button */
+.op-custom-filter-toolbar {
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  padding: 0 4px 6px 0 !important;
+  margin: 0 0 4px 0 !important;
+  border-bottom: 1px dashed #eef1f5 !important;
+}
+
+.op-custom-reset-filters {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  height: 26px !important;
+  padding: 0 10px !important;
+  border-radius: 6px !important;
+  border: 1px solid #e5e9f0 !important;
+  background: #ffffff !important;
+  color: var(--op-board-text-muted, #64748b) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: opacity 0.18s ease, background-color 0.15s ease, color 0.15s ease,
+              border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease !important;
+  animation: op-reset-pop 0.2s ease !important;
+}
+
+.op-custom-reset-filters svg {
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease !important;
+}
+
+.op-custom-reset-filters:hover {
+  background: rgba(201, 55, 44, 0.08) !important;
+  color: var(--op-board-overdue, #c9372c) !important;
+  border-color: rgba(201, 55, 44, 0.35) !important;
+}
+.op-custom-reset-filters:hover svg {
+  transform: rotate(-30deg) !important;
+}
+
+.op-custom-reset-filters:active {
+  transform: scale(0.97) !important;
+}
+
+.op-custom-reset-filters:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(12, 102, 228, 0.25) !important;
+}
+
+/* Spin while reset is in progress */
+.op-custom-reset-filters.is-resetting svg {
+  animation: op-reset-spin 0.6s ease !important;
+}
+
+/* When there's nothing to reset — collapse the whole toolbar */
+.op-custom-filter-toolbar:has(.op-custom-reset-filters.is-empty) {
+  display: none !important;
+}
+
+
+/* ── Filter rows — tight, single line ─────────────────────────── */
+.advanced-filters--filters {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+/* Each row = 4 cells: [label] [operator] [value] [remove ✕]
+   The search row has --without-operator and uses a 2-cell grid. */
+.advanced-filters--filter {
+  display: grid !important;
+  grid-template-columns: 110px max-content minmax(0, 1fr) 24px !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 3px 6px !important;
+  border-radius: 6px !important;
+  min-height: 32px !important;
+  transition: background-color 0.15s ease !important;
+}
+.advanced-filters--filter:hover {
+  background-color: #f8fafc !important;
+}
+
+/* Search-only row (Filter by text): no operator, no remove */
+.advanced-filters--filter.--without-operator {
+  grid-template-columns: 110px minmax(0, 1fr) !important;
+}
+
+/* Filter label — compact, muted */
+.advanced-filters--filter-name {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--op-board-text-muted, #64748b) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Operator cell — tight, no extra spacing */
+.advanced-filters--filter-operator {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.advanced-filters--filter-operator .advanced-filters--select,
+.advanced-filters--filter-operator select {
+  min-width: 90px !important;
+  max-width: 130px !important;
+  height: 26px !important;
+  padding: 2px 22px 2px 8px !important;
+  font-size: 12px !important;
+  border: 1px solid #e5e9f0 !important;
+  border-radius: 5px !important;
+  background-color: #ffffff !important;
+}
+
+/* Value cell fills its column cleanly (no more flex / no operator inside) */
+.advanced-filters--filter-value {
+  min-width: 0 !important;
+  width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Native inputs */
+.advanced-filters--filter-value input[type="text"],
+.advanced-filters--filter-value input[type="number"],
+.advanced-filters--filter-value input[type="date"] {
+  width: 100% !important;
+  border: 1px solid #e5e9f0 !important;
+  border-radius: 5px !important;
+  padding: 2px 8px !important;
+  height: 26px !important;
+  background: #ffffff !important;
+  font-size: 12px !important;
+  line-height: 1.3 !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.advanced-filters--filter-value input[type="text"]:focus,
+.advanced-filters--filter-value input[type="number"]:focus,
+.advanced-filters--filter-value input[type="date"]:focus {
+  outline: none !important;
+  border-color: var(--op-board-accent, #0c66e4) !important;
+  box-shadow: 0 0 0 2px rgba(12, 102, 228, 0.15) !important;
+}
+
+/* ng-select (autocomplete) controls — compact, full width of the cell */
+.advanced-filters--filter-value .ng-select {
+  width: 100% !important;
+}
+.advanced-filters--filter-value .ng-select .ng-select-container {
+  border: 1px solid #e5e9f0 !important;
+  border-radius: 5px !important;
+  min-height: 26px !important;
+  height: auto !important;
+  background: #ffffff !important;
+  font-size: 12px !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+.advanced-filters--filter-value .ng-select.ng-select-single .ng-select-container {
+  height: 26px !important;
+}
+.advanced-filters--filter-value .ng-select .ng-value-container {
+  padding: 0 6px !important;
+}
+.advanced-filters--filter-value .ng-select .ng-input > input {
+  font-size: 12px !important;
+}
+.advanced-filters--filter-value .ng-select.ng-select-focused .ng-select-container {
+  border-color: var(--op-board-accent, #0c66e4) !important;
+  box-shadow: 0 0 0 2px rgba(12, 102, 228, 0.15) !important;
+}
+.advanced-filters--filter-value .ng-select .ng-value {
+  background-color: rgba(12, 102, 228, 0.1) !important;
+  color: var(--op-board-accent, #0c66e4) !important;
+  border-radius: 3px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  padding: 1px 5px !important;
+  margin: 1px 2px 1px 0 !important;
+}
+
+/* Remove filter (✕) — inline on the right, no wrapping */
+.advanced-filters--remove-filter {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+.advanced-filters--remove-filter button {
+  opacity: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 5px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--op-board-text-muted, #64748b) !important;
+  cursor: pointer !important;
+  transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease !important;
+}
+.advanced-filters--filter:hover .advanced-filters--remove-filter button {
+  opacity: 0.7 !important;
+}
+.advanced-filters--remove-filter button:hover {
+  opacity: 1 !important;
+  color: var(--op-board-overdue, #c9372c) !important;
+  background-color: rgba(201, 55, 44, 0.1) !important;
+}
+.advanced-filters--remove-filter .icon-close::before,
+.advanced-filters--remove-filter-icon::before {
+  font-size: 11px !important;
+  color: inherit !important;
+}
+
+
+/* ── Hairline spacers — minimal ───────────────────────────────── */
+.advanced-filters--spacer {
+  height: 1px !important;
+  background: #eef1f5 !important;
+  margin: 2px 0 !important;
+  list-style: none !important;
+  padding: 0 !important;
+}
+
+
+/* ── Search row — same density as the rest, no special bg ─────── */
+#filter_search {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 3px 6px !important;
+}
+#filter_search:hover {
+  background-color: #f8fafc !important;
+}
+
+
+/* ── "+ Add filter" row — compact ─────────────────────────────── */
+.advanced-filters--add-filter {
+  display: grid !important;
+  grid-template-columns: 120px 1fr !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 6px !important;
+  margin-top: 2px !important;
+  border-top: 1px dashed #eef1f5 !important;
+}
+.advanced-filters--add-filter-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--op-board-accent, #0c66e4) !important;
+  margin: 0 !important;
+}
+.advanced-filters--add-filter-label .icon-add::before {
+  color: var(--op-board-accent, #0c66e4) !important;
+  font-size: 11px !important;
+}
+.advanced-filters--add-filter-value {
+  min-width: 0 !important;
+}
+
+
+/* ── Responsive — stack rows on narrow viewports ──────────────── */
+@media (max-width: 720px) {
+  .advanced-filters--filter,
+  .advanced-filters--add-filter {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important;
+  }
+  .advanced-filters--filter .filter_rem,
+  .advanced-filters--filter button[id*="rem_button"] {
+    opacity: 0.7 !important;
+    justify-self: end !important;
+  }
+}

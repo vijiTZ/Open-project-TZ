@@ -5,18 +5,21 @@ services:
   web:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./openproject-custom.js:/app/public/custom-redesign.js"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
   worker:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./openproject-custom.js:/app/public/custom-redesign.js"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
   cron:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./openproject-custom.js:/app/public/custom-redesign.js"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
 
