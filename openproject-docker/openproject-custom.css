@@ -3657,3 +3657,156 @@ nav#main-menu #sidebar label   { color: #54657d !important; }
   background: linear-gradient(180deg, #f0f6fc 0%, #e6eff8 100%) !important;
   border-right: 1px solid #d5e3f1 !important;
 }
+
+
+/* ================================================================
+   WORK PACKAGE CREATION - CARD LAYOUT (JIRA-STYLE MODAL)
+   1. Centered card container
+   2. Dark overlay backdrop
+   3. Pill-shaped buttons + 50% width fields
+   4. Preserve all backend logic & functionality
+   ================================================================ */
+
+/* Main content - blur background, keep sidebar visible */
+body.controller-work_packages.action-new main {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(4px) !important;
+  z-index: 998 !important;
+}
+
+/* Work packages new form - card styling (Jira-style centered card) */
+.work-packages--new {
+  position: relative !important;
+  width: 900px !important;
+  max-width: 95vw !important;
+  max-height: 88vh !important;
+  overflow-y: auto !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2) !important;
+  padding: 40px !important;
+  z-index: 1000 !important;
+  margin: 0 auto !important;
+}
+
+/* Ensure Project field is visible */
+.work-packages--new [data-attribute="project"],
+.work-packages--new .form-group--project,
+.work-packages--new .project-field,
+.work-packages--new .wp-edit-field[data-field-name="project"],
+.work-packages--new .form--field[data-field-name="project"],
+.work-packages--new .form--field-container[data-field-name="project"] {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Show project input/select */
+.work-packages--new [data-attribute="project"] input,
+.work-packages--new [data-attribute="project"] select,
+.work-packages--new [data-attribute="project"] .ng-select {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Pill-shaped buttons - scoped to work package creation page .work-packages--new */
+.work-packages--new button,
+.work-packages--new .button,
+.work-packages--new #work-packages--edit-actions-save,
+.work-packages--new #work-packages--edit-actions-cancel {
+  border-radius: 999px !important;
+  max-width: unset !important;
+  width: auto !important;
+  float: right !important;
+  margin-left: 8px !important;
+  margin-right: 0 !important;
+}
+
+/* Ensure button container puts buttons on right - only on creation page */
+.work-packages--new .work-packages--edit-actions,
+.work-packages--new .work-packages--buttons {
+  text-align: right !important;
+  display: block !important;
+  justify-content: flex-end !important;
+}
+
+/* Half-width fields ONLY (not buttons) - on creation page with pill-shaped edges */
+.work-packages--new input[type="text"],
+.work-packages--new input[type="date"],
+.work-packages--new input[type="number"],
+.work-packages--new input[type="email"],
+.work-packages--new input[type="search"],
+.work-packages--new .form--text-field,
+.work-packages--new .form--select,
+.work-packages--new .form--field-container,
+.work-packages--new .inline-edit--field,
+.work-packages--new select,
+.work-packages--new textarea {
+  max-width: 50% !important;
+  width: 50% !important;
+  border-radius: 12px !important;
+}
+
+/* Force ng-select (dropdown) to fixed 50% width - creation page only */
+.work-packages--new .ng-select,
+.work-packages--new .ng-select-container,
+.work-packages--new .ng-input {
+  width: 50% !important;
+  max-width: 50% !important;
+  border-radius: 12px !important;
+}
+
+/* Project field - increase width by 150px - try all possible selectors */
+[data-field-name="project"],
+[data-attribute="project"],
+.form--field[data-field-name*="project"],
+.wp-edit-field[data-field-name*="project"],
+.form-group[class*="project"],
+[class*="project-field"],
+[id*="project"] {
+  min-width: 230px !important;
+  width: 230px !important;
+}
+
+/* Project ng-select container */
+[data-field-name="project"] .ng-select-container,
+[data-attribute="project"] .ng-select-container,
+[class*="project"] .ng-select-container {
+  min-width: 230px !important;
+  width: 230px !important;
+}
+
+/* Prevent dropdown from expanding - creation page only */
+.work-packages--new .ng-select-container {
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Hide ONLY the blue ATTACHMENTS section (heading + drop box), keep file input */
+.op-attachments--drop-box,
+.op-file-section--drop-box {
+  display: none !important;
+}
+
+/* Hide "Attach files" link and icons */
+.op-attachments--upload-button,
+.op-add-attachment-icon,
+[class*="op-file-section--actions"],
+[class*="hide-when-print"] {
+  display: none !important;
+}
+
+/* Keep the file input field visible */
+#attachment_files,
+input[type="file"][id*="attachment"] {
+  display: block !important;
+  visibility: visible !important;
+}
