@@ -5,53 +5,70 @@
 //  into every HTML response via css_injector.rb. Defines a single global
 //  `TzTable` you can call from any page or inline script.
 //
-//  Usage:
+//  Usage (matches the "tickets" reference mock — dark header, status pills,
+//  avatar-with-dot, colored time, circular action button, active row):
 //
-//    <div id="my-table"></div>
+//    <div id="tickets"></div>
 //    <script>
-//      const t = TzTable.mount('#my-table', {
+//      TzTable.mount('#tickets', {
+//        variant: 'dark',
+//        activeRowId: 90686,
 //        columns: [
-//          { key: 'login',      label: 'Login' },
-//          { key: 'name',       label: 'User Name', type: 'avatar' },
-//          { key: 'email',      label: 'Email' },
-//          { key: 'admin',      label: 'Administrator', type: 'yesno' },
-//          { key: 'created',    label: 'Created at',    type: 'datetime' },
-//          { key: 'lastSignIn', label: 'Last sign in',  type: 'datetime' },
-//          { key: 'actions',                            type: 'actions' },
+//          { key: 'id',          label: 'ID' },
+//          { key: 'title',       label: 'Problem Title' },
+//          { key: 'technician',  label: 'Technician', type: 'avatar',
+//                                statusKey: 'presence' },          // 'online'|'idle'|'offline'
+//          { key: 'model',       label: 'Model' },
+//          { key: 'dealer',      label: 'Dealer Code' },
+//          { key: 'date',        label: 'Date', type: 'date',
+//                                timeKey: 'sla',
+//                                timeColorKey: 'slaLevel' },        // 'danger'|'warn'
+//          { key: 'status',      label: 'Status', type: 'status' }, // see status map below
+//          {                     label: 'Action', type: 'actions' },
 //        ],
 //        rows: [
-//          { id: 1, login: 'Admin',  name: 'Redmine',     email: 'admin@gmail.com',
-//            admin: true,  created: '2024-02-15T10:45', lastSignIn: '2026-05-05T13:20' },
-//          // ...
+//          { id: 90686, title: 'Gear indication not show...',
+//            technician: 'Ansari Mustufa M', presence: 'online',
+//            model: 'Motorcycles, TVS Ronin', dealer: '14360',
+//            date: '2026-02-19', sla: '15:34min', slaLevel: 'danger',
+//            status: 'opened' },
+//          // 'opened' | 'closed' | 'reopened' | 'in-progress'
 //        ],
 //        rowKey: 'id',
-//        selectable: true,
-//        pageSize: 10,
 //        actions: [
-//          { icon: '⋮', label: 'More', onClick: (row) => console.log(row) },
+//          { icon: '⋯', label: 'More', onClick: (row) => console.log(row) },
 //        ],
-//        onSelectionChange: (ids) => console.log('selected:', ids),
 //      });
-//      // Later: t.getSelection(), t.setRows(newRows), t.destroy()
 //    </script>
 //
 //  Column types:
 //    text       — default; renders `String(row[key])`
-//    avatar     — round initial circle + name; uses `row[key]` for the display
-//                 text, optional `avatarKey` for initial (defaults to first char)
+//    avatar     — round initial circle + name. Options:
+//                   avatarKey  — field for the initial letter (defaults to first char of value)
+//                   colorKey   — field whose value is hashed to pick the bg color
+//                   statusKey  — field with 'online'|'idle'|'offline'|'busy' for the corner dot
 //    yesno      — green "Yes" when truthy, dim "No" otherwise
+//    date       — formats ISO/Date as "MMM DD, YY". Options:
+//                   timeKey       — second field rendered as " | 15:34min" suffix
+//                   timeColorKey  — field whose value ('danger'|'warn'|'ok') colors the time
 //    datetime   — formats ISO/Date as "MM/DD/YYYY | hh:mm AM"
-//    date       — formats as "MM/DD/YYYY"
-//    badge      — colored pill; `colorKey` chooses the row field to read color from
+//    status     — colored pill with icon. row[key] is one of:
+//                   'opened' | 'closed' | 'reopened' | 'in-progress'
+//                 Or pass `col.statusMap = { mykey: { label, tone, icon } }` to extend.
+//    badge      — plain colored pill; `colorKey` chooses the row field to read color from
 //    link       — anchor tag; `hrefKey` (or `href` function) for the URL
-//    actions    — right-aligned cluster of icon buttons (config.actions[])
+//    actions    — right-aligned cluster of circular icon buttons (config.actions[])
 //    select     — managed automatically when `selectable: true`; you do not need
 //                 to declare it
 //    custom     — `render(row)` returns the cell HTML string (use carefully —
 //                 you are responsible for escaping)
 //
+//  Config:
+//    variant       — '' (default, light header) | 'dark' (navy header w/ white text)
+//    activeRowId   — id of the row to highlight with a blue border (matches mock)
+//
 //  Styling: the rendered HTML uses class="tz-table" + .tz-table-container,
-//  which are already styled in openproject-custom.css (section 6+). No CSS
+//  which are styled in openproject-custom.css (sections 6, 10, 12). No CSS
 //  changes needed to consume the component.
 // ============================================================================
 
@@ -67,13 +84,16 @@
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
 
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
   const fmtDate = (v) => {
     if (!v) return "";
     const d = v instanceof Date ? v : new Date(v);
     if (isNaN(d)) return escapeHtml(v);
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const mm = MONTHS[d.getMonth()];
     const dd = String(d.getDate()).padStart(2, "0");
-    return `${mm}/${dd}/${d.getFullYear()}`;
+    const yy = String(d.getFullYear()).slice(-2);
+    return `${mm} ${dd}, ${yy}`;
   };
 
   const fmtDateTime = (v) => {
@@ -94,6 +114,48 @@
     return t ? t[0].toUpperCase() : "?";
   };
 
+  // Stable hash → palette index, so the same name always gets the same color.
+  const AVATAR_PALETTE = [
+    { bg: "#dbeafe", fg: "#1d4ed8" }, // blue
+    { bg: "#fde68a", fg: "#92400e" }, // amber
+    { bg: "#dcfce7", fg: "#166534" }, // green
+    { bg: "#fce7f3", fg: "#9d174d" }, // pink
+    { bg: "#e0e7ff", fg: "#3730a3" }, // indigo
+    { bg: "#cffafe", fg: "#155e75" }, // cyan
+    { bg: "#fee2e2", fg: "#991b1b" }, // red
+    { bg: "#ede9fe", fg: "#5b21b6" }, // violet
+  ];
+  const pickAvatarColor = (seed) => {
+    const s = String(seed || "");
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+    return AVATAR_PALETTE[h % AVATAR_PALETTE.length];
+  };
+
+  // ─── status pills ───────────────────────────────────────────────────────
+  // Each entry: label shown in the pill, tone (CSS modifier), and an inline
+  // SVG icon. Icons are tiny (12px) so they sit clean inside the pill.
+  const ICON = {
+    dotCircle: `<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2.5" fill="currentColor"/></svg>`,
+    check:     `<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="currentColor" opacity="0.18"/><path d="M5 8.2l2.2 2.2L11 6.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    refresh:   `<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.46-3.54M13 3.5V6H10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    clock:     `<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5V8l2.2 1.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+  };
+
+  const DEFAULT_STATUS_MAP = {
+    "opened":      { label: "Opened",      tone: "opened",  icon: ICON.dotCircle },
+    "open":        { label: "Opened",      tone: "opened",  icon: ICON.dotCircle },
+    "closed":      { label: "Closed",      tone: "closed",  icon: ICON.check },
+    "resolved":    { label: "Closed",      tone: "closed",  icon: ICON.check },
+    "reopened":    { label: "Reopend",     tone: "reopened",icon: ICON.refresh },
+    "reopend":     { label: "Reopend",     tone: "reopened",icon: ICON.refresh },
+    "in-progress": { label: "In Progress", tone: "progress",icon: ICON.clock },
+    "in_progress": { label: "In Progress", tone: "progress",icon: ICON.clock },
+    "progress":    { label: "In Progress", tone: "progress",icon: ICON.clock },
+  };
+
+  const SORT_ARROWS = `<span class="tz-sort-arrows" aria-hidden="true"><span class="tz-sort-up">▲</span><span class="tz-sort-down">▼</span></span>`;
+
   const resolveTarget = (target) => {
     if (typeof target === "string") return document.querySelector(target);
     if (target instanceof HTMLElement) return target;
@@ -105,19 +167,46 @@
     const v = row[col.key];
     switch (col.type) {
       case "avatar": {
+        const name = String(v == null ? "" : v);
         const initial = col.avatarKey
           ? escapeHtml(row[col.avatarKey])
-          : escapeHtml(initialOf(v));
-        return `<span class="tz-cell-avatar"><span class="tz-avatar" aria-hidden="true">${initial}</span>${escapeHtml(v)}</span>`;
+          : escapeHtml(initialOf(name));
+        const seed = col.colorKey ? row[col.colorKey] : name;
+        const c = pickAvatarColor(seed);
+        const presence = col.statusKey ? String(row[col.statusKey] || "").toLowerCase() : "";
+        const dot = presence
+          ? `<span class="tz-avatar-dot tz-avatar-dot--${escapeHtml(presence)}" aria-hidden="true"></span>`
+          : "";
+        return (
+          `<span class="tz-cell-avatar">` +
+            `<span class="tz-avatar-wrap">` +
+              `<span class="tz-avatar" aria-hidden="true" style="background:${c.bg};color:${c.fg}">${initial}</span>` +
+              dot +
+            `</span>` +
+            `<span class="tz-avatar-name">${escapeHtml(name)}</span>` +
+          `</span>`
+        );
       }
       case "yesno":
         return v
           ? `<span class="tz-cell-yes">Yes</span>`
           : `<span class="tz-cell-no">No</span>`;
-      case "date":
-        return fmtDate(v);
+      case "date": {
+        const main = fmtDate(v);
+        if (!col.timeKey) return main;
+        const t = row[col.timeKey];
+        if (t == null || t === "") return main;
+        const level = col.timeColorKey ? String(row[col.timeColorKey] || "").toLowerCase() : "warn";
+        return `${main} <span class="tz-cell-date-time tz-cell-date-time--${escapeHtml(level)}">| ${escapeHtml(t)}</span>`;
+      }
       case "datetime":
         return fmtDateTime(v);
+      case "status": {
+        const map = Object.assign({}, DEFAULT_STATUS_MAP, col.statusMap || {});
+        const key = String(v == null ? "" : v).toLowerCase().trim();
+        const def = map[key] || { label: String(v == null ? "" : v), tone: "neutral", icon: ICON.dotCircle };
+        return `<span class="tz-status tz-status--${escapeHtml(def.tone)}">${def.icon}<span class="tz-status-label">${escapeHtml(def.label)}</span></span>`;
+      }
       case "badge": {
         const color = col.colorKey ? row[col.colorKey] : col.color;
         const style = color ? ` style="color:${escapeHtml(color)}"` : "";
@@ -133,7 +222,7 @@
         return ctx.actions
           .map(
             (a, i) =>
-              `<button type="button" class="tz-action-btn" data-tz-action="${i}" aria-label="${escapeHtml(a.label || "")}">${escapeHtml(a.icon || "⋮")}</button>`
+              `<button type="button" class="tz-action-btn" data-tz-action="${i}" aria-label="${escapeHtml(a.label || "")}">${escapeHtml(a.icon || "⋯")}</button>`
           )
           .join("");
       case "custom":
@@ -143,15 +232,28 @@
     }
   }
 
-  function renderHeaderCell(col) {
+  function renderHeaderCell(col, ctx) {
     if (col.type === "select") {
       return `<th class="tz-select-cell"><input type="checkbox" class="tz-master-checkbox" aria-label="Select all"></th>`;
     }
     if (col.type === "actions") {
-      return `<th class="actions" style="text-align:right">${escapeHtml(col.label || "Actions")}</th>`;
+      return `<th class="actions" style="text-align:right">${escapeHtml(col.label || "Action")}</th>`;
     }
-    const sortable = col.sortable === false ? "" : " data-tz-sortable";
-    return `<th${sortable} data-tz-key="${escapeHtml(col.key)}">${escapeHtml(col.label || col.key)}</th>`;
+    const isSortable = ctx.sortable && col.sortable !== false;
+    const sortableAttr = isSortable ? " data-tz-sortable" : "";
+    const arrows = isSortable ? SORT_ARROWS : "";
+    const sortedCls =
+      ctx.sortKey === col.key
+        ? ` tz-sorted tz-sorted--${ctx.sortDir}`
+        : "";
+    return (
+      `<th${sortableAttr} class="tz-th${sortedCls}" data-tz-key="${escapeHtml(col.key)}">` +
+        `<span class="tz-th-inner">` +
+          `<span class="tz-th-label">${escapeHtml(col.label || col.key)}</span>` +
+          arrows +
+        `</span>` +
+      `</th>`
+    );
   }
 
   // ─── core component ─────────────────────────────────────────────────────
@@ -172,6 +274,8 @@
         pageSizes: [10, 25, 50, 100],
         sortable: true,
         actions: [],
+        variant: "",          // '' | 'dark'
+        activeRowId: null,    // id of the row to highlight with the blue border
         onSelectionChange: null,
         onSortChange: null,
         onPageChange: null,
@@ -179,7 +283,6 @@
       configIn || {}
     );
 
-    // Inject a leading :select column if requested and not already present
     const columns = config.selectable && !config.columns.some((c) => c.type === "select")
       ? [{ type: "select", key: "__select" }].concat(config.columns)
       : config.columns.slice();
@@ -221,15 +324,22 @@
 
     function render() {
       const pageRows = visibleRows();
-      const ctx = { actions: config.actions };
+      const ctx = {
+        actions: config.actions,
+        sortable: config.sortable,
+        sortKey: state.sortKey,
+        sortDir: state.sortDir,
+      };
 
-      const headHtml = columns.map(renderHeaderCell).join("");
+      const headHtml = columns.map((c) => renderHeaderCell(c, ctx)).join("");
       const bodyHtml = pageRows.length === 0
         ? `<tr class="tz-table--empty-row"><td colspan="${columns.length}">No data</td></tr>`
         : pageRows
             .map((row) => {
               const id = String(row[config.rowKey]);
               const checked = state.selection.has(id) ? " checked" : "";
+              const isActive = config.activeRowId != null && String(config.activeRowId) === id;
+              const rowCls = isActive ? " tz-row--active" : "";
               const cells = columns
                 .map((col) => {
                   if (col.type === "select") {
@@ -241,17 +351,16 @@
                   return `<td class="${escapeHtml(col.key)}">${renderCell(col, row, ctx)}</td>`;
                 })
                 .join("");
-              return `<tr data-tz-row-id="${escapeHtml(id)}">${cells}</tr>`;
+              return `<tr class="tz-row${rowCls}" data-tz-row-id="${escapeHtml(id)}">${cells}</tr>`;
             })
             .join("");
 
-      const footerHtml = state.pageSize
-        ? renderFooter(pageRows.length)
-        : "";
+      const footerHtml = state.pageSize ? renderFooter(pageRows.length) : "";
 
+      const variantCls = config.variant === "dark" ? " tz-table--dark" : "";
       root.innerHTML = `
-        <div class="tz-table-container">
-          <table class="tz-table generic-table">
+        <div class="tz-table-container${variantCls ? " tz-table-container--dark" : ""}">
+          <table class="tz-table generic-table${variantCls}">
             <thead><tr>${headHtml}</tr></thead>
             <tbody>${bodyHtml}</tbody>
           </table>
@@ -290,7 +399,6 @@
     }
 
     function wireEvents() {
-      // master checkbox
       const master = root.querySelector(".tz-master-checkbox");
       if (master) {
         master.addEventListener("change", () => {
@@ -302,7 +410,6 @@
         });
       }
 
-      // per-row checkboxes
       root.querySelectorAll(".tz-row-checkbox").forEach((el) => {
         el.addEventListener("change", () => {
           if (el.checked) state.selection.add(el.value);
@@ -312,7 +419,6 @@
         });
       });
 
-      // sort headers
       if (config.sortable) {
         root.querySelectorAll("th[data-tz-sortable]").forEach((th) => {
           th.style.cursor = "pointer";
@@ -330,7 +436,6 @@
         });
       }
 
-      // actions
       root.querySelectorAll("button[data-tz-action]").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
@@ -343,7 +448,6 @@
         });
       });
 
-      // pagination
       const prev = root.querySelector(".tz-page-prev");
       const next = root.querySelector(".tz-page-next");
       const size = root.querySelector(".tz-page-size");
@@ -391,7 +495,6 @@
 
     render();
 
-    // public controller
     return {
       root,
       getSelection: () => Array.from(state.selection),
@@ -400,6 +503,10 @@
       setRows: (rows) => {
         state.rows = rows.slice();
         state.page = 1;
+        render();
+      },
+      setActiveRow: (id) => {
+        config.activeRowId = id;
         render();
       },
       setPage: (p) => {
@@ -413,5 +520,5 @@
     };
   }
 
-  global.TzTable = { mount, version: "0.1.0" };
+  global.TzTable = { mount, version: "0.2.0" };
 })(window);

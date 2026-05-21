@@ -81,6 +81,12 @@
   function injectBackButton() {
     var body = document.body;
     if (!body) return false; // DOM not ready — keep watching
+    // If a back button is already on the page, we're done. This catches
+    // both the JS-injected button from a previous bootstrap() call AND
+    // a server-side button rendered by a bind-mounted ERB template
+    // (see openproject-docker/users_new.html.erb), so the two paths
+    // can't double up and produce two back buttons.
+    if (document.querySelector(".tz-back-btn")) return true;
 
     // Which controllers should get the Back button.
     // Avatars pages have slashes in their class name (e.g.
