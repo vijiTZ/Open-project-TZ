@@ -3871,23 +3871,37 @@ body.action-login .op-homescreen-announcement {
    _accounts.sass and Primer ViewComponent styles. */
 
 #login-form {
-  position: relative !important;
-  margin: 0 0 0 50vw !important;
-  padding: 60px 40px !important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  left: auto !important;
+  margin: 0 !important;
+  padding: 96px 40px 40px 40px !important;
   width: 50vw !important;
   max-width: 50vw !important;
+  height: 100vh !important;
   min-height: 100vh !important;
-  background: transparent !important;
+  max-height: 100vh !important;
+  background: #ffffff !important;
   border: none !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  overflow: visible !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: center !important;
   align-items: center !important;
+  box-sizing: border-box !important;
   word-break: break-word !important;
-  z-index: 1 !important;
+  z-index: 11 !important;
+  scrollbar-width: none !important;
+}
+
+/* Hide scrollbar visual on login form */
+#login-form::-webkit-scrollbar {
+  width: 0 !important;
+  display: none !important;
 }
 
 /* Tamilzorous logo, rendered at the top of the right column.
@@ -3897,20 +3911,20 @@ body.action-login .op-homescreen-announcement {
    stays on the page even when the bind-mounted file isn't present. */
 #login-form::before {
   content: "" !important;
-  position: relative !important;
-  top: auto !important;
+  position: absolute !important;
+  top: 32px !important;
+  right: 40px !important;
   left: auto !important;
   display: block !important;
-  align-self: center !important;
-  width: 180px !important;
-  height: 36px !important;
-  margin: 0 0 36px 0 !important;
-  flex-shrink: 0 !important;
+  width: 160px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  z-index: 12 !important;
+  pointer-events: none !important;
   background-image: url("data:image/png;base64,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") !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
-  background-position: left center !important;
-  z-index: 2 !important;
+  background-position: right center !important;
 }
 
 /* Illustration — fixed position, fills the LEFT half of the viewport
@@ -3991,11 +4005,11 @@ body.action-login .op-homescreen-announcement {
   background-color: #ffffff !important;
   background-image: none !important;
   border: 1px solid #d1d5db !important;
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   font-size: 1rem !important;
   color: #0f172a !important;
   box-shadow: none !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  transition: none !important;
 }
 
 #login-form input[type="text"]::placeholder,
@@ -4015,8 +4029,8 @@ body.action-login .op-homescreen-announcement {
 #login-form input[type="password"]:focus {
   outline: none !important;
   background-color: #ffffff !important;
-  border-color: #1f8a4c !important;
-  box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15) !important;
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
 }
 
 /* Labels — small, weight 600, calm slate */
@@ -4195,9 +4209,10 @@ body.action-login .op-homescreen-announcement {
     display: none !important;
   }
   #login-form::before {
-    width: 150px !important;
-    height: 32px !important;
-    margin-bottom: 28px !important;
+    top: 20px !important;
+    right: 24px !important;
+    width: 140px !important;
+    height: 28px !important;
   }
   #login-form h1 {
     font-size: 1.75rem !important;
@@ -4302,7 +4317,7 @@ html:has(.registration-modal) [class*="modal-backdrop"] {
   height: 100vh !important;
   max-height: 100vh !important;
   margin: 0 !important;
-  padding: 40px !important;
+  padding: 72px 24px 24px 24px !important;
   background: #ffffff !important;
   border: none !important;
   border-radius: 0 !important;
@@ -4315,51 +4330,148 @@ html:has(.registration-modal) [class*="modal-backdrop"] {
   box-sizing: border-box !important;
   z-index: 11 !important;
   transform: none !important;
-  scrollbar-width: none !important;  /* Firefox: hide scrollbar */
+  /* Show a thin scrollbar so the user can tell when content overflows
+     (e.g. on short laptop viewports the form + button + back link can
+     extend past 100vh). Was hidden before; visible now per user ask. */
+  scrollbar-width: thin !important;
 }
 
-/* Logo at the top of the register form column — matches the sign-in
-   layout (#login-form::before). Image is served from the same bind-mount
-   directory used for the illustration; the directory mount is stable on
-   Windows Docker Desktop. `margin-top: auto` does the "center if fits,
-   scroll if overflow" trick — it grows to push the logo down toward the
-   centered group, but collapses to 0 when content overflows. */
+/* Logo positioned absolutely in the TOP-RIGHT of the form column.
+   Sits outside the flex flow so it doesn't shift other content; the
+   modal's padding-top is bumped so the heading clears the logo area. */
 .registration-modal::before {
   content: "" !important;
-  flex-shrink: 0 !important;
-  align-self: center !important;
+  position: absolute !important;
+  top: 32px !important;
+  right: 40px !important;
   display: block !important;
-  width: 180px !important;
-  height: 36px !important;
-  margin: auto auto 36px auto !important;
+  width: 160px !important;
+  height: 32px !important;
+  margin: 0 !important;
   background-image: url("/tz-assets/tamilzorous-logo.png") !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
-  background-position: center !important;
+  background-position: right center !important;
+  z-index: 12 !important;
+  pointer-events: none !important;
 }
 
-/* Pair the bottom auto-margin on the last flex item so the auto-margins
-   on logo (top) and back-link (bottom) work as a "vertical centering"
-   pair when the form fits in the viewport. Applied to both register
-   and forgot-password pages — the back link is a sibling of the form,
-   appended by tz_bulk_select.js. */
-.registration-modal .tz-back-to-login,
+/* Register & forgot-password "Back to sign in" link.
+   Appended by tz_bulk_select.js. On register it lands inside
+   .modal-delivery-element (the inner form wrapper) and flows naturally
+   right below the Create Account button (no auto-margin push to the
+   bottom). On forgot-password it lands inside .form--section just below
+   the submit button. */
+.registration-modal .modal-delivery-element .tz-back-to-login,
+[data-modal-class-name*="registration"] .modal-delivery-element .tz-back-to-login,
+.modal-delivery-element .tz-back-to-login,
 html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
-  margin-bottom: auto !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 460px !important;
+  text-align: center !important;
+  margin: 16px auto 0 auto !important;
+  padding: 8px 12px !important;
+  margin-bottom: 0 !important;
   flex-shrink: 0 !important;
 }
 
-/* Hide scrollbar inside the modal (form might be tall) */
-.registration-modal::-webkit-scrollbar {
-  width: 0 !important;
-  display: none !important;
+/* Force-visible — defensive overrides in case some upstream rule hides it */
+.tz-back-to-login {
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-/* Inner wrapper — constrained to 400px to keep fields a comfortable width */
+
+/* ── AUTH PAGES → PLACEHOLDER STYLING + NO AUTOFILL COLOR CHANGE ──
+   Placeholder text style and autofill override applied uniformly across
+   login, register, and forgot-password input fields. */
+
+/* Consistent placeholder appearance: subtle slate grey, regular weight */
+#login-form input::placeholder,
+.registration-modal input::placeholder,
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input::placeholder {
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+
+/* Override Chrome / Safari / Edge autofill yellow (or blue) background.
+   The browser applies an internal style when an input is autofilled — we
+   trump it via -webkit-box-shadow inset, which is the only CSS property
+   the browser allows to override the autofill background color. */
+#login-form input:-webkit-autofill,
+#login-form input:-webkit-autofill:hover,
+#login-form input:-webkit-autofill:focus,
+#login-form input:-webkit-autofill:active,
+.registration-modal input:-webkit-autofill,
+.registration-modal input:-webkit-autofill:hover,
+.registration-modal input:-webkit-autofill:focus,
+.registration-modal input:-webkit-autofill:active,
+html:has(form[action*="lost_password"]) form input:-webkit-autofill,
+html:has(form[action*="lost_password"]) form input:-webkit-autofill:hover,
+html:has(form[action*="lost_password"]) form input:-webkit-autofill:focus,
+html:has(form[action*="lost_password"]) form input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  caret-color: #0f172a !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Firefox autofill (no yellow there, but reset just in case) */
+#login-form input:autofill,
+.registration-modal input:autofill,
+html:has(form[action*="lost_password"]) form input:autofill {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Register page back-link is a <div> wrapping "Have an account? " + <a>Login</a>.
+   Style the wrapper as muted text, the inner anchor as the brand-green link. */
+.registration-modal .modal-delivery-element div.tz-back-to-login,
+[data-modal-class-name*="registration"] .modal-delivery-element div.tz-back-to-login,
+.modal-delivery-element div.tz-back-to-login {
+  color: #64748b !important;
+  font-size: 0.9rem !important;
+  font-weight: 400 !important;
+  text-align: center !important;
+}
+
+.tz-back-to-login-link {
+  color: #1f8a4c !important;
+  font-weight: 600 !important;
+  text-decoration: none !important;
+  margin-left: 2px !important;
+}
+
+.tz-back-to-login-link:hover {
+  color: #156a39 !important;
+  text-decoration: underline !important;
+}
+
+/* Slim scrollbar inside the modal (form might be tall on short viewports).
+   Was hidden before; the user now wants visual scroll indication so they
+   can tell when there's more content below. */
+.registration-modal::-webkit-scrollbar {
+  width: 8px !important;
+}
+.registration-modal::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.registration-modal::-webkit-scrollbar-thumb {
+  background: #d1d5db !important;
+  border-radius: 4px !important;
+}
+.registration-modal::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af !important;
+}
+
+/* Inner wrapper — widened to 640px so the 2-column field layout has
+   room. The fields themselves live in a CSS Grid further down. */
 .registration-modal .modal-delivery-element,
 .registration-modal > form {
   width: 100% !important;
-  max-width: 400px !important;
+  max-width: 640px !important;
   margin: 0 auto !important;
   background: transparent !important;
   border: none !important;
@@ -4371,12 +4483,20 @@ html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
 
 /* Modal header — original text "Welcome to OpenProject" is hidden via
    font-size: 0, then replaced with "Create your account" via ::before
-   pseudo-element. CSS-only override; the actual i18n string isn't
-   modified, so other languages would render the original until they
-   add their own override. */
+   pseudo-element and the subtitle via ::after. CSS-only override.
+   IMPORTANT: Spot's default styling makes .spot-modal--header a flex
+   row (for icon + title + close-button layout). We force flex-direction
+   to column so our ::before (heading) sits ABOVE the ::after (subtitle)
+   instead of beside it. */
 .registration-modal .spot-modal--header,
 .registration-modal #spotModalTitle {
-  margin: 0 0 8px 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  max-width: 640px !important;
+  margin: 0 auto 8px auto !important;
   padding: 0 !important;
   font-size: 0 !important;
   line-height: 0 !important;
@@ -4410,12 +4530,13 @@ html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
   display: none !important;
 }
 
-/* Subtitle injected after the heading */
+/* Subtitle injected after the heading — tight margin to keep the
+   overall page compact. */
 .registration-modal .spot-modal--header::after,
 .registration-modal #spotModalTitle::after {
   content: "Please fill in the details below to create your account." !important;
   display: block !important;
-  margin: 8px 0 24px 0 !important;
+  margin: 6px 0 16px 0 !important;
   font-size: 0.95rem !important;
   line-height: 1.4 !important;
   font-weight: 400 !important;
@@ -4460,19 +4581,19 @@ html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
   background-color: #ffffff !important;
   background-image: none !important;
   border: 1px solid #d1d5db !important;
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   font-size: 0.95rem !important;
   color: #0f172a !important;
   box-shadow: none !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  transition: none !important;
 }
 
 .registration-modal input[type="text"]:focus,
 .registration-modal input[type="email"]:focus,
 .registration-modal input[type="password"]:focus {
   outline: none !important;
-  border-color: #1f8a4c !important;
-  box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15) !important;
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
 }
 
 .registration-modal .form--field-container {
@@ -4482,26 +4603,46 @@ html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
   padding: 0 !important;
 }
 
-/* Primary submit button */
+/* Primary "Create Account" button — mirrors the sign-in screen's
+   submit button exactly so the two pages feel like siblings. */
 .registration-modal button[type="submit"],
 .registration-modal .button.-primary,
 .registration-modal .Button--primary,
 .registration-modal input[type="submit"] {
+  display: block !important;
   width: 100% !important;
-  height: 48px !important;
+  max-width: 640px !important;
+  height: 52px !important;
+  padding: 0 18px !important;
   background: #1f8a4c !important;
   border: 1px solid #1f8a4c !important;
   border-radius: 10px !important;
   color: #ffffff !important;
-  font-size: 1rem !important;
+  font-size: 1.05rem !important;
   font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  box-shadow: none !important;
   cursor: pointer !important;
-  margin-top: 8px !important;
+  margin: 8px auto 0 auto !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.15s ease, filter 0.15s ease !important;
 }
 
 .registration-modal button[type="submit"]:hover,
-.registration-modal .button.-primary:hover {
+.registration-modal .button.-primary:hover,
+.registration-modal .Button--primary:hover,
+.registration-modal input[type="submit"]:hover {
   background: #176d3c !important;
+  filter: none !important;
+}
+
+.registration-modal button[type="submit"]:active,
+.registration-modal .button.-primary:active,
+.registration-modal .Button--primary:active,
+.registration-modal input[type="submit"]:active {
+  transform: translateY(1px) !important;
 }
 
 /* Secondary "Cancel" / back buttons */
@@ -4546,7 +4687,7 @@ html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
   text-decoration: underline !important;
 }
 
-/* Mobile: stack the register page (no illustration) */
+/* Mobile: stack the register page (no illustration, single-column form) */
 @media (max-width: 760px) {
   [data-modal-class-name*="registration"]::before,
   [data-augmented-model-wrapper]:has(.registration-modal)::before {
@@ -4558,6 +4699,11 @@ html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
     width: 100vw !important;
     max-width: 100vw !important;
     padding: 32px 24px !important;
+  }
+  /* Collapse the 2-column field grid back to single column */
+  .registration-modal .spot-modal--body .form--section,
+  .registration-modal .spot-container .form--section {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -4621,8 +4767,11 @@ html:has(form[action*="lost_password"]) #content::before {
 }
 
 /* Right-half container — matches the sign-in screen's #login-form.
-   Uses margin: auto on inner content for centered-when-fits, scroll-when-
-   overflows behavior. */
+   Uses justify-content: center so the small form (logo + heading +
+   subtitle + email + button + back link) is vertically centered in
+   the column. The forgot-password form is short enough to always fit
+   in a 100vh viewport, so we don't need the auto-margin scroll trick
+   that the register page uses. */
 html:has(form[action*="lost_password"]) .form--section {
   position: fixed !important;
   top: 0 !important;
@@ -4638,6 +4787,7 @@ html:has(form[action*="lost_password"]) .form--section {
   border: none !important;
   display: flex !important;
   flex-direction: column !important;
+  justify-content: center !important;
   align-items: center !important;
   box-sizing: border-box !important;
   overflow-y: auto !important;
@@ -4651,19 +4801,23 @@ html:has(form[action*="lost_password"]) .form--section::-webkit-scrollbar {
   display: none !important;
 }
 
-/* Logo at top of the form column — matches sign-in's #login-form::before */
+/* Logo positioned absolutely in the TOP-RIGHT of the form column,
+   matching login and register pages. */
 html:has(form[action*="lost_password"]) .form--section::before {
   content: "" !important;
-  flex-shrink: 0 !important;
-  align-self: center !important;
+  position: absolute !important;
+  top: 32px !important;
+  right: 40px !important;
   display: block !important;
-  width: 180px !important;
-  height: 36px !important;
-  margin: auto auto 36px auto !important;
+  width: 160px !important;
+  height: 32px !important;
+  margin: 0 !important;
   background-image: url("/tz-assets/tamilzorous-logo.png") !important;
   background-size: contain !important;
   background-repeat: no-repeat !important;
-  background-position: center !important;
+  background-position: right center !important;
+  z-index: 12 !important;
+  pointer-events: none !important;
 }
 
 /* The form itself — natural block, centered, max-width 400px to match register */
@@ -4739,18 +4893,18 @@ html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type
   background-color: #ffffff !important;
   background-image: none !important;
   border: 1px solid #d1d5db !important;
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   font-size: 0.95rem !important;
   color: #0f172a !important;
   box-shadow: none !important;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  transition: none !important;
 }
 
 html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="text"]:focus,
 html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="email"]:focus {
   outline: none !important;
-  border-color: #1f8a4c !important;
-  box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15) !important;
+  border-color: #d1d5db !important;
+  box-shadow: none !important;
 }
 
 html:has(form[action*="lost_password"]) form[action*="lost_password"] .form--field-container {
@@ -4824,8 +4978,10 @@ html:has(form[action*="lost_password"]) form[action*="lost_password"] [class*="i
   transition: color 0.15s ease !important;
   /* Center it horizontally inside the flex form container */
   align-self: center !important;
-  /* Make sure it appears below the submit button when the parent is a flex column */
-  order: 99 !important;
+  /* No flex order — let it sit in DOM source order (appended after the
+     submit button by tz_bulk_select.js) so it flows naturally as part
+     of the form, not pinned to the bottom of the column. */
+  order: 0 !important;
 }
 
 .tz-back-to-login:hover {
@@ -4854,11 +5010,13 @@ html:has(form[action*="lost_password"]) form[action*="lost_password"] [class*="i
   align-items: stretch !important;
 }
 
-/* Each field row in the register form — full-width inside its 400px container */
+/* Each field row in the register form — full-width inside its grid cell.
+   The grid container (.form--section) handles the column layout; fields
+   just need to take their cell's full width. */
 .registration-modal .form--field {
   width: 100% !important;
-  max-width: 400px !important;
-  margin: 0 auto 14px auto !important;
+  max-width: none !important;
+  margin: 0 !important;
   display: block !important;
   text-align: left !important;
 }
@@ -4876,14 +5034,16 @@ html:has(form[action*="lost_password"]) form[action*="lost_password"] [class*="i
   text-align: left !important;
 }
 
-/* Action bar (Create button) — center the button, full-width */
+/* Action bar (Create button) — match the 640px form column width.
+   This rule is intentionally broad; a more specific rule further down
+   refines the layout for the new 2-column grid. */
 .registration-modal .spot-action-bar,
 .registration-modal .spot-action-bar--right {
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
   width: 100% !important;
-  max-width: 400px !important;
+  max-width: 640px !important;
   margin: 8px auto 0 auto !important;
   padding: 0 !important;
   background: transparent !important;
@@ -4896,4 +5056,471 @@ html:has(form[action*="lost_password"]) form[action*="lost_password"] [class*="i
   text-align: center !important;
   font-size: 0.85rem !important;
   color: #64748b !important;
+}
+
+
+/* ── REGISTER PAGE → DETAILED ALIGNMENT FIX ──────────────────────
+   The register form uses OpenProject's "form -wide-labels" class,
+   which lays labels in a left column and fields to the right. We
+   override that to a vertical stack matching login/forgot. Also
+   handles: inner .form--section padding, <br> separators between
+   custom fields and password, password requirements list styling,
+   the auth-providers section (if enabled), the action bar layout. */
+
+/* Force vertical-stack layout regardless of -wide-labels */
+.registration-modal .form.-wide-labels,
+.registration-modal form.spot-modal,
+.registration-modal .form.-wide-labels .form--field,
+.registration-modal form.spot-modal .form--field {
+  display: block !important;
+}
+
+.registration-modal .form.-wide-labels .form--label,
+.registration-modal form.spot-modal .form--label {
+  display: block !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding: 0 !important;
+  margin: 0 0 6px 0 !important;
+  float: none !important;
+  position: static !important;
+}
+
+.registration-modal .form.-wide-labels .form--field-container,
+.registration-modal form.spot-modal .form--field-container {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Inner .form--section (wraps the fields inside the modal body) —
+   turned into a 2-column CSS Grid. Each .form--field occupies one cell
+   by default. Wide-content fields (password with requirements list,
+   custom long fields) span both columns via :has() selectors below. */
+.registration-modal .spot-modal--body .form--section,
+.registration-modal .spot-container .form--section {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px 16px !important;
+  width: 100% !important;
+}
+
+/* Each field is one grid cell by default */
+.registration-modal .spot-modal--body .form--section .form--field,
+.registration-modal .spot-container .form--section .form--field {
+  margin: 0 !important;
+  min-width: 0 !important;
+  grid-column: span 1 !important;
+}
+
+/* Default: each field takes one grid cell (half-width). Overrides below
+   promote specific fields (Username, Email) to full-width rows so the
+   layout reads:
+       Row 1: Username                    (full)
+       Row 2: First name | Last name      (split)
+       Row 3: Email                       (full)
+       Row 4: Password | Confirmation     (split)
+*/
+.registration-modal .spot-modal--body .form--section .form--field,
+.registration-modal .spot-container .form--section .form--field,
+.registration-modal .spot-modal--body .form--section [data-controller="password-requirements"],
+.registration-modal .spot-container .form--section [data-controller="password-requirements"] {
+  grid-column: span 1 !important;
+}
+
+/* The first .form--field is always Username (login/email) — full width. */
+.registration-modal .spot-modal--body .form--section .form--field:first-of-type,
+.registration-modal .spot-container .form--section .form--field:first-of-type {
+  grid-column: 1 / -1 !important;
+}
+
+/* Email field (4th .form--field by default order: login, firstname,
+   lastname, email) — full width. Combined position-based + attribute-
+   based matching for resilience: positional :nth-of-type(4) catches
+   the standard layout, attribute selectors catch installs where the
+   field order is customized. */
+.registration-modal .spot-modal--body .form--section .form--field:nth-of-type(4),
+.registration-modal .spot-container .form--section .form--field:nth-of-type(4),
+.registration-modal .spot-modal--body .form--section .form--field:has(input[type="email"]),
+.registration-modal .spot-container .form--section .form--field:has(input[type="email"]),
+.registration-modal .spot-modal--body .form--section .form--field:has(input[name*="mail"]),
+.registration-modal .spot-container .form--section .form--field:has(input[name*="mail"]),
+.registration-modal .spot-modal--body .form--section .form--field:has(input[id*="mail"]),
+.registration-modal .spot-container .form--section .form--field:has(input[id*="mail"]) {
+  grid-column: 1 / -1 !important;
+}
+
+/* Force grid cells to ignore intrinsic content sizes — without this the
+   password_field's HTML `size="25"` attribute and the data-controller
+   wrapper can push the cell wider than its 1fr share, causing Password
+   to render narrower than its sibling Confirmation. */
+.registration-modal .spot-modal--body .form--section,
+.registration-modal .spot-container .form--section {
+  grid-auto-rows: min-content !important;
+}
+
+.registration-modal .spot-modal--body .form--section .form--field,
+.registration-modal .spot-container .form--section .form--field,
+.registration-modal .spot-modal--body .form--section [data-controller="password-requirements"],
+.registration-modal .spot-container .form--section [data-controller="password-requirements"] {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* All inputs inside the register grid — ignore HTML size attribute,
+   fill their grid cell width-wise. Trumps OpenProject's inline `size`
+   and any inherited width from form themes. */
+.registration-modal .spot-modal--body .form--section input,
+.registration-modal .spot-container .form--section input {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* The .form--field-container (wraps the input) — also full width. */
+.registration-modal .spot-modal--body .form--section .form--field-container,
+.registration-modal .spot-container .form--section .form--field-container {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Drop the awkward <br><br> separator the ERB inserts between custom
+   user fields and the password field. */
+.registration-modal br {
+  display: none !important;
+}
+
+/* Password requirements list — hidden by default. The JS validator
+   (setupPasswordValidation in tz_bulk_select.js) intercepts the submit
+   and renders only the failing requirements as .tz-pw-errors below. */
+.registration-modal .form--field-instructions,
+.registration-modal [data-controller="password-requirements"] .form--field-instructions {
+  display: none !important;
+  margin: 6px 0 0 0 !important;
+  padding: 0 !important;
+  font-size: 0.8rem !important;
+  line-height: 1.4 !important;
+  color: #64748b !important;
+  text-align: left !important;
+  font-style: normal !important;
+}
+
+/* Toast notification container — fixed top-right of the viewport.
+   Used by tz_bulk_select.js to surface password-validation errors (and
+   any future auth-flow toasts). Stacked top-to-bottom with a small gap. */
+.tz-toast-container {
+  position: fixed !important;
+  top: 24px !important;
+  right: 24px !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  pointer-events: none !important;
+  max-width: calc(100% - 48px) !important;
+}
+
+.tz-toast {
+  pointer-events: auto !important;
+  min-width: 300px !important;
+  max-width: 420px !important;
+  padding: 14px 40px 14px 16px !important;
+  background: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.08),
+    0 12px 32px rgba(15, 23, 42, 0.12) !important;
+  position: relative !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  color: #0f172a !important;
+  animation: tz-toast-in 0.24s ease-out !important;
+}
+
+/* Error variant — soft red theme with a left accent bar */
+.tz-toast-error {
+  background: #fef2f2 !important;
+  border-left: 4px solid #dc2626 !important;
+  color: #7f1d1d !important;
+}
+
+/* Success / info variants for future use */
+.tz-toast-success {
+  background: #ecfdf5 !important;
+  border-left: 4px solid #16a34a !important;
+  color: #064e3b !important;
+}
+.tz-toast-info {
+  background: #eff6ff !important;
+  border-left: 4px solid #2563eb !important;
+  color: #1e3a8a !important;
+}
+
+.tz-toast-title {
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.tz-toast-body {
+  font-weight: 400 !important;
+}
+
+.tz-toast-list {
+  margin: 4px 0 0 0 !important;
+  padding: 0 0 0 18px !important;
+  list-style: disc !important;
+}
+
+.tz-toast-list li {
+  margin: 2px 0 !important;
+  font-weight: 400 !important;
+}
+
+/* Close button (×) in top-right corner of each toast */
+.tz-toast-close {
+  position: absolute !important;
+  top: 6px !important;
+  right: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  color: inherit !important;
+  opacity: 0.55 !important;
+  border-radius: 4px !important;
+  transition: opacity 0.15s ease, background-color 0.15s ease !important;
+}
+
+.tz-toast-close:hover {
+  opacity: 1 !important;
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+@keyframes tz-toast-in {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+.tz-toast-leaving {
+  animation: tz-toast-out 0.2s ease-in forwards !important;
+}
+
+@keyframes tz-toast-out {
+  to { transform: translateX(110%); opacity: 0; }
+}
+
+/* Red border on the invalid input — kept from the inline-error version
+   so the field still draws attention even when the toast scrolls off. */
+.registration-modal input.tz-pw-invalid {
+  border-color: #fca5a5 !important;
+}
+
+.registration-modal .form--field-instructions ul,
+.registration-modal .form--field-instructions ol {
+  margin: 4px 0 0 0 !important;
+  padding: 0 0 0 18px !important;
+  list-style: disc !important;
+}
+
+.registration-modal .form--field-instructions li {
+  margin: 2px 0 !important;
+  font-size: 0.78rem !important;
+  color: #64748b !important;
+}
+
+/* Field rows after the password block — same spacing as before */
+.registration-modal [data-controller="password-requirements"] {
+  margin-bottom: 14px !important;
+}
+
+/* Hide the icon prefix on the Create button (originally .icon-checkmark) */
+.registration-modal .spot-action-bar button[type="submit"]::before,
+.registration-modal .spot-action-bar [class*="icon-"]::before,
+.registration-modal button[type="submit"] .icon-checkmark,
+.registration-modal button[type="submit"] [class*="icon-"] {
+  display: none !important;
+}
+
+/* Action bar — wraps the Create-account button. Centered within the form. */
+.registration-modal .spot-action-bar {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 640px !important;
+  margin: 12px auto 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  position: static !important;
+  box-shadow: none !important;
+}
+
+.registration-modal .spot-action-bar--right {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  gap: 12px !important;
+}
+
+/* Auth providers section (e.g. "or sign up with Google") — match form width */
+.registration-modal .login-auth-providers {
+  width: 100% !important;
+  max-width: 640px !important;
+  margin: 24px auto 0 auto !important;
+  text-align: center !important;
+}
+
+/* Consent checkbox section (if user_consent_required?) */
+.registration-modal .op-user-consent-form {
+  width: 100% !important;
+  max-width: 640px !important;
+  margin: 16px auto 0 auto !important;
+  font-size: 0.85rem !important;
+  color: #475569 !important;
+}
+
+.registration-modal .op-user-consent-form hr,
+.registration-modal hr:not(.spot-divider) {
+  display: none !important;
+}
+
+/* Server-rendered error block (Rails error_messages_for helper, Spot
+   flash, op-toast, etc.). Visually hidden — tz_bulk_select.js's
+   rerouteServerErrorsToToast() extracts its content into our own toast
+   and we keep this off-screen so the toast is the only error surface.
+   Kept in DOM (not display: none) so the JS can read it on a fresh
+   page load. Broad selector list covers the variants OpenProject has
+   used across versions. */
+.registration-modal #errorExplanation,
+.registration-modal .errorExplanation,
+.modal-delivery-element #errorExplanation,
+.modal-delivery-element .errorExplanation,
+[data-modal-class-name*="registration"] #errorExplanation,
+[data-modal-class-name*="registration"] .errorExplanation,
+.registration-modal .flash-error,
+.registration-modal .flash.flash--error,
+.registration-modal .flash.error,
+.registration-modal .flash--error,
+.registration-modal .op-toast,
+.registration-modal .op-toast.-error,
+.registration-modal .spot-action-message,
+.registration-modal [role="alert"]:not(.tz-toast),
+.modal-delivery-element .flash-error,
+.modal-delivery-element .flash.flash--error,
+.modal-delivery-element .flash.error,
+.modal-delivery-element .flash--error,
+.modal-delivery-element .op-toast,
+.modal-delivery-element .spot-action-message,
+.modal-delivery-element [role="alert"]:not(.tz-toast),
+[data-modal-class-name*="registration"] .flash-error,
+[data-modal-class-name*="registration"] .flash.flash--error,
+[data-modal-class-name*="registration"] .op-toast,
+[data-modal-class-name*="registration"] .spot-action-message {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+/* Required-field asterisk — softer color */
+.registration-modal .required,
+.registration-modal abbr[title*="required" i] {
+  color: #1f8a4c !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  margin-left: 2px !important;
+}
+
+/* Field-error indicator (the ⓘ / ⚠ icon Rails inserts on invalid fields)
+   gets pushed onto a line by itself by default in some fields, which
+   misaligns the label. Force it inline next to the label text. */
+.registration-modal .form--field svg,
+.registration-modal .form--field img,
+.registration-modal .form--field .octicon,
+.registration-modal .form--field [class*="error-icon" i],
+.registration-modal .form--field .form--field-error-icon,
+.registration-modal .form--field .errors,
+.registration-modal .form--field a.errors,
+.registration-modal .form--field .icon-error {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  position: static !important;
+  float: none !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin: 0 4px 0 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* The label itself — flex row so an inline icon sits next to the text
+   instead of wrapping onto its own line. */
+.registration-modal .form--field > label,
+.registration-modal .form--field > .form--label,
+.registration-modal .form--field label.form--label {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+/* Some Rails layouts put the error icon as a SIBLING of the label inside
+   the .form--field wrapper. Flex-row the wrapper with wrap so the icon
+   sits next to the label, and the input wraps to the next line at full
+   width. */
+.registration-modal .spot-modal--body .form--section .form--field,
+.registration-modal .spot-container .form--section .form--field {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+/* Input / container occupies its own row at full width */
+.registration-modal .spot-modal--body .form--section .form--field > input,
+.registration-modal .spot-modal--body .form--section .form--field > .form--field-container,
+.registration-modal .spot-container .form--section .form--field > input,
+.registration-modal .spot-container .form--section .form--field > .form--field-container {
+  flex: 1 1 100% !important;
+  width: 100% !important;
+  margin-top: 6px !important;
+}
+
+/* Tighter, consistent field spacing across the whole form */
+.registration-modal .form--field {
+  margin: 0 0 14px 0 !important;
+  padding: 0 !important;
+}
+
+/* The <h2> "Create a new account" was hidden above — also collapse any
+   leftover whitespace it left around itself */
+.registration-modal h2 + section,
+.registration-modal h2 + .form--section {
+  margin-top: 0 !important;
 }
