@@ -18,6 +18,9 @@ services:
       - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
+      # tz: server-side override of the New User view to add the Back
+      # button into the Create / Create-and-continue action row.
+      - "./users_new.html.erb:/app/app/views/users/new.html.erb"
 
   worker:
     volumes:

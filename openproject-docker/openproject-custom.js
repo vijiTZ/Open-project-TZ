@@ -176,3 +176,233 @@
     start();
   }
 })();
+
+
+/* ================================================================
+   WORK-PACKAGE TABLE LAYOUT FIX
+   ----------------------------------------------------------------
+   OpenProject's WP table is an Angular component that writes
+   column widths to inline styles with high specificity — CSS
+   !important rules don't always win. Worse, there's often a
+   leading hidden hierarchy/select column, so :nth-child(N) in CSS
+   targets the WRONG visual column.
+
+   This script identifies columns by data-property-name (the OP
+   semantic attribute), header text, or class, and forces the right
+   width onto BOTH the <col> AND the <th>/<td> via setProperty
+   with 'important' priority — which is the only way to beat
+   inline !important set by JS. It also kills the reserved
+   hierarchy indent so Subject titles sit flush-left.
+
+   Re-runs on DOM mutations to survive Angular re-renders.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  var COL_WIDTH_PX = {
+    id: 70,
+    subject: 380,
+  };
+
+  function identifyColumn(th) {
+    var data = th.getAttribute('data-property-name') ||
+               th.getAttribute('data-column-name') ||
+               th.getAttribute('data-attribute');
+    if (data) return data.toLowerCase().replace(/[^a-z]/g, '');
+
+    var cls = (th.className || '').toLowerCase();
+    var known = ['id', 'subject', 'type', 'status', 'assignee', 'priority'];
+    for (var i = 0; i < known.length; i++) {
+      if (cls.indexOf(known[i]) !== -1) return known[i];
+    }
+
+    var text = (th.textContent || '').trim().toLowerCase();
+    if (known.indexOf(text) !== -1) return text;
+    return null;
+  }
+
+  function lockWidth(el, w) {
+    el.style.setProperty('width', w + 'px', 'important');
+    el.style.setProperty('min-width', w + 'px', 'important');
+    el.style.setProperty('max-width', w + 'px', 'important');
+    el.style.setProperty('box-sizing', 'border-box', 'important');
+  }
+
+  function flushLeft(el) {
+    el.style.setProperty('text-align', 'left', 'important');
+    el.style.setProperty('justify-content', 'flex-start', 'important');
+  }
+
+  function killHierarchyIndent(el) {
+    var cls = (el.className || '');
+    if (typeof cls !== 'string') return;
+    if (cls.indexOf('hierarchy') !== -1 || cls.indexOf('indicator') !== -1) {
+      el.style.setProperty('padding-left', '0', 'important');
+      el.style.setProperty('margin-left', '0', 'important');
+    }
+  }
+
+  /* --- Status / Priority pill palette ----------------------------- */
+  var NEUTRAL_PILL = { bg: '#f3f4f6', fg: '#1f2937', border: '#e5e7eb' };
+  var STATUS_COLORS = [
+    { match: 'in progress',     bg: '#fef3c7', fg: '#b45309', border: '#fde68a' },
+    { match: 'in specification',bg: '#fef3c7', fg: '#b45309', border: '#fde68a' },
+    { match: 'to be scheduled', bg: '#fef9c3', fg: '#a16207', border: '#fde68a' },
+    { match: 'on hold',         bg: '#ffedd5', fg: '#c2410c', border: '#fed7aa' },
+    { match: 'closed',          bg: '#dcfce7', fg: '#15803d', border: '#bbf7d0' },
+    { match: 'resolved',        bg: '#dcfce7', fg: '#15803d', border: '#bbf7d0' },
+    { match: 'done',            bg: '#dcfce7', fg: '#15803d', border: '#bbf7d0' },
+    { match: 'developed',       bg: '#dcfce7', fg: '#15803d', border: '#bbf7d0' },
+    { match: 'scheduled',       bg: '#ecfccb', fg: '#4d7c0f', border: '#d9f99d' },
+    { match: 'rejected',        bg: '#fee2e2', fg: '#b91c1c', border: '#fecaca' },
+    { match: 'opened',          bg: '#fee2e2', fg: '#b91c1c', border: '#fecaca' },
+    { match: 'reopened',        bg: '#cffafe', fg: '#0891b2', border: '#a5f3fc' },
+    { match: 'new',             bg: '#cffafe', fg: '#0e7490', border: '#a5f3fc' },
+    { match: 'open',            bg: '#cffafe', fg: '#0e7490', border: '#a5f3fc' },
+  ];
+  var PRIORITY_COLORS = [
+    { match: 'immediate', bg: '#fee2e2', fg: '#b91c1c', border: '#fecaca' },
+    { match: 'high',      bg: '#ffedd5', fg: '#c2410c', border: '#fed7aa' },
+    { match: 'normal',    bg: '#dbeafe', fg: '#1d4ed8', border: '#bfdbfe' },
+    { match: 'low',       bg: '#f1f5f9', fg: '#475569', border: '#e2e8f0' },
+  ];
+
+  function pickColor(text, palette) {
+    var t = (text || '').toLowerCase().trim();
+    for (var i = 0; i < palette.length; i++) {
+      if (t.indexOf(palette[i].match) !== -1) return palette[i];
+    }
+    return NEUTRAL_PILL;
+  }
+
+  function findPillTarget(cell) {
+    // Prefer .op-status / .op-priority wrappers; fall back to first
+    // non-empty inline child; if nothing, style the cell itself.
+    var t = cell.querySelector('.op-status, .op-priority, op-status, op-priority');
+    if (t) return t;
+    var children = cell.children;
+    for (var i = 0; i < children.length; i++) {
+      var c = children[i];
+      if ((c.textContent || '').trim().length > 0) return c;
+    }
+    return cell;
+  }
+
+  function applyPill(cell, color) {
+    var target = findPillTarget(cell);
+    target.style.setProperty('display', 'inline-flex', 'important');
+    target.style.setProperty('align-items', 'center', 'important');
+    target.style.setProperty('gap', '6px', 'important');
+    target.style.setProperty('padding', '4px 12px', 'important');
+    target.style.setProperty('border-radius', '999px', 'important');
+    target.style.setProperty('background-color', color.bg, 'important');
+    target.style.setProperty('color', color.fg, 'important');
+    target.style.setProperty('border', '1px solid ' + color.border, 'important');
+    target.style.setProperty('font-weight', '600', 'important');
+    target.style.setProperty('font-size', '12.5px', 'important');
+    target.style.setProperty('line-height', '1.2', 'important');
+    target.style.setProperty('white-space', 'nowrap', 'important');
+    target.style.setProperty('text-transform', 'none', 'important');
+    target.style.setProperty('letter-spacing', '0', 'important');
+
+    // The colored OP dot becomes redundant inside the colored pill;
+    // hide it so the pill reads cleanly.
+    var dots = target.querySelectorAll(
+      '.op-status--dot, .op-priority--dot, [class*="--dot"]'
+    );
+    for (var i = 0; i < dots.length; i++) {
+      dots[i].style.setProperty('display', 'none', 'important');
+    }
+  }
+
+  function fixTable(table) {
+    var headerRow = table.querySelector('thead tr');
+    if (!headerRow) return;
+
+    var ths = headerRow.querySelectorAll('th');
+    var cols = table.querySelectorAll('colgroup col');
+
+    for (var i = 0; i < ths.length; i++) {
+      var th = ths[i];
+      var name = identifyColumn(th);
+      var w = name ? COL_WIDTH_PX[name] : null;
+
+      if (w) {
+        lockWidth(th, w);
+        if (cols[i]) lockWidth(cols[i], w);
+      }
+      if (name === 'subject') flushLeft(th);
+
+      // Body cells in this column
+      var tdSelector = 'tbody tr td:nth-child(' + (i + 1) + ')';
+      var tds = table.querySelectorAll(tdSelector);
+      for (var j = 0; j < tds.length; j++) {
+        var td = tds[j];
+        if (w) lockWidth(td, w);
+
+        if (name === 'subject') {
+          flushLeft(td);
+          td.style.setProperty('padding-left', '18px', 'important');
+          var descendants = td.querySelectorAll('*');
+          for (var k = 0; k < descendants.length; k++) {
+            flushLeft(descendants[k]);
+            killHierarchyIndent(descendants[k]);
+          }
+        } else if (name === 'status') {
+          applyPill(td, pickColor(td.textContent, STATUS_COLORS));
+        } else if (name === 'priority') {
+          applyPill(td, pickColor(td.textContent, PRIORITY_COLORS));
+        }
+      }
+    }
+  }
+
+  function fixAllTables() {
+    var tables = document.querySelectorAll('table.work-package-table');
+    for (var i = 0; i < tables.length; i++) fixTable(tables[i]);
+  }
+
+  var pending = false;
+  function scheduleFix() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () {
+      pending = false;
+      fixAllTables();
+    });
+  }
+
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      var m = mutations[i];
+      if (m.type !== 'childList') continue;
+      for (var j = 0; j < m.addedNodes.length; j++) {
+        var node = m.addedNodes[j];
+        if (node.nodeType !== 1) continue;
+        if (node.matches && (
+            node.matches('table.work-package-table') ||
+            node.matches('tr') ||
+            node.matches('td') ||
+            node.matches('col'))) {
+          scheduleFix();
+          return;
+        }
+        if (node.querySelector && node.querySelector('table.work-package-table, table.work-package-table tr')) {
+          scheduleFix();
+          return;
+        }
+      }
+    }
+  });
+
+  function start() {
+    fixAllTables();
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
