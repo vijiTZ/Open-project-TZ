@@ -119,9 +119,18 @@
    OpenProject renders the logo as a CSS background-image on
    .op-logo--link (desktop) and .op-logo--icon (mobile).        */
 
-/* Local file served from /tz-assets/tamilzorous-logo.png (directory
-   bind-mount). Cache-busted at runtime by css_injector.rb via an
-   inline <style id="tz-logo-cachebust"> block.
+/* Logo embedded as a base64 data URI directly in this stylesheet.
+   Previously the PNG was served from /tz-assets/tamilzorous-logo.png
+   via a directory bind-mount, but on Docker Desktop (Windows/WSL2) the
+   container intermittently failed to pick up replaced PNG bytes, so
+   the navbar would show a stale or missing logo. Embedding the image
+   in the CSS removes the bind-mount dependency entirely — the image
+   updates atomically with the stylesheet, and every container that
+   mounts openproject-custom.css gets the correct logo.
+
+   To replace the logo: re-encode the new PNG to base64 and swap the
+   string below. (PowerShell:
+     [Convert]::ToBase64String([IO.File]::ReadAllBytes("path\to.png")) )
 
    OpenProject renders BOTH an .op-logo--link AND a second anchor with
    classes "op-logo--icon op-logo--link" in the same container. To
@@ -141,7 +150,7 @@
 a.op-logo--link:not(.op-logo--icon),
 .op-logo--link_high_contrast {
   display: inline-block !important;
-  background-image: url("/tz-assets/tamilzorous-logo.png") !important;
+  background-image: url("data:image/png;base64,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") !important;
   background-repeat: no-repeat !important;
   background-size: contain !important;
   background-position: left center !important;
@@ -3809,4 +3818,181 @@ body.controller-work_packages.action-new main {
 input[type="file"][id*="attachment"] {
   display: block !important;
   visibility: visible !important;
+}
+
+
+/* ── SIGN IN PAGE → MODERN SAAS ──────────────────────────────────
+   Scope: #login-form (rendered by app/views/account/login.html.erb).
+   The compiled OpenProject stylesheet ships its own #login-form rules
+   from _accounts.sass; everything below uses !important so the live
+   bind-mounted custom CSS wins regardless of source-order. */
+
+#login-form {
+  position: relative !important;
+  margin: 80px auto 40px !important;
+  padding: 48px 44px 40px !important;
+  width: 440px !important;
+  max-width: calc(100% - 32px) !important;
+  word-break: break-word !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 32px rgba(15, 23, 42, 0.08) !important;
+  overflow: hidden !important;
+}
+
+/* Brand accent strip across the top of the card */
+#login-form::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, #1f8a4c 0%, #2bb673 50%, #38d39f 100%) !important;
+}
+
+#login-form h1 {
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
+  font-size: 1.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: #0f172a !important;
+  text-align: left !important;
+}
+
+/* Hide the default <hr> separator under the heading */
+#login-form hr.form--separator {
+  display: none !important;
+}
+
+/* Inputs — soft fill, rounded, green focus ring */
+#login-form input[type="text"],
+#login-form input[type="email"],
+#login-form input[type="password"] {
+  width: 100% !important;
+  height: 44px !important;
+  padding: 10px 14px !important;
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+#login-form input[type="text"]:hover,
+#login-form input[type="email"]:hover,
+#login-form input[type="password"]:hover {
+  border-color: #cbd5e1 !important;
+}
+
+#login-form input[type="text"]:focus,
+#login-form input[type="email"]:focus,
+#login-form input[type="password"]:focus {
+  outline: none !important;
+  background: #ffffff !important;
+  border-color: #2bb673 !important;
+  box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15) !important;
+}
+
+/* Labels — small, weight 600, calm slate */
+#login-form label,
+#login-form .form--label,
+#login-form .FormControl-label {
+  display: block !important;
+  margin-bottom: 6px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
+/* Field spacing */
+#login-form .FormControl,
+#login-form .form--field,
+#login-form .form--field-container,
+#login-form .FormControl-spacingWrapper {
+  margin-bottom: 18px !important;
+}
+
+/* Primary "Sign in" button — full-width green gradient */
+#login-form button[type="submit"],
+#login-form .button.-primary,
+#login-form .Button--primary {
+  width: 100% !important;
+  height: 44px !important;
+  padding: 0 18px !important;
+  background: linear-gradient(180deg, #2bb673 0%, #1f8a4c 100%) !important;
+  border: 1px solid #1f8a4c !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.08),
+    0 4px 12px rgba(31, 138, 76, 0.25) !important;
+  transition: transform 0.05s ease, box-shadow 0.15s ease, filter 0.15s ease !important;
+}
+
+#login-form button[type="submit"]:hover,
+#login-form .button.-primary:hover,
+#login-form .Button--primary:hover {
+  filter: brightness(1.05) !important;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.1),
+    0 6px 18px rgba(31, 138, 76, 0.3) !important;
+}
+
+#login-form button[type="submit"]:active,
+#login-form .button.-primary:active,
+#login-form .Button--primary:active {
+  transform: translateY(1px) !important;
+}
+
+/* Links — brand green, underline on hover */
+#login-form a {
+  color: #1f8a4c !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+#login-form a:hover {
+  color: #156a39 !important;
+  text-decoration: underline !important;
+}
+
+/* Footer row with submit + links (Create account / Forgot password) */
+#login-form .login-form--footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-top: 20px !important;
+  margin-bottom: 0 !important;
+  gap: 16px !important;
+  font-size: 0.9rem !important;
+}
+
+/* Auth-provider separator label, in case providers are enabled */
+#content .login-auth-providers h3 span,
+#nav-login-content .login-auth-providers h3 span {
+  background: #ffffff !important;
+  padding: 0 0.75rem !important;
+  color: #64748b !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  #login-form {
+    margin: 24px auto !important;
+    padding: 32px 24px 28px !important;
+    border-radius: 14px !important;
+  }
 }

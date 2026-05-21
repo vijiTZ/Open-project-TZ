@@ -28,8 +28,12 @@ module CustomCssInjector
   JS_FILE    = "/app/public/tz-bulk-select.js".freeze
   TZ_JS_URL  = "/tz-table.js".freeze
   TZ_JS_FILE = "/app/public/tz-table.js".freeze
-  LOGO_URL   = "/tz-assets/tamilzorous-logo.png".freeze
-  LOGO_FILE  = "/app/public/tz-assets/tamilzorous-logo.png".freeze
+  # NOTE: The logo is no longer served from /tz-assets/tamilzorous-logo.png.
+  # It is now embedded as a base64 data URI directly in openproject-custom.css
+  # because Docker Desktop bind-mounts of single image files were unreliable
+  # on Windows (stale or missing PNG inside the container). The data URI
+  # updates atomically with the stylesheet, so no separate cache-buster is
+  # needed for the logo.
 
   # Compute a short content hash for cache-busting. Returns "0" if the file
   # is missing so the middleware still emits a (broken) tag we can debug in
@@ -60,15 +64,10 @@ module CustomCssInjector
         css_ver   = CustomCssInjector.asset_version(CSS_FILE)
         js_ver    = CustomCssInjector.asset_version(JS_FILE)
         tz_js_ver = CustomCssInjector.asset_version(TZ_JS_FILE)
-        logo_ver  = CustomCssInjector.asset_version(LOGO_FILE)
         link      = %(<link rel="stylesheet" href="#{CSS_URL}?v=#{css_ver}">)
         script    = %(<script src="#{JS_URL}?v=#{js_ver}" defer></script>)
         tz_script = %(<script src="#{TZ_JS_URL}?v=#{tz_js_ver}" defer></script>)
-        # Inline style overrides the logo URL with a content-hash cache-buster
-        # so browsers refetch the PNG whenever the file content changes.
-        logo_url   = "#{LOGO_URL}?v=#{logo_ver}"
-        logo_style = %(<style id="tz-logo-cachebust">.op-logo--link,.op-logo--link_high_contrast,.op-logo--icon,.op-logo--icon_white{background-image:url("#{logo_url}") !important;}</style>)
-        body = body.sub("</head>", "#{link}\n#{logo_style}\n#{script}\n#{tz_script}\n</head>")
+        body = body.sub("</head>", "#{link}\n#{script}\n#{tz_script}\n</head>")
         headers.delete_if { |k, _| %w[content-length etag].include?(k.to_s.downcase) }
       end
 

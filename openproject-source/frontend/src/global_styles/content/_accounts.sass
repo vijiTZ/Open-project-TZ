@@ -27,16 +27,124 @@
 //++
 
 #login-form
-  margin: 50px auto 0
-  padding: 20px
-  width: 511px
+  position: relative
+  margin: 80px auto 40px
+  padding: 48px 44px 40px
+  width: 440px
+  max-width: calc(100% - 32px)
   word-break: break-word
-  background-color: var(--display-gray-bgColor-muted)
+  background-color: #ffffff
+  border: 1px solid rgba(15, 23, 42, 0.06)
+  border-radius: 16px
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.08)
+  overflow: hidden
+
+  &:before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 4px
+    background: linear-gradient(90deg, #1f8a4c 0%, #2bb673 50%, #38d39f 100%)
+
+  h1
+    margin: 0 0 8px 0
+    padding: 0
+    font-size: 1.75rem
+    font-weight: 700
+    letter-spacing: -0.02em
+    color: #0f172a
+    text-align: left
+
+  hr.form--separator
+    display: none
+
+  // subtle subtitle under the heading
+  & > h1 + hr + *,
+  & > h1 + *
+    margin-top: 0
+
+  // inputs — soft, modern, focus-ring accent
+  input[type="text"],
+  input[type="email"],
+  input[type="password"]
+    width: 100%
+    height: 44px
+    padding: 10px 14px
+    background: #f8fafc
+    border: 1px solid #e2e8f0
+    border-radius: 10px
+    font-size: 0.95rem
+    color: #0f172a
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease
+
+    &:hover
+      border-color: #cbd5e1
+
+    &:focus
+      outline: none
+      background: #ffffff
+      border-color: #2bb673
+      box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15)
+
+  // labels — small, uppercase-ish weight, calm color
+  label,
+  .form--label
+    display: block
+    margin-bottom: 6px
+    font-size: 0.85rem
+    font-weight: 600
+    color: #334155
+
+  // spacing between fields
+  .FormControl,
+  .form--field,
+  .form--field-container
+    margin-bottom: 18px
+
+  // primary submit button
+  button[type="submit"],
+  .button.-primary,
+  .Button--primary
+    width: 100%
+    height: 44px
+    padding: 0 18px
+    background: linear-gradient(180deg, #2bb673 0%, #1f8a4c 100%)
+    border: 1px solid #1f8a4c
+    border-radius: 10px
+    color: #ffffff
+    font-size: 0.95rem
+    font-weight: 600
+    letter-spacing: 0.01em
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(31, 138, 76, 0.25)
+    transition: transform 0.05s ease, box-shadow 0.15s ease, filter 0.15s ease
+
+    &:hover
+      filter: brightness(1.05)
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.1), 0 6px 18px rgba(31, 138, 76, 0.3)
+
+    &:active
+      transform: translateY(1px)
+
+  // link styling — quiet, accent on hover
+  a
+    color: #1f8a4c
+    font-weight: 500
+    text-decoration: none
+
+    &:hover
+      color: #156a39
+      text-decoration: underline
 
   .login-form--footer
     display: flex
     justify-content: space-between
-    margin-bottom: 10px
+    align-items: center
+    margin-top: 20px
+    margin-bottom: 0
+    gap: 16px
+    font-size: 0.9rem
 
 #content .login-auth-providers.wide
   width: auto
@@ -85,8 +193,12 @@
     span
       // to hide the lines from behind the text, you have to set the
       // background color the same as the container
-      background: var(--display-gray-bgColor-muted)
-      padding: 0 0.5rem
+      background: #ffffff
+      padding: 0 0.75rem
+      color: #64748b
+      font-size: 0.85rem
+      text-transform: uppercase
+      letter-spacing: 0.08em
 
   .login-auth-provider-list
     @include prevent-float-collapse
