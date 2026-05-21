@@ -164,27 +164,71 @@
     }
   }
 
+  // Inject a "Back to sign in" link on the register and forgot-password
+  // pages. The OpenProject ERB for those pages doesn't include a way to
+  // return to /login, so users get stranded after clicking the link from
+  // the login form. CSS-only options don't work — pseudo-elements can't
+  // be real clickable anchors — so we inject a real <a> via JS.
+  //
+  // Returns true when finished (link present, or not a target page),
+  // false when we need to retry — the Spot modal that wraps the register
+  // form is mounted by Stimulus async, so .registration-modal often
+  // doesn't exist on the first try.
+  function injectAuthBackLink() {
+    var registrationContainer =
+      document.querySelector(".registration-modal") ||
+      document.querySelector('[data-modal-class-name*="registration"]');
+    // Lost-password: append to the .form--section (the right-half flex
+    // container), not the inner <form> — so the link becomes a sibling
+    // of the form and lives at the bottom of the column with the logo
+    // auto-margin pair, matching the register page's layout.
+    var lostPasswordSection = null;
+    var lostPasswordForm = document.querySelector('form[action*="lost_password"]');
+    if (lostPasswordForm) {
+      lostPasswordSection =
+        lostPasswordForm.closest(".form--section") || lostPasswordForm.parentNode;
+    }
+
+    // Not on a target page — done.
+    if (!registrationContainer && !lostPasswordSection) return true;
+
+    // Already injected — done.
+    if (document.querySelector(".tz-back-to-login")) return true;
+
+    var container = registrationContainer || lostPasswordSection;
+    if (!container) return false; // wait for next mutation
+
+    var link = document.createElement("a");
+    link.href = "/login";
+    link.className = "tz-back-to-login";
+    link.innerHTML = '<span aria-hidden="true">&larr;</span> Back to sign in';
+    container.appendChild(link);
+    return true;
+  }
+
   function bootstrap() {
     init();
 
     // Tear down any retry watcher left over from the previous page.
     stopWatching();
 
-    if (injectBackButton()) return;
+    // Try both injections up-front. The observer below retries both
+    // until each reports done — the Spot modal that wraps the register
+    // form is mounted by Stimulus after DOMContentLoaded, so the
+    // .registration-modal element often doesn't exist on the first try.
+    var authDone = injectAuthBackLink();
+    var backBtnDone = injectBackButton();
+    if (authDone && backBtnDone) return;
 
-    // PageHeader wasn't in the DOM yet — OpenProject renders it after
-    // turbo:render in some flows. Watch the body subtree and retry on
-    // each mutation until injectBackButton() reports done.
     pageHeaderObserver = new MutationObserver(function () {
-      if (injectBackButton()) stopWatching();
+      var a = injectAuthBackLink();
+      var b = injectBackButton();
+      if (a && b) stopWatching();
     });
     pageHeaderObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Safety net — stop after 30s even if PageHeader never shows up,
-    // so we don't leak a forever-running observer on pages where the
-    // header simply doesn't exist. 30s (was 10s) handles slower
-    // machines and heavier Turbo render loads where the PageHeader
-    // can land later than expected.
+    // Safety net — stop after 30s even if neither feature ever resolves,
+    // so we don't leak a forever-running observer.
     pageHeaderObserverTimer = setTimeout(stopWatching, 30000);
   }
 

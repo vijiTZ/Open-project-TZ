@@ -3931,7 +3931,7 @@ body.action-login .op-homescreen-announcement {
   width: 50vw !important;
   height: 100vh !important;
   background-color: #f0fdf4 !important;
-  background-image: url("/tz-assets/download.jpg") !important;
+  background-image: url("/tz-assets/login2.jpg") !important;
   background-size: cover !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
@@ -4202,4 +4202,698 @@ body.action-login .op-homescreen-announcement {
   #login-form h1 {
     font-size: 1.75rem !important;
   }
+}
+
+
+/* ── REGISTER PAGE → SAME SPLIT-SCREEN AS SIGN IN ────────────────
+   The OpenProject register page (/account/register) wraps the form in
+   a Spot modal component. We override the modal chrome to look like
+   the full-page split-screen sign-in design: illustration on the LEFT
+   half of the viewport, form on the RIGHT half. Detection via :has()
+   on the registration-modal class so we don't depend on body classes. */
+
+/* Hide nav + scroll-lock the whole register page, same as sign-in. */
+html:has(.registration-modal),
+html:has([data-modal-class-name*="registration"]),
+html:has(.registration-modal) body,
+html:has([data-modal-class-name*="registration"]) body {
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html:has(.registration-modal) #header,
+html:has(.registration-modal) .op-app-header,
+html:has([data-modal-class-name*="registration"]) #header,
+html:has([data-modal-class-name*="registration"]) .op-app-header {
+  display: none !important;
+}
+
+html:has(.registration-modal) #main,
+html:has(.registration-modal) #content,
+html:has([data-modal-class-name*="registration"]) #main,
+html:has([data-modal-class-name*="registration"]) #content {
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Neutralize the modal overlay/backdrop — make the page background white,
+   not a dark transparent layer. */
+html:has(.registration-modal) .spot-modal-overlay,
+html:has(.registration-modal) [data-spot-modal-overlay],
+html:has(.registration-modal) [class*="modal-overlay"],
+html:has(.registration-modal) [class*="modal-backdrop"] {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  position: static !important;
+}
+
+/* Container — the wrapper section that holds the modal */
+[data-modal-class-name*="registration"],
+[data-augmented-model-wrapper]:has(.registration-modal),
+[data-augmented-model-wrapper]:has([data-modal-class-name*="registration"]) {
+  display: block !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background: #ffffff !important;
+  z-index: 10 !important;
+}
+
+/* Illustration on the LEFT half of the viewport (same image as sign-in) */
+[data-modal-class-name*="registration"]::before,
+[data-augmented-model-wrapper]:has(.registration-modal)::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 50vw !important;
+  height: 100vh !important;
+  background-color: #f0fdf4 !important;
+  background-image: url("/tz-assets/login2.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* The actual modal box — fills the RIGHT half of the viewport.
+   Matches the sign-in screen's layout (#login-form): same flex column
+   with centered content, same padding, same z-stack.
+   IMPORTANT: we use `margin: auto` on the inner content instead of
+   `justify-content: center` on this container. That pattern centers
+   the form when it fits in the viewport but allows natural scroll
+   when content is taller than 100vh. With justify-content: center +
+   overflow-y: auto, overflowing content gets pushed off-screen above
+   the viewport and the user can't scroll up to reach it. */
+.registration-modal,
+.spot-modal.registration-modal {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  left: auto !important;
+  width: 50vw !important;
+  max-width: 50vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 40px !important;
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  z-index: 11 !important;
+  transform: none !important;
+  scrollbar-width: none !important;  /* Firefox: hide scrollbar */
+}
+
+/* Logo at the top of the register form column — matches the sign-in
+   layout (#login-form::before). Image is served from the same bind-mount
+   directory used for the illustration; the directory mount is stable on
+   Windows Docker Desktop. `margin-top: auto` does the "center if fits,
+   scroll if overflow" trick — it grows to push the logo down toward the
+   centered group, but collapses to 0 when content overflows. */
+.registration-modal::before {
+  content: "" !important;
+  flex-shrink: 0 !important;
+  align-self: center !important;
+  display: block !important;
+  width: 180px !important;
+  height: 36px !important;
+  margin: auto auto 36px auto !important;
+  background-image: url("/tz-assets/tamilzorous-logo.png") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* Pair the bottom auto-margin on the last flex item so the auto-margins
+   on logo (top) and back-link (bottom) work as a "vertical centering"
+   pair when the form fits in the viewport. Applied to both register
+   and forgot-password pages — the back link is a sibling of the form,
+   appended by tz_bulk_select.js. */
+.registration-modal .tz-back-to-login,
+html:has(form[action*="lost_password"]) .form--section .tz-back-to-login {
+  margin-bottom: auto !important;
+  flex-shrink: 0 !important;
+}
+
+/* Hide scrollbar inside the modal (form might be tall) */
+.registration-modal::-webkit-scrollbar {
+  width: 0 !important;
+  display: none !important;
+}
+
+/* Inner wrapper — constrained to 400px to keep fields a comfortable width */
+.registration-modal .modal-delivery-element,
+.registration-modal > form {
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 0 auto !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Modal header — original text "Welcome to OpenProject" is hidden via
+   font-size: 0, then replaced with "Create your account" via ::before
+   pseudo-element. CSS-only override; the actual i18n string isn't
+   modified, so other languages would render the original until they
+   add their own override. */
+.registration-modal .spot-modal--header,
+.registration-modal #spotModalTitle {
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
+  color: transparent !important;
+  border: none !important;
+  background: transparent !important;
+  text-align: center !important;
+}
+
+.registration-modal .spot-modal--header::before,
+.registration-modal #spotModalTitle::before {
+  content: "Create your account" !important;
+  display: block !important;
+  font-size: 2.25rem !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: #0f172a !important;
+  text-align: center !important;
+}
+
+/* Hide the divider line */
+.registration-modal .spot-divider {
+  display: none !important;
+}
+
+/* Hide the original "Create a new account" h2 — we replace it with a
+   subtitle injected via .spot-modal--header::after below, so showing
+   both would be redundant. */
+.registration-modal h2 {
+  display: none !important;
+}
+
+/* Subtitle injected after the heading */
+.registration-modal .spot-modal--header::after,
+.registration-modal #spotModalTitle::after {
+  content: "Please fill in the details below to create your account." !important;
+  display: block !important;
+  margin: 8px 0 24px 0 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
+  color: #64748b !important;
+  text-align: center !important;
+}
+
+/* Body container — remove modal padding/borders */
+.registration-modal .spot-modal--body,
+.registration-modal .spot-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Form fields — match sign-in input styling */
+.registration-modal .form--field {
+  margin-bottom: 16px !important;
+  display: block !important;
+}
+
+.registration-modal .form--label {
+  display: block !important;
+  margin-bottom: 6px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  text-align: left !important;
+  width: 100% !important;
+  float: none !important;
+}
+
+.registration-modal input[type="text"],
+.registration-modal input[type="email"],
+.registration-modal input[type="password"] {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 10px 14px !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.registration-modal input[type="text"]:focus,
+.registration-modal input[type="email"]:focus,
+.registration-modal input[type="password"]:focus {
+  outline: none !important;
+  border-color: #1f8a4c !important;
+  box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15) !important;
+}
+
+.registration-modal .form--field-container {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Primary submit button */
+.registration-modal button[type="submit"],
+.registration-modal .button.-primary,
+.registration-modal .Button--primary,
+.registration-modal input[type="submit"] {
+  width: 100% !important;
+  height: 48px !important;
+  background: #1f8a4c !important;
+  border: 1px solid #1f8a4c !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin-top: 8px !important;
+}
+
+.registration-modal button[type="submit"]:hover,
+.registration-modal .button.-primary:hover {
+  background: #176d3c !important;
+}
+
+/* Secondary "Cancel" / back buttons */
+.registration-modal .button:not(.-primary):not(.Button--primary) {
+  background: transparent !important;
+  border: 1px solid #d1d5db !important;
+  color: #475569 !important;
+  border-radius: 10px !important;
+  height: 44px !important;
+  padding: 0 18px !important;
+  font-weight: 500 !important;
+}
+
+/* Footer (close button row) — center / clean up */
+.registration-modal .spot-modal--footer,
+.registration-modal [class*="modal--footer"] {
+  background: transparent !important;
+  border: none !important;
+  padding: 12px 0 0 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+/* Hide the modal close-X button (we're now a full page, not a popup) */
+.registration-modal .spot-modal--close,
+.registration-modal [class*="modal--close"],
+.registration-modal [data-action*="close"] {
+  display: none !important;
+}
+
+/* Links in the register form — brand green */
+.registration-modal a {
+  color: #1f8a4c !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+}
+
+.registration-modal a:hover {
+  color: #156a39 !important;
+  text-decoration: underline !important;
+}
+
+/* Mobile: stack the register page (no illustration) */
+@media (max-width: 760px) {
+  [data-modal-class-name*="registration"]::before,
+  [data-augmented-model-wrapper]:has(.registration-modal)::before {
+    display: none !important;
+  }
+  .registration-modal,
+  .spot-modal.registration-modal {
+    left: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 32px 24px !important;
+  }
+}
+
+
+/* ── FORGOT PASSWORD PAGE → SAME SPLIT-SCREEN AS SIGN IN ─────────
+   /account/lost_password renders a simple form (no modal). We wrap it
+   in the same split-screen layout: illustration left, form right.
+   Detection: html:has(form[action*="lost_password"]) — fires only on
+   pages whose body contains a form posting to the lost_password action. */
+
+html:has(form[action*="lost_password"]),
+html:has(form[action*="lost_password"]) body {
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #ffffff !important;
+}
+
+html:has(form[action*="lost_password"]) #header,
+html:has(form[action*="lost_password"]) .op-app-header {
+  display: none !important;
+}
+
+html:has(form[action*="lost_password"]) #main,
+html:has(form[action*="lost_password"]) #content {
+  position: relative !important;
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: #ffffff !important;
+}
+
+/* Hide the breadcrumb / page header (we're now a standalone screen) */
+html:has(form[action*="lost_password"]) [class*="op-page-header"],
+html:has(form[action*="lost_password"]) [class*="PageHeader"],
+html:has(form[action*="lost_password"]) [class*="breadcrumb" i],
+html:has(form[action*="lost_password"]) h1:has(+ form),
+html:has(form[action*="lost_password"]) [data-test-selector*="page-header"] {
+  display: none !important;
+}
+
+/* Illustration on LEFT half of the viewport */
+html:has(form[action*="lost_password"]) #content::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 50vw !important;
+  height: 100vh !important;
+  background-color: #f0fdf4 !important;
+  background-image: url("/tz-assets/login2.jpg") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Right-half container — matches the sign-in screen's #login-form.
+   Uses margin: auto on inner content for centered-when-fits, scroll-when-
+   overflows behavior. */
+html:has(form[action*="lost_password"]) .form--section {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  left: auto !important;
+  width: 50vw !important;
+  max-width: 50vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  padding: 40px !important;
+  background: #ffffff !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  z-index: 11 !important;
+  scrollbar-width: none !important;
+}
+
+html:has(form[action*="lost_password"]) .form--section::-webkit-scrollbar {
+  width: 0 !important;
+  display: none !important;
+}
+
+/* Logo at top of the form column — matches sign-in's #login-form::before */
+html:has(form[action*="lost_password"]) .form--section::before {
+  content: "" !important;
+  flex-shrink: 0 !important;
+  align-self: center !important;
+  display: block !important;
+  width: 180px !important;
+  height: 36px !important;
+  margin: auto auto 36px auto !important;
+  background-image: url("/tz-assets/tamilzorous-logo.png") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* The form itself — natural block, centered, max-width 400px to match register */
+html:has(form[action*="lost_password"]) form[action*="lost_password"] {
+  position: static !important;
+  width: 100% !important;
+  max-width: 400px !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  background: transparent !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  flex-shrink: 0 !important;
+}
+
+/* Heading on the form (::before) — order: -2 so it sits ABOVE the input */
+html:has(form[action*="lost_password"]) form[action*="lost_password"]::before {
+  content: "Forgot password?" !important;
+  display: block !important;
+  order: -2 !important;
+  font-size: 2.25rem !important;
+  line-height: 1.2 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: #0f172a !important;
+  text-align: center !important;
+  margin: 0 0 8px 0 !important;
+  width: 100% !important;
+}
+
+/* Subtitle on the form (::after) — order: -1 so it sits BETWEEN heading and input */
+html:has(form[action*="lost_password"]) form[action*="lost_password"]::after {
+  content: "Enter your email and we'll send you reset instructions." !important;
+  display: block !important;
+  order: -1 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
+  color: #64748b !important;
+  text-align: center !important;
+  margin: 0 0 24px 0 !important;
+  width: 100% !important;
+}
+
+/* Form fields — constrained width, centered */
+html:has(form[action*="lost_password"]) form[action*="lost_password"] .form--field {
+  width: 100% !important;
+  max-width: 460px !important;
+  margin: 0 auto 18px auto !important;
+}
+
+html:has(form[action*="lost_password"]) form[action*="lost_password"] .form--label,
+html:has(form[action*="lost_password"]) form[action*="lost_password"] label {
+  display: block !important;
+  margin-bottom: 6px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  text-align: left !important;
+  width: 100% !important;
+  float: none !important;
+}
+
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="text"],
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="email"] {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 10px 14px !important;
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 10px !important;
+  font-size: 0.95rem !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="text"]:focus,
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="email"]:focus {
+  outline: none !important;
+  border-color: #1f8a4c !important;
+  box-shadow: 0 0 0 4px rgba(43, 182, 115, 0.15) !important;
+}
+
+html:has(form[action*="lost_password"]) form[action*="lost_password"] .form--field-container {
+  display: block !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Submit button — full-width brand green */
+html:has(form[action*="lost_password"]) form[action*="lost_password"] button[type="submit"],
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="submit"],
+html:has(form[action*="lost_password"]) form[action*="lost_password"] .button.-primary {
+  width: 100% !important;
+  max-width: 460px !important;
+  height: 48px !important;
+  padding: 0 18px !important;
+  background: #1f8a4c !important;
+  border: 1px solid #1f8a4c !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  margin: 8px auto 0 auto !important;
+  display: block !important;
+}
+
+html:has(form[action*="lost_password"]) form[action*="lost_password"] button[type="submit"]:hover,
+html:has(form[action*="lost_password"]) form[action*="lost_password"] input[type="submit"]:hover {
+  background: #176d3c !important;
+}
+
+/* Hide the icon prefix on the submit button (it had .icon-checkmark) */
+html:has(form[action*="lost_password"]) form[action*="lost_password"] [class*="icon-"]::before {
+  display: none !important;
+}
+
+/* Mobile: stack the forgot-password page */
+@media (max-width: 760px) {
+  html:has(form[action*="lost_password"]) #content::before {
+    display: none !important;
+  }
+  html:has(form[action*="lost_password"]) .form--section,
+  html:has(form[action*="lost_password"]) form[action*="lost_password"] {
+    left: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 32px 24px !important;
+  }
+}
+
+
+/* ── "BACK TO SIGN IN" LINK ──────────────────────────────────────
+   Injected by tz_bulk_select.js on the register and forgot-password
+   pages (the ERB doesn't render one). Styled here as a discreet text
+   link with a left arrow, centered below the form. */
+
+.tz-back-to-login {
+  display: inline-block !important;
+  margin: 24px auto 0 auto !important;
+  padding: 8px 12px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #1f8a4c !important;
+  font-size: 0.92rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: color 0.15s ease !important;
+  /* Center it horizontally inside the flex form container */
+  align-self: center !important;
+  /* Make sure it appears below the submit button when the parent is a flex column */
+  order: 99 !important;
+}
+
+.tz-back-to-login:hover {
+  color: #156a39 !important;
+  text-decoration: underline !important;
+}
+
+.tz-back-to-login span {
+  display: inline-block !important;
+  margin-right: 4px !important;
+  font-weight: 600 !important;
+}
+
+
+/* ── ALIGNMENT TIGHTENING (register & forgot password) ───────────
+   The register form has many fields stacked vertically — without a
+   max-height + scroll the page can overflow on short laptops, and
+   without horizontal centering on wider columns the form drifts left.
+   Forces consistent center alignment across both auth pages. */
+
+/* Register page: form container is the modal-delivery-element div */
+.registration-modal .modal-delivery-element,
+.registration-modal > form {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+/* Each field row in the register form — full-width inside its 400px container */
+.registration-modal .form--field {
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 0 auto 14px auto !important;
+  display: block !important;
+  text-align: left !important;
+}
+
+.registration-modal .form--field-container {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Help/instructions text below fields (e.g. password requirements) — tame the font size */
+.registration-modal .form--field-instructions {
+  font-size: 0.8rem !important;
+  color: #64748b !important;
+  margin-top: 4px !important;
+  text-align: left !important;
+}
+
+/* Action bar (Create button) — center the button, full-width */
+.registration-modal .spot-action-bar,
+.registration-modal .spot-action-bar--right {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  max-width: 400px !important;
+  margin: 8px auto 0 auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  gap: 8px !important;
+}
+
+/* Footer registration text (if any) — centered, small */
+.registration-modal .spot-action-bar--right > span {
+  text-align: center !important;
+  font-size: 0.85rem !important;
+  color: #64748b !important;
 }
