@@ -19,6 +19,10 @@ services:
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      # tz: replace upstream homescreen initializer to hide selected
+      # blocks (welcome / new_features / meetings / community) and the
+      # Community forum footer link.
+      - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
       # tz: server-side override of the New User view to add the Back
       # button into the Create / Create-and-continue action row.
       - "./users_new.html.erb:/app/app/views/users/new.html.erb"
@@ -35,6 +39,7 @@ services:
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
 
   cron:
     volumes:
@@ -45,6 +50,7 @@ services:
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
 
   seeder:
     volumes:
