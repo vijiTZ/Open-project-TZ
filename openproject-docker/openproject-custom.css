@@ -9674,3 +9674,291 @@ div.op-settings-grid > .op-settings-card {
   margin-bottom: 0 !important;
   display: none !important;
 }
+/* ════════════════════════════════════════════════════════════════════
+   ADMINISTRATION INDEX — branded tile grid with custom ICONS 8 PNGs
+   ════════════════════════════════════════════════════════════════════
+   The /admin index renders <a class="menu-block"> tiles from
+   app/views/admin/index.html.erb. Converts each tile into a
+   horizontal pill: dark navy circular badge (left) holding a
+   Tamilzorous-branded PNG icon, label text (right). 4 columns wide,
+   responsive down to 1 column.
+   Icon source: ./assets/ICONS 8 → /tz-assets/ICONS 8/ (URL-encoded). */
+
+body.controller-admin.action-index .menu-blocks--container,
+.menu-blocks--container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-content: flex-start !important;
+  gap: 18px !important;
+  margin-top: 24px !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+/* Hide every direct child of the container that isn't a real menu-block.
+   These invisible siblings were taking grid/flex slots and creating the
+   blank row between rows 1 and 2. */
+.menu-blocks--container > *:not(a.menu-block),
+.menu-blocks--container > a:not(.menu-block),
+.menu-blocks--container > a.menu-block:not([href]),
+.menu-blocks--container > a.menu-block[href=""],
+.menu-blocks--container > a.menu-block[href="#"],
+.menu-blocks--container > a.menu-block:empty {
+  display: none !important;
+}
+
+/* Each tile is exactly 1/4 of the row minus the gap. With flexbox+wrap
+   there are no implicit empty cells — tiles flow left→right and wrap. */
+.menu-blocks--container > a.menu-block {
+  flex: 0 0 calc((100% - 54px) / 4) !important;   /* 4 cols, 3 gaps × 18px */
+}
+@media (max-width: 1200px) {
+  .menu-blocks--container > a.menu-block {
+    flex: 0 0 calc((100% - 36px) / 3) !important; /* 3 cols, 2 gaps */
+  }
+}
+@media (max-width: 900px) {
+  .menu-blocks--container > a.menu-block {
+    flex: 0 0 calc((100% - 18px) / 2) !important; /* 2 cols, 1 gap */
+  }
+}
+@media (max-width: 600px) {
+  .menu-blocks--container > a.menu-block {
+    flex: 0 0 100% !important;
+  }
+}
+
+/* (grid-template-columns media queries removed — using flexbox now) */
+
+.menu-blocks--container a.menu-block {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 16px !important;
+  padding: 18px 22px !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  text-decoration: none !important;
+  color: #0f172a !important;
+  height: 84px !important;
+  min-height: 0 !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s !important;
+}
+.menu-blocks--container a.menu-block:hover {
+  border-color: #0c66e4 !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06) !important;
+  transform: translateY(-1px) !important;
+}
+.menu-blocks--container a.menu-block:focus,
+.menu-blocks--container a.menu-block:focus-visible {
+  border: 2px solid #0c66e4 !important;
+  outline: none !important;
+  padding: 17px 21px !important;
+}
+
+.menu-blocks--container a.menu-block .menu-block--icon {
+  display: none !important;
+}
+
+/* Skip any menu-block that has no href or is otherwise empty — these
+   are conditional/hidden items that still get rendered as <a> tags
+   and were leaving blank rows in the grid. */
+.menu-blocks--container a.menu-block:not([href]),
+.menu-blocks--container a.menu-block[href=""],
+.menu-blocks--container a.menu-block[href="#"],
+.menu-blocks--container a.menu-block:empty,
+.menu-blocks--container > a.menu-block[hidden],
+.menu-blocks--container > a.menu-block[aria-hidden="true"],
+.menu-blocks--container > [style*="display: none"],
+.menu-blocks--container > [style*="display:none"] {
+  display: none !important;
+}
+
+/* Light circle (badge background) — soft lavender so the colourful
+   Icons 8 art shows in its native colours on a neutral backdrop. */
+.menu-blocks--container a.menu-block::before {
+  content: "" !important;
+  display: inline-block !important;
+  flex: 0 0 48px !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background-color: #eef0f7 !important;
+  background-size: 28px 28px !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+}
+
+/* No icon-overlay layer — icons render natively on the ::before badge. */
+.menu-blocks--container a.menu-block::after {
+  content: none !important;
+}
+
+.menu-blocks--container a.menu-block .menu-block--title {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+  line-height: 1.3 !important;
+  text-align: left !important;
+}
+
+/* Per-tile icon mapping by href (URLs from config/initializers/menus.rb) */
+
+/* Users and permissions */
+.menu-blocks--container a.menu-block[href="/users"]::before,
+.menu-blocks--container a.menu-block[href*="/users?"]::before,
+.menu-blocks--container a.menu-block[href$="/users"]::before {
+  background-image: url("/tz-assets/ICONS%208/User%20Permission.png") !important;
+}
+
+/* Work packages */
+.menu-blocks--container a.menu-block[href*="work_packages_general"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/settings/work_packages"]::before {
+  background-image: url("/tz-assets/ICONS%208/Work%20Packages.png") !important;
+}
+
+/* Projects */
+.menu-blocks--container a.menu-block[href*="project_phase_definitions"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/settings/projects"]::before {
+  background-image: url("/tz-assets/ICONS%208/Projects.png") !important;
+}
+
+/* Custom fields */
+.menu-blocks--container a.menu-block[href*="/custom_fields"]::before {
+  background-image: url("/tz-assets/ICONS%208/Custom%20Fields.png") !important;
+}
+
+/* Attribute help texts */
+.menu-blocks--container a.menu-block[href*="/attribute_help_texts"]::before {
+  background-image: url("/tz-assets/ICONS%208/Attribute.png") !important;
+}
+
+/* Calendars and dates */
+.menu-blocks--container a.menu-block[href*="working_days_and_hours"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/settings/calendar"]::before {
+  background-image: url("/tz-assets/ICONS%208/Calander%20Date.png") !important;
+}
+
+/* AI */
+.menu-blocks--container a.menu-block[href*="/admin/mcp_configurations"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/ai"]::before {
+  background-image: url("/tz-assets/ICONS%208/AI.png") !important;
+}
+
+/* System settings — icon "gear" + aria-label fallback */
+.menu-blocks--container a.menu-block[href*="general_settings"]::before,
+.menu-blocks--container a.menu-block:has(.octicon-gear)::before,
+.menu-blocks--container a.menu-block:has([aria-label*="System settings" i])::before {
+  background-image: url("/tz-assets/ICONS%208/System%20Settings.png") !important;
+}
+
+/* Emails and notifications — icon "mail" + aria-label fallback */
+.menu-blocks--container a.menu-block[href*="aggregation_settings"]::before,
+.menu-blocks--container a.menu-block[href*="mail_notifications"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/settings/mail"]::before,
+.menu-blocks--container a.menu-block:has(.octicon-mail)::before,
+.menu-blocks--container a.menu-block:has([aria-label*="Emails and notifications" i])::before,
+.menu-blocks--container a.menu-block:has([aria-label*="mails and notifications" i])::before {
+  background-image: url("/tz-assets/ICONS%208/Emails.png") !important;
+}
+
+/* API and webhooks — icon "op-relations" + aria-label fallback */
+.menu-blocks--container a.menu-block[href*="api_settings"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/webhooks"]::before,
+.menu-blocks--container a.menu-block:has([class*="op-relations"])::before,
+.menu-blocks--container a.menu-block:has([aria-label*="API and webhooks" i])::before {
+  background-image: url("/tz-assets/ICONS%208/API.png") !important;
+}
+
+/* Authentication — icon "shield-lock" in menus.rb + aria-label + href patterns */
+.menu-blocks--container a.menu-block[href*="authentication_settings"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/authentication"]::before,
+.menu-blocks--container a.menu-block[href*="authentication"]::before,
+.menu-blocks--container a.menu-block:has(.octicon-shield-lock)::before,
+.menu-blocks--container a.menu-block:has([class*="shield-lock"])::before,
+.menu-blocks--container a.menu-block:has([aria-label*="Authentication" i])::before {
+  background-image: url("/tz-assets/ICONS%208/Authentication.png") !important;
+}
+
+/* Announcement */
+.menu-blocks--container a.menu-block[href*="/announcements"]::before {
+  background-image: url("/tz-assets/ICONS%208/Announcment.png") !important;
+}
+
+/* Integrations */
+.menu-blocks--container a.menu-block[href*="github_integration"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/integrations"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/storages"]::before {
+  background-image: url("/tz-assets/ICONS%208/Integrations.png") !important;
+}
+
+/* Design — icon "paintbrush" + aria-label fallback */
+.menu-blocks--container a.menu-block[href*="/custom_styles"]::before,
+.menu-blocks--container a.menu-block:has(.octicon-paintbrush)::before,
+.menu-blocks--container a.menu-block:has([aria-label*="Design" i])::before {
+  background-image: url("/tz-assets/ICONS%208/Design.png") !important;
+}
+
+/* Colors */
+.menu-blocks--container a.menu-block[href*="/colors"]::before {
+  background-image: url("/tz-assets/ICONS%208/Colors.png") !important;
+}
+
+/* Enterprise edition */
+.menu-blocks--container a.menu-block[href*="/enterprise_tokens"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/enterprise"]::before {
+  background-image: url("/tz-assets/ICONS%208/Enterprices.png") !important;
+}
+
+/* Time and costs */
+.menu-blocks--container a.menu-block[href*="time_tracking"]::before,
+.menu-blocks--container a.menu-block[href*="time_entry"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/costs"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/settings/costs"]::before {
+  background-image: url("/tz-assets/ICONS%208/Time%20and%20Costs.png") !important;
+}
+
+/* Import */
+.menu-blocks--container a.menu-block[href*="/admin/import"]::before {
+  background-image: url("/tz-assets/ICONS%208/Import.png") !important;
+}
+
+/* Backlogs */
+.menu-blocks--container a.menu-block[href*="/backlogs"]::before {
+  background-image: url("/tz-assets/ICONS%208/Backlogs.png") !important;
+}
+
+/* Documents — module-provided + aria-label fallback */
+.menu-blocks--container a.menu-block[href*="/document_categories"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/documents"]::before,
+.menu-blocks--container a.menu-block:has([aria-label*="Documents" i])::before {
+  background-image: url("/tz-assets/ICONS%208/Documents.png") !important;
+}
+
+/* Files — module-provided + aria-label fallback */
+.menu-blocks--container a.menu-block[href*="/admin/settings/files"]::before,
+.menu-blocks--container a.menu-block[href*="/admin/files"]::before,
+.menu-blocks--container a.menu-block:has([aria-label*="Files" i])::before,
+.menu-blocks--container a.menu-block:has(.octicon-file)::before,
+.menu-blocks--container a.menu-block:has(.octicon-file-directory)::before {
+  background-image: url("/tz-assets/ICONS%208/Files.png") !important;
+}
+
+/* Plugins */
+.menu-blocks--container a.menu-block[href*="/admin/plugins"]::before {
+  background-image: url("/tz-assets/ICONS%208/Plugins.png") !important;
+}
+
+/* Backup */
+.menu-blocks--container a.menu-block[href*="/admin/backups"]::before {
+  background-image: url("/tz-assets/ICONS%208/Backup.png") !important;
+}
+
+/* Information */
+.menu-blocks--container a.menu-block[href*="/admin/info"]::before,
+.menu-blocks--container a.menu-block[href$="/info"]::before {
+  background-image: url("/tz-assets/ICONS%208/Information.png") !important;
+}
