@@ -4094,7 +4094,16 @@ nav#main-menu .op-project-select--trigger-button:focus {
 }
 
 /* Hide the native ▼ caret/icon inside the trigger so we can replace it
-   with the same chevron style as the main-menu togglers (⌃/⌄). */
+   with the same chevron style as the main-menu togglers (⌃/⌄).
+
+   The native arrow is rendered by <i class="button--dropdown-indicator">
+   inside the trigger button — source:
+     openproject-source/frontend/src/app/shared/components/
+       header-project-select/header-project-select.component.html (L23)
+   It's NOT an SVG/octicon, so we hide it explicitly here. */
+nav#main-menu .op-project-select--trigger-button .button--dropdown-indicator,
+.op-project-select--trigger-button .button--dropdown-indicator,
+nav#main-menu .op-project-select--trigger-button > i,
 nav#main-menu .op-project-select--trigger-button svg,
 nav#main-menu .op-project-select--trigger-button .octicon,
 nav#main-menu .op-project-select--trigger-button [class*="octicon-"],
