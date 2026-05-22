@@ -3,6 +3,19 @@
 .op-modal-single-date-picker
   // Avoid jumping when a month has less days and the flatpickr is thus smaller
   height: 505px
+  // Pin the form width so the inner flatpickr calendar always has enough
+  // room for its 7-column day grid — otherwise the calendar overflows and
+  // the body picks up horizontal scrollbars (one on .flatpickr-days, a
+  // second on the surrounding spot-drop-modal--body).
+  width: 320px
+  max-width: 100%
+  box-sizing: border-box
+  // No horizontal scroll at this level — calendar must fit.
+  overflow-x: hidden
+
   &--flatpickr-instance.inline
     margin: 0 1rem !important
     flex-grow: 1
+    // Inline flatpickr should never push past its parent's width.
+    max-width: calc(100% - 2rem)
+    overflow-x: hidden

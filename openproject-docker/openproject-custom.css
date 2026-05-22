@@ -4796,22 +4796,27 @@ nav#main-menu #sidebar label   { color: #6B7280 !important; }
   border-radius: 12px !important;
 }
 
-/* Project field - increase width by 150px - try all possible selectors */
-[data-field-name="project"],
-[data-attribute="project"],
-.form--field[data-field-name*="project"],
+/* Project FORM-FIELD width override (work-package "Project" edit field).
+   IMPORTANT: keep the selectors narrow — restrict to actual form-field
+   wrappers. The previous version included `[id*="project"]` and
+   `[class*="project"] .ng-select-container`, which were so broad they
+   matched the phase edit dialog (id="edit-project-life-cycle-dialog"),
+   the project life-cycle sidebar, and other unrelated elements —
+   forcing them all to a 230px width and breaking their layout. */
+.work-packages--new [data-field-name="project"],
+.work-packages--new [data-attribute="project"],
+.work-packages--new .form--field[data-field-name*="project"],
 .wp-edit-field[data-field-name*="project"],
-.form-group[class*="project"],
-[class*="project-field"],
-[id*="project"] {
+.form--field.work-packages--field--project,
+.form--field[data-field-name="project"] {
   min-width: 230px !important;
   width: 230px !important;
 }
 
-/* Project ng-select container */
-[data-field-name="project"] .ng-select-container,
-[data-attribute="project"] .ng-select-container,
-[class*="project"] .ng-select-container {
+/* Project ng-select container — same narrowed scope */
+.work-packages--new [data-field-name="project"] .ng-select-container,
+.work-packages--new [data-attribute="project"] .ng-select-container,
+.wp-edit-field[data-field-name*="project"] .ng-select-container {
   min-width: 230px !important;
   width: 230px !important;
 }
@@ -6676,4 +6681,342 @@ opce-in-app-notification-bell button:hover::before,
 [data-test-selector="op-app-header-notification-bell"]:hover::before,
 .op-app-menu--item-action[href*="notification"]:hover::before {
   background-color: #0c66e4;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   DATE PICKER POPUP — Project life-cycle phase editor
+   ════════════════════════════════════════════════════════════════════
+   Source: openproject-source/frontend/src/app/shared/components/
+           datepicker/modal-single-date-picker/
+             modal-single-date-picker.component.{html,sass}
+
+   Markup the component renders (relevant parts):
+     <spot-drop-modal data-test-selector="opce-modal-single-date-picker">
+       <form class="spot-container op-modal-single-date-picker"
+             data-test-selector="op-datepicker-modal">
+         <spot-form-field>…date input…</spot-form-field>
+         <div #flatpickrTarget></div>   ← flatpickr renders here
+         <div class="spot-action-bar">…Cancel / Save…</div>
+       </form>
+     </spot-drop-modal>
+
+   Bug: the source SASS pins height: 505px on .op-modal-single-date-picker
+   but leaves WIDTH unset. The form inherits width from spot-drop-modal--
+   body (which varies by media query and is often "auto" in-context). The
+   inline flatpickr calendar then needs ~290px for its 7-column day grid;
+   when the form is narrower, .flatpickr-days picks up overflow-x and a
+   second horizontal scrollbar appears on the form itself.
+
+   Fix: pin a width on the form, hide horizontal overflow on every wrapper
+   in the chain, and lay the day grid out as a true 7-col CSS grid so the
+   columns always align under Sun/Mon/Tue/… regardless of viewport. */
+
+/* Outer form — anchor a width so the inner calendar always fits.
+   IMPORTANT: do NOT target [data-test-selector="op-datepicker-modal"]
+   alone — that selector matches BOTH the single-date-picker form AND
+   the WP/phase date-picker wrapper (which needs ~640px for its 2-month
+   layout). Use the class-scoped selector instead. */
+.spot-container.op-modal-single-date-picker,
+form.op-modal-single-date-picker {
+  width: 320px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* The drop-modal body that wraps the SINGLE date picker form — size to
+   content but never narrower than the form's pinned width. */
+.spot-drop-modal--body:has(.op-modal-single-date-picker) {
+  min-width: 320px !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* WP / Project-phase date picker — uses 2-month flatpickr (showMonths:2)
+   so the dialog body must be wide enough for two side-by-side calendars.
+   Markup: <div class="wp-datepicker-dialog--content" data-test-selector=
+   "op-datepicker-modal"> wraps a Primer Dialog Body. Source:
+     openproject-source/app/components/work_packages/date_picker/
+       dialog_content_component.html.erb
+     openproject-source/frontend/src/app/shared/components/datepicker/
+       wp-date-picker-modal/wp-date-picker-instance.component.ts (L238) */
+.wp-datepicker-dialog--content,
+[data-test-selector="op-datepicker-modal"].wp-datepicker-dialog--content,
+.wp-datepicker-dialog--body {
+  width: auto !important;
+  min-width: 640px !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Phase edit popup outer container.
+
+   The popup is rendered as a Spot modal (NOT a Primer Dialog as the
+   .erb template suggests — the actual on-screen popup comes from
+   wp-date-picker.modal.html which wraps the turbo-loaded content in
+   <div class="spot-modal spot-modal_auto-size
+   spot-modal_full-screen-when-narrow">). Source:
+     openproject-source/frontend/src/app/shared/components/datepicker/
+       wp-date-picker-modal/wp-date-picker.modal.html (L2)
+
+   The spot-modal_auto-size variant sizes to its content, so we must
+   make sure the wp-datepicker-dialog--content inside it requests a
+   width wide enough for 2-month flatpickr. ALSO override the Primer
+   Overlay layer in case it's used instead. */
+
+/* Phase edit dialog — async-dialog Stimulus controller fetches
+   edit_dialog_component.html.erb (Primer::Alpha::Dialog), which the
+   ViewComponent gem renders as <modal-dialog ... class="Overlay
+   Overlay--size-large-portrait">. The wrapping element is NOT <dialog>
+   but a custom <modal-dialog> element. Source:
+     openproject-source/modules/overviews/app/components/overviews/
+       project_phases/edit_dialog_component.html.erb (size: :large,
+       Overlay--size-large-portrait) */
+
+/* Modal-dialog element + its Overlay container — widen to fit
+   2 side-by-side months (~720px) instead of Primer's narrower default. */
+modal-dialog:has(.wp-datepicker-dialog--content),
+modal-dialog:has([data-test-selector="op-datepicker-modal"]),
+modal-dialog:has(.op-datepicker-modal--flatpickr-instance),
+modal-dialog#edit-project-life-cycle-dialog,
+.Overlay:has(.wp-datepicker-dialog--content),
+.Overlay:has([data-test-selector="op-datepicker-modal"]),
+.Overlay--size-large-portrait:has(.wp-datepicker-dialog--content),
+.Overlay--size-large-portrait:has([data-test-selector="op-datepicker-modal"]),
+dialog:has(.wp-datepicker-dialog--content) {
+  --overlay-width: 720px !important;
+  --overlay-min-width: 680px !important;
+  --overlay-max-width: calc(100vw - 32px) !important;
+  width: 720px !important;
+  min-width: 680px !important;
+  max-width: calc(100vw - 32px) !important;
+  box-sizing: border-box !important;
+}
+
+/* The Overlay wrapper INSIDE modal-dialog (Primer often nests an
+   .Overlay div within the modal-dialog custom element). */
+modal-dialog:has(.wp-datepicker-dialog--content) > .Overlay,
+modal-dialog:has([data-test-selector="op-datepicker-modal"]) > .Overlay,
+modal-dialog#edit-project-life-cycle-dialog > .Overlay {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Spot-modal fallback — same width override if rendered as spot-modal */
+.spot-modal:has(.wp-datepicker-dialog--content),
+.spot-modal:has([data-test-selector="op-datepicker-modal"]),
+.spot-modal#wp-datepicker-dialog,
+.spot-modal_auto-size:has(.wp-datepicker-dialog--content) {
+  width: 720px !important;
+  min-width: 680px !important;
+  max-width: calc(100vw - 32px) !important;
+  box-sizing: border-box !important;
+}
+
+/* Turbo-frame wrapping the loaded dialog content — full width of host */
+.spot-modal turbo-frame#wp-datepicker-dialog--content,
+#wp-datepicker-dialog--content {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* The wp-datepicker-dialog--content wrapper — fills the modal */
+.wp-datepicker-dialog--content {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}
+
+/* Dialog body padding cleanup */
+.wp-datepicker-dialog--body {
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Side panel where the modal docks — make sure it doesn't constrain
+   the modal width further. */
+.spot-modal:has(.wp-datepicker-dialog--content) > * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Flatpickr inline calendar inside the WP date picker — let it expand
+   naturally to fit both months. */
+.op-datepicker-modal--flatpickr-instance.inline,
+.wp-datepicker-dialog--content .flatpickr-calendar {
+  width: auto !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+/* When two months are shown side by side, each month container should
+   take half the width — let flatpickr's default flex layout handle it
+   but prevent overflow. */
+.wp-datepicker-dialog--content .flatpickr-innerContainer,
+.wp-datepicker-dialog--content .flatpickr-rContainer {
+  display: flex !important;
+  overflow: visible !important;
+}
+.wp-datepicker-dialog--content .flatpickr-days {
+  display: flex !important;
+  flex-direction: row !important;
+  width: auto !important;
+  overflow: visible !important;
+}
+.wp-datepicker-dialog--content .flatpickr-days .dayContainer {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  width: 280px !important;
+  min-width: 280px !important;
+  gap: 2px !important;
+  padding: 4px 8px !important;
+}
+
+/* Every internal wrapper down to the day grid — no horizontal scroll.
+   Scoped to .op-modal-single-date-picker so the WP/phase 2-month
+   picker is NOT affected (its grid rules live below). */
+.op-modal-single-date-picker,
+.op-modal-single-date-picker .flatpickr-calendar,
+.op-modal-single-date-picker .flatpickr-innerContainer,
+.op-modal-single-date-picker .flatpickr-rContainer,
+.op-modal-single-date-picker .flatpickr-days {
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+/* Flatpickr calendar inside the SINGLE-date-picker — full width, no
+   library shadow/border (spot-drop-modal supplies chrome). */
+.op-modal-single-date-picker .flatpickr-calendar {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border: none !important;
+  position: static !important;
+  display: block !important;
+}
+
+/* Day grid for the SINGLE date picker — one 7-column grid spanning the
+   full width (only ever one .dayContainer here). */
+.op-modal-single-date-picker .flatpickr-days,
+.op-modal-single-date-picker .flatpickr-days .dayContainer {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+.op-modal-single-date-picker .flatpickr-days {
+  display: block !important;
+}
+.op-modal-single-date-picker .flatpickr-days .dayContainer {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 2px !important;
+  padding: 4px 0 !important;
+  justify-items: center !important;
+  align-items: center !important;
+}
+
+/* Weekday header row — same 7-col grid so headers align with day cells. */
+.op-modal-single-date-picker .flatpickr-weekdays {
+  width: 100% !important;
+  padding: 0 !important;
+}
+.op-modal-single-date-picker .flatpickr-weekdaycontainer {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  width: 100% !important;
+  gap: 2px !important;
+}
+.op-modal-single-date-picker .flatpickr-weekday {
+  width: auto !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #6B7280 !important;
+  text-align: center !important;
+  padding: 6px 0 !important;
+}
+
+/* Individual day cells inside SINGLE date picker. */
+.op-modal-single-date-picker .flatpickr-day {
+  width: 100% !important;
+  max-width: 36px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  margin: 0 !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  border: 1px solid transparent !important;
+}
+
+/* Selected / in-range day */
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected:hover {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #fff !important;
+}
+.flatpickr-day.inRange,
+.flatpickr-day.inRange:hover {
+  background: #dbeafe !important;
+  border-color: transparent !important;
+  color: #1F2328 !important;
+  box-shadow: none !important;
+}
+.flatpickr-day:hover {
+  background: rgba(31, 35, 40, 0.06) !important;
+  border-color: transparent !important;
+}
+
+/* Month / year navigation row */
+.flatpickr-months {
+  padding: 4px 0 6px !important;
+}
+.flatpickr-current-month {
+  padding: 0 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+.flatpickr-prev-month,
+.flatpickr-next-month {
+  padding: 6px !important;
+  border-radius: 6px !important;
+}
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+  background: rgba(31, 35, 40, 0.06) !important;
+}
+
+/* Action bar (Cancel / Save) — the component uses .spot-action-bar with
+   a right-aligned slot. Ensure no scroll, clean flex layout. */
+.op-modal-single-date-picker .spot-action-bar {
+  display: flex !important;
+  width: 100% !important;
+  overflow: visible !important;
+  padding: 10px 0 0 !important;
+}
+.op-modal-single-date-picker .spot-action-bar--right {
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  margin-left: auto !important;
+}
+
+/* Suppress webkit horizontal scrollbars inside the form, belt-and-braces
+   in case some inner library wrapper still tries to render one. */
+.op-modal-single-date-picker ::-webkit-scrollbar:horizontal,
+.flatpickr-calendar ::-webkit-scrollbar:horizontal {
+  height: 0 !important;
+  display: none !important;
 }
