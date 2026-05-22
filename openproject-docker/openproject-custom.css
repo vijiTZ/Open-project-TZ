@@ -11,7 +11,7 @@
 :root {
   --op-blue:        #0C66E4;
   --op-blue-hover:  #0055CC;
-  --op-green:       #1C6B3F;
+  --op-green:       #0C66E4;
 
   /* Used only in dark-scoped sections below */
   --op-bg:          #0A0B0D;
@@ -7242,4 +7242,2006 @@ form[id$="-roles-form"][class*="--edit-toggle-item"] > p:last-of-type {
   margin: 18px 0 0;
   padding-top: 14px;
   border-top: 1px solid #e6e6e6;
+}
+
+
+/* ================================================================
+   FINAL OVERRIDES: BOTH CREATE BUTTONS — BLUE COLOR ONLY
+   Color-only override. Do NOT change size/padding/layout so the
+   toolbar Create button stays the same size as Include projects,
+   Baseline, Filter, etc.
+   ================================================================ */
+
+/* Color override only — preserve native sizing of toolbar buttons */
+.button.-primary,
+.button.-highlight,
+button.-primary,
+button.-highlight,
+a.button.-primary,
+a.button.-highlight {
+  background: #0c66e4 !important;
+  background-color: #0c66e4 !important;
+  border-color: #0c66e4 !important;
+  color: #ffffff !important;
+}
+
+.button.-primary:hover,
+.button.-highlight:hover,
+button.-primary:hover,
+button.-highlight:hover,
+a.button.-primary:hover,
+a.button.-highlight:hover {
+  background: #0055cc !important;
+  background-color: #0055cc !important;
+  border-color: #0055cc !important;
+  color: #ffffff !important;
+}
+
+/* Icons inside primary/highlight buttons stay white */
+.button.-primary svg,
+.button.-highlight svg,
+.button.-primary [class*="icon-"],
+.button.-highlight [class*="icon-"] {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+
+/* ================================================================
+   MODERN PRIMER-STYLE HEADER CREATE BUTTON (OpenProject 17+)
+   - Force BLUE pill background
+   - Show "Create" text label
+   - Keep dropdown chevron at the RIGHT end
+   - Do NOT inject an extra "+" — only style what's already there
+   ================================================================ */
+
+/* Header "+" create trigger: blue pill, room for label + chevron */
+.op-app-header .op-app-header--primer-button:has(.octicon-plus),
+.op-app-header--end .op-app-header--primer-button:has(.octicon-plus) {
+  background-color: #0c66e4 !important;
+  background: #0c66e4 !important;
+  border: 1px solid #0c66e4 !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  box-shadow: 0 1px 2px rgba(12, 102, 228, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 4px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 32px !important;
+  min-height: 32px !important;
+}
+
+.op-app-header .op-app-header--primer-button:has(.octicon-plus):hover,
+.op-app-header--end .op-app-header--primer-button:has(.octicon-plus):hover {
+  background-color: #0055cc !important;
+  background: #0055cc !important;
+  border-color: #0055cc !important;
+}
+
+/* Plus and chevron icons inside the header create button → white */
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .octicon,
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) svg {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+
+/* Inner Button-content wrapper: flex row, room for the label */
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .Button-content {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: auto !important;
+}
+
+/* Hide the native dropdown chevron — we render one with the "Create ▼"
+   text label so the order is predictable: [plus] [Create] [▼]. */
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .octicon-chevron-down,
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .octicon-triangle-down,
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) [class*="octicon-triangle-down"],
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) [class*="octicon-chevron-down"],
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .dropdown-caret,
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .Button-trailingVisual,
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .Button-trailingAction {
+  display: none !important;
+}
+
+/* Inject "Create ▼" text ONCE — on the button itself, not on
+   .Button-content (targeting both would render the label twice).
+   Tight margin so the label sits close to the plus icon. */
+.op-app-header .op-app-header--primer-button:has(.octicon-plus)::after {
+  content: "Create \00A0\25BC" !important;
+  display: inline-block !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.2px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  margin-left: 0 !important;
+}
+
+/* Tight gap between plus icon and the "Create" label */
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) {
+  gap: 2px !important;
+}
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) .Button-content {
+  gap: 2px !important;
+}
+
+/* ── DEFEAT GREEN HOVER — highest-specificity blue override ───────────── */
+html body .op-app-header .op-app-header--primer-button:has(.octicon-plus),
+html body .op-app-header .op-app-header--primer-button:has(.octicon-plus):hover,
+html body .op-app-header .op-app-header--primer-button:has(.octicon-plus):focus,
+html body .op-app-header .op-app-header--primer-button:has(.octicon-plus):active,
+html body .op-app-header .op-app-header--primer-button:has(.octicon-plus):focus-visible,
+html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus),
+html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus):hover,
+html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus):focus,
+html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus):active {
+  background: #0c66e4 !important;
+  background-color: #0c66e4 !important;
+  background-image: none !important;
+  border-color: #0c66e4 !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(12, 102, 228, 0.25) !important;
+  filter: none !important;
+}
+
+/* Slightly darker BLUE on hover (no green flash) */
+html body .op-app-header .op-app-header--primer-button:has(.octicon-plus):hover,
+html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus):hover {
+  background: #0055cc !important;
+  background-color: #0055cc !important;
+  background-image: none !important;
+  border-color: #0055cc !important;
+}
+
+/* Let the button grow to fit the label */
+.op-app-header .op-app-header--primer-button.Button--iconOnly:has(.octicon-plus),
+.op-app-header .op-app-header--primer-button:has(.octicon-plus) {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  padding: 4px 12px !important;
+  overflow: visible !important;
+}
+
+/* ================================================================
+   NEW WORK PACKAGE PAGE → PREMIUM SAAS MODAL (CARD-BASED)
+   --------------------------------------------------------------
+   Route : /work_packages/new?type=...
+   Body  : body.controller-work_packages.action-new
+         / body.controller-work-packages.action-new
+   Goal  : enterprise-grade modal — wide card (1180px), soft off-white
+           interior, each form group rendered as its own white card,
+           48px inputs, 2-column grid, sticky header + footer.
+           Pure CSS. No Angular bindings or HTML structure changed.
+
+   Scope alias (used throughout this section):
+     body.router--work-packages-full-create   ← matches
+       both controller-work_packages and controller-work-packages
+   ================================================================ */
+
+@keyframes tz-modal-pop {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+@keyframes tz-modal-backdrop {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Dim backdrop over the viewport ────────────────────────────── */
+body.router--work-packages-full-create::before {
+  content: "" !important;
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(15, 23, 42, 0.38) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: 998 !important;
+  animation: tz-modal-backdrop 0.2s ease-out !important;
+  pointer-events: none !important;
+}
+
+/* Lock the underlying page from scrolling */
+body.router--work-packages-full-create {
+  overflow: hidden !important;
+}
+
+/* ── Neutralize OpenProject's stock rule that pins #content to 100% width
+   (`.router--work-packages-full-create #main #content { width: 100%; height: 100% }`).
+   Our modal rule below sets explicit fixed positioning + 1180px width.
+   Same selector specificity → ours wins because it comes later. */
+
+/* ── Modal shell ──────────────────────────────────────────────────
+   The create form container becomes a centered floating card.
+   1180px wide on desktops, with screen margins on smaller screens. */
+body.router--work-packages-full-create #main #content,
+body.router--work-packages-full-create #content {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: min(1180px, calc(100vw - 64px)) !important;
+  max-width: 1180px !important;
+  max-height: calc(100vh - 64px) !important;
+  background: #f6f7fb !important;
+  border-radius: 24px !important;
+  border: 1px solid #e6e9ef !important;
+  box-shadow:
+    0 32px 80px -24px rgba(15, 23, 42, 0.30),
+    0 12px 28px -10px rgba(15, 23, 42, 0.12),
+    0 2px 6px rgba(15, 23, 42, 0.06) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  z-index: 1000 !important;
+  animation: tz-modal-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+body.router--work-packages-full-create #content > * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ── Inner scrollable form region ─────────────────────────────────
+   Only the form scrolls, header + footer stay fixed. */
+body.router--work-packages-full-create #content .work-packages--new,
+body.router--work-packages-full-create #content .work-package--new-state,
+body.router--work-packages-full-create #content .wp-new-create-form,
+body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  padding: 28px 32px 16px 32px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  background: #f6f7fb !important;
+}
+
+/* ── Slim scrollbar ─────────────────────────────────────────────── */
+body.router--work-packages-full-create #content,
+body.router--work-packages-full-create #content * {
+  scrollbar-width: thin !important;
+  scrollbar-color: #cbd2dc transparent !important;
+}
+body.router--work-packages-full-create #content *::-webkit-scrollbar {
+  width: 8px !important;
+  height: 8px !important;
+}
+body.router--work-packages-full-create #content *::-webkit-scrollbar-thumb {
+  background: #cbd2dc !important;
+  border-radius: 999px !important;
+}
+body.router--work-packages-full-create #content *::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+/* ── Modal header (title + breadcrumb + actions) ─────────────────── */
+body.router--work-packages-full-create #content .toolbar-container,
+body.router--work-packages-full-create #content .work-packages--toolbar-container,
+body.router--work-packages-full-create #content .PageHeader {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 5 !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #eef1f5 !important;
+  padding: 22px 32px 18px 32px !important;
+  margin: 0 !important;
+  border-radius: 24px 24px 0 0 !important;
+}
+
+/* Larger, modern title */
+body.router--work-packages-full-create #content .toolbar-container h2,
+body.router--work-packages-full-create #content .work-packages--toolbar-container h2,
+body.router--work-packages-full-create #content .PageHeader h1,
+body.router--work-packages-full-create #content .PageHeader h2,
+body.router--work-packages-full-create #content .toolbar-container .editable-toolbar-title,
+body.router--work-packages-full-create #content .toolbar-container .editable-toolbar-title input {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  color: #0f172a !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+}
+
+/* Circular ghost buttons for header actions (close / fullscreen) */
+body.router--work-packages-full-create #content .toolbar-container button,
+body.router--work-packages-full-create #content .toolbar-container .button,
+body.router--work-packages-full-create #content .toolbar-container a[role="button"],
+body.router--work-packages-full-create #content .PageHeader button {
+  border-radius: 999px !important;
+  background: #ffffff !important;
+  border: 1px solid #e6e9ef !important;
+  color: #475569 !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+  box-shadow: none !important;
+}
+body.router--work-packages-full-create #content .toolbar-container button:hover,
+body.router--work-packages-full-create #content .PageHeader button:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* ── Hide intra-modal breadcrumbs (already in title row) ─────────── */
+body.router--work-packages-full-create #content .op-breadcrumb,
+body.router--work-packages-full-create #content .work-packages--breadcrumb,
+body.router--work-packages-full-create #content .op-toolbar--breadcrumb {
+  display: none !important;
+}
+
+/* ── CARD GROUPING ────────────────────────────────────────────────
+   Every .attributes-group (Basic Information, Description, People,
+   Estimate & Progress, Details, Other, Attachments) becomes its
+   own white rounded card with consistent rhythm. */
+body.router--work-packages-full-create #content .attributes-group,
+body.router--work-packages-full-create #content .op-attributes-group,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper,
+body.router--work-packages-full-create #content .work-packages--info-row,
+body.router--work-packages-full-create #content .op-attachments,
+body.router--work-packages-full-create #content .op-file-section {
+  background: #ffffff !important;
+  border: 1px solid #e6e9ef !important;
+  border-radius: 18px !important;
+  padding: 22px 24px !important;
+  margin: 0 0 24px 0 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Last card flush to footer */
+body.router--work-packages-full-create #content .attributes-group:last-of-type,
+body.router--work-packages-full-create #content .op-attributes-group:last-of-type {
+  margin-bottom: 8px !important;
+}
+
+/* ── Section headings (uppercase blue) ──────────────────────────── */
+body.router--work-packages-full-create #content .attributes-group--header,
+body.router--work-packages-full-create #content .attributes-group--header-text,
+body.router--work-packages-full-create #content .op-attributes-group--header-text {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: #1e3a8a !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+body.router--work-packages-full-create #content .attributes-group--header {
+  border-bottom: none !important;
+}
+
+/* ── Two-column responsive grid for fields inside cards ────────── */
+body.router--work-packages-full-create #content .attributes-map,
+body.router--work-packages-full-create #content .attributes-group .attributes-map {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 20px 24px !important;
+  align-items: start !important;
+}
+
+/* Wide rows (Title, Project field) span both columns */
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name="subject"],
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name="project"],
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name="description"],
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name="tags"],
+body.router--work-packages-full-create #content .wp-new--subject-wrapper {
+  grid-column: 1 / -1 !important;
+}
+
+/* Stack to single column under 900px */
+@media (max-width: 900px) {
+  body.router--work-packages-full-create #content .attributes-map,
+  body.router--work-packages-full-create #content .attributes-group .attributes-map {
+    grid-template-columns: 1fr !important;
+  }
+  body.router--work-packages-full-create #content {
+    width: calc(100vw - 24px) !important;
+    max-height: calc(100vh - 24px) !important;
+    border-radius: 18px !important;
+  }
+}
+
+/* Each key-value row: label above input */
+body.router--work-packages-full-create #content .attributes-key-value {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+}
+
+/* Field label */
+body.router--work-packages-full-create #content .attributes-key-value--key,
+body.router--work-packages-full-create #content .attributes-key-value .attributes-key-value--key,
+body.router--work-packages-full-create #content label.attributes-key-value--key {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  text-align: left !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Field value container — fill the grid cell */
+body.router--work-packages-full-create #content .attributes-key-value--value-container,
+body.router--work-packages-full-create #content .attributes-key-value--value {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ── INPUTS — modern 48px height, 12px radius, blue focus glow ─── */
+body.router--work-packages-full-create #content input[type="text"],
+body.router--work-packages-full-create #content input[type="number"],
+body.router--work-packages-full-create #content input[type="date"],
+body.router--work-packages-full-create #content input[type="search"],
+body.router--work-packages-full-create #content input[type="email"],
+body.router--work-packages-full-create #content select,
+body.router--work-packages-full-create #content textarea {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: 44px !important;
+  padding: 10px 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  font-family: inherit !important;
+}
+
+/* Subject (title) input: bigger and prominent inside its card */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper input[type="text"],
+body.router--work-packages-full-create #content [data-field-name="subject"] input[type="text"] {
+  height: 48px !important;
+  font-size: 15px !important;
+}
+
+/* Textarea height */
+body.router--work-packages-full-create #content textarea {
+  height: auto !important;
+  min-height: 96px !important;
+  padding: 12px 14px !important;
+  line-height: 1.5 !important;
+  resize: vertical !important;
+}
+
+/* Placeholders */
+body.router--work-packages-full-create #content input::placeholder,
+body.router--work-packages-full-create #content textarea::placeholder {
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+}
+
+/* Hover */
+body.router--work-packages-full-create #content input[type="text"]:hover,
+body.router--work-packages-full-create #content input[type="number"]:hover,
+body.router--work-packages-full-create #content input[type="date"]:hover,
+body.router--work-packages-full-create #content textarea:hover,
+body.router--work-packages-full-create #content select:hover {
+  border-color: #c5cbd6 !important;
+}
+
+/* Focus glow */
+body.router--work-packages-full-create #content input[type="text"]:focus,
+body.router--work-packages-full-create #content input[type="number"]:focus,
+body.router--work-packages-full-create #content input[type="date"]:focus,
+body.router--work-packages-full-create #content input[type="search"]:focus,
+body.router--work-packages-full-create #content input[type="email"]:focus,
+body.router--work-packages-full-create #content select:focus,
+body.router--work-packages-full-create #content textarea:focus {
+  outline: none !important;
+  border-color: #0c66e4 !important;
+  box-shadow: 0 0 0 4px rgba(12, 102, 228, 0.12) !important;
+  background: #ffffff !important;
+}
+
+/* ── ng-select (dropdowns) styled like inputs ───────────────────── */
+body.router--work-packages-full-create #content .ng-select,
+body.router--work-packages-full-create #content .ng-select-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+body.router--work-packages-full-create #content .ng-select-container .ng-value-container {
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+body.router--work-packages-full-create #content .ng-select-container .ng-placeholder {
+  color: #9ca3af !important;
+  font-size: 14px !important;
+}
+body.router--work-packages-full-create #content .ng-select:hover .ng-select-container {
+  border-color: #c5cbd6 !important;
+}
+body.router--work-packages-full-create #content .ng-select.ng-select-focused .ng-select-container,
+body.router--work-packages-full-create #content .ng-select.ng-select-opened .ng-select-container {
+  border-color: #0c66e4 !important;
+  box-shadow: 0 0 0 4px rgba(12, 102, 228, 0.12) !important;
+}
+body.router--work-packages-full-create #content .ng-dropdown-panel {
+  border-radius: 12px !important;
+  border: 1px solid #e6e9ef !important;
+  box-shadow: 0 16px 32px -12px rgba(15, 23, 42, 0.18) !important;
+  margin-top: 6px !important;
+  overflow: hidden !important;
+}
+
+/* ── INFO ALERT — soft blue panel ───────────────────────────────── */
+body.router--work-packages-full-create #content .work-packages--info-row,
+body.router--work-packages-full-create #content .op-info-row,
+body.router--work-packages-full-create #content .notification-box.-info,
+body.router--work-packages-full-create #content .op-toast.-info {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 12px !important;
+  padding: 14px 16px !important;
+  margin: 0 0 18px 0 !important;
+  color: #1e3a8a !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  box-shadow: none !important;
+}
+body.router--work-packages-full-create #content .work-packages--info-row .icon,
+body.router--work-packages-full-create #content .work-packages--info-row [class*="icon-"],
+body.router--work-packages-full-create #content .notification-box.-info [class*="icon-"] {
+  color: #2563eb !important;
+  flex: 0 0 auto !important;
+  margin-top: 2px !important;
+}
+
+/* ── DESCRIPTION editor — extra breathing room inside its card ──── */
+body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-editor__main,
+body.router--work-packages-full-create #content .op-uc-container {
+  border-radius: 12px !important;
+  border: 1px solid #dfe3eb !important;
+  background: #ffffff !important;
+  overflow: hidden !important;
+}
+body.router--work-packages-full-create #content .ck.ck-toolbar {
+  background: #fafbfc !important;
+  border: none !important;
+  border-bottom: 1px solid #eef1f5 !important;
+  padding: 8px 10px !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+body.router--work-packages-full-create #content .ck.ck-content,
+body.router--work-packages-full-create #content .ck-editor__editable {
+  min-height: 180px !important;
+  padding: 16px 18px !important;
+  background: #ffffff !important;
+  border: none !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  color: #0f172a !important;
+}
+body.router--work-packages-full-create #content .ck.ck-content:focus,
+body.router--work-packages-full-create #content .ck-editor__editable:focus,
+body.router--work-packages-full-create #content .ck-editor__editable_inline:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor:focus-within {
+  border-color: #0c66e4 !important;
+  box-shadow: 0 0 0 4px rgba(12, 102, 228, 0.12) !important;
+}
+
+/* ── ATTACHMENTS card — dashed drop area ───────────────────────── */
+body.router--work-packages-full-create #content .op-attachments,
+body.router--work-packages-full-create #content .op-file-section {
+  position: relative !important;
+}
+body.router--work-packages-full-create #content input[type="file"][id*="attachment"],
+body.router--work-packages-full-create #content #attachment_files {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 96px !important;
+  padding: 22px !important;
+  background: #fafbfd !important;
+  border: 2px dashed #cbd5e1 !important;
+  border-radius: 14px !important;
+  color: #475569 !important;
+  cursor: pointer !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease !important;
+}
+body.router--work-packages-full-create #content input[type="file"][id*="attachment"]:hover,
+body.router--work-packages-full-create #content #attachment_files:hover {
+  border-color: #0c66e4 !important;
+  background: #eff6ff !important;
+}
+
+/* ── STICKY FOOTER — Save (blue solid pill) / Cancel (ghost) ───── */
+body.router--work-packages-full-create #content .toolbar-container_bottom,
+body.router--work-packages-full-create #content .work-packages--panel-inner-actions,
+body.router--work-packages-full-create #content .work-packages--action-buttons,
+body.router--work-packages-full-create #content [class*="action-buttons"],
+body.router--work-packages-full-create #content [class*="submit-buttons"] {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 5 !important;
+  background: #ffffff !important;
+  border-top: 1px solid #eef1f5 !important;
+  padding: 16px 32px !important;
+  margin: 0 !important;
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: flex-end !important;
+  border-radius: 0 0 24px 24px !important;
+}
+
+/* Base button reset inside the modal footer */
+body.router--work-packages-full-create #content #work-packages--edit-actions-save,
+body.router--work-packages-full-create #content #work-packages--edit-actions-cancel,
+body.router--work-packages-full-create #content .work-packages--edit-actions button,
+body.router--work-packages-full-create #content [class*="action-buttons"] button {
+  height: 44px !important;
+  padding: 0 22px !important;
+  border-radius: 999px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease !important;
+  float: none !important;
+  margin: 0 !important;
+  min-width: 96px !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* Save — solid blue */
+body.router--work-packages-full-create #content #work-packages--edit-actions-save,
+body.router--work-packages-full-create #content button.-primary,
+body.router--work-packages-full-create #content button.-highlight {
+  background: #0c66e4 !important;
+  background-image: linear-gradient(180deg, #1572f0 0%, #0c66e4 100%) !important;
+  border: 1px solid #0c66e4 !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(12, 102, 228, 0.30), 0 4px 10px -4px rgba(12, 102, 228, 0.35) !important;
+}
+body.router--work-packages-full-create #content #work-packages--edit-actions-save:hover,
+body.router--work-packages-full-create #content button.-primary:hover,
+body.router--work-packages-full-create #content button.-highlight:hover {
+  background: #0055cc !important;
+  background-image: linear-gradient(180deg, #0a5fd5 0%, #0055cc 100%) !important;
+  border-color: #0055cc !important;
+  box-shadow: 0 2px 4px rgba(12, 102, 228, 0.35), 0 6px 14px -4px rgba(12, 102, 228, 0.40) !important;
+}
+body.router--work-packages-full-create #content #work-packages--edit-actions-save:active {
+  transform: translateY(1px) !important;
+}
+
+/* Cancel — ghost */
+body.router--work-packages-full-create #content #work-packages--edit-actions-cancel {
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  color: #334155 !important;
+  box-shadow: none !important;
+}
+body.router--work-packages-full-create #content #work-packages--edit-actions-cancel:hover {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* ── Override earlier global "50% width" rules INSIDE the modal ── */
+body.router--work-packages-full-create #content .work-packages--new input[type="text"],
+body.router--work-packages-full-create #content .work-packages--new input[type="date"],
+body.router--work-packages-full-create #content .work-packages--new input[type="number"],
+body.router--work-packages-full-create #content .work-packages--new input[type="email"],
+body.router--work-packages-full-create #content .work-packages--new input[type="search"],
+body.router--work-packages-full-create #content .work-packages--new .form--text-field,
+body.router--work-packages-full-create #content .work-packages--new .form--select,
+body.router--work-packages-full-create #content .work-packages--new .form--field-container,
+body.router--work-packages-full-create #content .work-packages--new .inline-edit--field,
+body.router--work-packages-full-create #content .work-packages--new select,
+body.router--work-packages-full-create #content .work-packages--new textarea,
+body.router--work-packages-full-create #content .work-packages--new .ng-select,
+body.router--work-packages-full-create #content .work-packages--new .ng-select-container,
+body.router--work-packages-full-create #content .work-packages--new .ng-input {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Override .work-packages--new button float:right pill from earlier */
+body.router--work-packages-full-create #content .work-packages--new .work-packages--edit-actions,
+body.router--work-packages-full-create #content .work-packages--new .work-packages--buttons {
+  text-align: right !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 12px !important;
+}
+body.router--work-packages-full-create #content .work-packages--new button {
+  float: none !important;
+}
+
+/* ── Sidebar behind modal — not interactable ───────────────────── */
+body.router--work-packages-full-create #main-menu,
+body.router--work-packages-full-create nav#main-menu {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* ================================================================
+   FIX PASS — DOUBLE BORDERS, REAL SELECTORS, CLEAN SHAPES
+   --------------------------------------------------------------
+   The earlier rules targeted .attributes-group / .attributes-map
+   directly, but OpenProject nests every field inside
+   <op-editable-attribute-field> → .inline-edit--container →
+   .inline-edit--display-field / .inline-edit--field, each of
+   which carries its own border + background. Strip those down
+   to a single visible border on the inner control.
+   ================================================================ */
+
+/* Scope alias short-form for readability inside this block */
+
+/* 1) The wrapper elements are layout-only — no border, no bg, no padding */
+body.router--work-packages-full-create #content op-editable-attribute-field,
+body.router--work-packages-full-create #content .inline-edit--container,
+body.router--work-packages-full-create #content .inline-edit--display-field,
+body.router--work-packages-full-create #content .inline-edit--display-container,
+body.router--work-packages-full-create #content op-project-autocompleter,
+body.router--work-packages-full-create #content op-user-autocompleter,
+body.router--work-packages-full-create #content op-work-package-autocompleter,
+body.router--work-packages-full-create #content op-version-autocompleter,
+body.router--work-packages-full-create #content op-category-autocompleter,
+body.router--work-packages-full-create #content .wp-edit-field,
+body.router--work-packages-full-create #content .single-attribute {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+/* 2) When the field is in DISPLAY mode (not editing), the trigger link
+      should look like a filled input so the field never looks empty */
+body.router--work-packages-full-create #content .inline-edit--display-field {
+  width: 100% !important;
+  min-height: 44px !important;
+  padding: 10px 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 10px !important;
+  color: #0f172a !important;
+  font-size: 14px !important;
+  line-height: 22px !important;
+  cursor: pointer !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  display: flex !important;
+  align-items: center !important;
+}
+body.router--work-packages-full-create #content .inline-edit--display-field:hover {
+  border-color: #c5cbd6 !important;
+}
+body.router--work-packages-full-create #content .inline-edit--display-field .placeholder,
+body.router--work-packages-full-create #content .inline-edit--display-field.-placeholder {
+  color: #9ca3af !important;
+}
+body.router--work-packages-full-create #content .inline-edit--display-field .inline-edit--display-trigger {
+  width: 100% !important;
+  display: block !important;
+  color: inherit !important;
+  text-decoration: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 3) The op-input class is OpenProject's shared input atom — match it
+      to the same 44px / 10px-radius look */
+body.router--work-packages-full-create #content .op-input,
+body.router--work-packages-full-create #content input.op-input,
+body.router--work-packages-full-create #content textarea.op-input,
+body.router--work-packages-full-create #content .inline-edit--field {
+  width: 100% !important;
+  height: 44px !important;
+  padding: 10px 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  font-family: inherit !important;
+}
+body.router--work-packages-full-create #content textarea.op-input,
+body.router--work-packages-full-create #content .inline-edit--field[as*="textarea"],
+body.router--work-packages-full-create #content textarea.inline-edit--field {
+  height: auto !important;
+  min-height: 96px !important;
+  padding: 12px 14px !important;
+}
+
+/* 4) Subject (title) field — its op-editable-attribute-field wrapper
+      has class -no-label; treat the inside as a single tall input */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper {
+  margin-bottom: 0 !important;
+}
+body.router--work-packages-full-create #content .wp-new--subject-wrapper .inline-edit--display-field,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper input,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper .op-input {
+  height: 48px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+/* 5) Description group — wrapper is .attributes-group.description-group,
+      inner is .single-attribute.work-packages--details--description.
+      The CKEditor lives inside an op-editable-attribute-field. */
+body.router--work-packages-full-create #content .attributes-group.description-group .single-attribute {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+body.router--work-packages-full-create #content .work-packages--details--description {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 6) Attachments wrapper — the real selector is .work-packages--storages,
+      NOT .op-attachments. Treat it as a card. */
+body.router--work-packages-full-create #content .work-packages--storages {
+  background: #ffffff !important;
+  border: 1px solid #e6e9ef !important;
+  border-radius: 18px !important;
+  padding: 22px 24px !important;
+  margin: 0 0 24px 0 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+}
+body.router--work-packages-full-create #content .op-tab-content--header {
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+body.router--work-packages-full-create #content .op-tab-content--header .op-tab-content--header-text {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: #1e3a8a !important;
+}
+
+/* Dashed upload zone — for the native attachment list/upload component */
+body.router--work-packages-full-create #content op-attachments,
+body.router--work-packages-full-create #content .op-file-section,
+body.router--work-packages-full-create #content .op-attachment-list {
+  display: block !important;
+  border: 2px dashed #cbd5e1 !important;
+  border-radius: 14px !important;
+  background: #fafbfd !important;
+  padding: 24px !important;
+  margin: 0 !important;
+  text-align: center !important;
+  color: #475569 !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease !important;
+}
+body.router--work-packages-full-create #content op-attachments:hover,
+body.router--work-packages-full-create #content .op-file-section:hover {
+  border-color: #0c66e4 !important;
+  background: #eff6ff !important;
+}
+
+/* 7) Re-show the breadcrumb but as small grey text above the title */
+body.router--work-packages-full-create #content .toolbar-container .op-breadcrumb,
+body.router--work-packages-full-create #content .work-packages--toolbar-container .op-breadcrumb {
+  display: block !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+body.router--work-packages-full-create #content .op-breadcrumb a,
+body.router--work-packages-full-create #content .op-breadcrumb li {
+  font-size: 12px !important;
+  color: #64748b !important;
+  text-decoration: none !important;
+}
+body.router--work-packages-full-create #content .op-breadcrumb a:hover {
+  color: #0c66e4 !important;
+  text-decoration: underline !important;
+}
+
+/* 8) attributes-key-value: enforce flex-column for label-above-input.
+      OpenProject's default SASS sets these to flex-row with fixed
+      label width — that's why labels and inputs were misaligned. */
+body.router--work-packages-full-create #content .attributes-key-value,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 6px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+body.router--work-packages-full-create #content .attributes-key-value--key,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute-key {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: left !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  line-height: 1.4 !important;
+}
+body.router--work-packages-full-create #content .attributes-key-value--value-container,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute-value-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 9) The -project-context attributes-group inherits card chrome from
+      the earlier .attributes-group rule. The .wp-project-context--warning
+      <p> inside it is the soft-blue info alert. */
+body.router--work-packages-full-create #content .wp-project-context--warning {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 12px !important;
+  padding: 12px 14px !important;
+  margin: 0 0 16px 0 !important;
+  color: #1e3a8a !important;
+  font-size: 13.5px !important;
+  line-height: 1.55 !important;
+}
+
+/* 10) Span-all rows (subject, description, tags, project context) */
+body.router--work-packages-full-create #content .attributes-key-value.-span-all-columns,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute_span-all {
+  grid-column: 1 / -1 !important;
+}
+
+/* 11) Reset the .attributes-group inner wrapper. The template renders
+       .attributes-group > .attributes-group--header + ndc-dynamic, and
+       the ndc-dynamic emits the .attributes-map div. Strip default OP
+       SASS padding/margins that would collide with our card padding. */
+body.router--work-packages-full-create #content .attributes-group > div:not(.attributes-group--header) {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* 12) ndc-dynamic root + ALL Angular custom-element wrappers must be
+       display:contents so their children become direct grid items of
+       the surrounding .attributes-group (otherwise the 2-column grid
+       can't see the .attributes-key-value rows and they stack
+       vertically). */
+body.router--work-packages-full-create #content ndc-dynamic,
+body.router--work-packages-full-create #content wp-attribute-group,
+body.router--work-packages-full-create #content op-wp-form-group,
+body.router--work-packages-full-create #content op-form-group {
+  display: contents !important;
+}
+
+/* 13) The .work-package--single-view root inside #content shouldn't
+       carry its own padding — the modal already provides it */
+body.router--work-packages-full-create #content .work-package--single-view {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: block !important;
+}
+
+/* 14) wp-info-wrapper inside new form is just the custom-actions row;
+       hide if empty to avoid a stray gap */
+body.router--work-packages-full-create #content .wp-info-wrapper:empty {
+  display: none !important;
+}
+
+/* 15) op-editable-attribute-field's -no-label modifier (used on subject
+       and description) — remove any side margin its SASS applies */
+body.router--work-packages-full-create #content .-no-label,
+body.router--work-packages-full-create #content [class*="-no-label"] .inline-edit--container {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* ── Universal wrapper-strip — every element that carries
+      .inline-edit--field but ISN'T a native input/select/textarea is
+      a custom-element wrapper. Strip it to transparent so only the
+      inner native control (or .ng-select-container) shows the visible
+      border. The :not() chain handles ALL field types in one rule —
+      autocompleters, *-edit-field components, custom date pickers,
+      etc. — no enumeration needed. */
+body.router--work-packages-full-create #content .inline-edit--field:not(input):not(select):not(textarea) {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Same treatment for the read-mode wrapper hierarchy: op-editable-attribute-field,
+   .inline-edit--container, .inline-edit--display-container should all be
+   completely transparent layout-only wrappers. Only .inline-edit--display-field
+   (when in display mode) or the inner control (when editing) shows the border. */
+body.router--work-packages-full-create #content op-editable-attribute-field,
+body.router--work-packages-full-create #content .inline-edit--container,
+body.router--work-packages-full-create #content .inline-edit--display-container,
+body.router--work-packages-full-create #content .wp-edit-field,
+body.router--work-packages-full-create #content .single-attribute {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ================================================================
+   FINAL PASS — match the target mockup exactly
+   --------------------------------------------------------------
+   Issues visible in latest screenshot:
+   (a) Assignee/Accountable autocompleters render INVISIBLE
+       because ng-select inner elements collapse to 0 height
+   (b) Description card has empty 22px top gap (empty header row)
+   (c) Details labels truncate ("Cat...", "Da...")
+   (d) Empty cards (Other) render with chrome but no content
+   (e) Attachments file input wraps awkwardly
+   (f) Type tabs (New / TASK) crammed against breadcrumb
+   ================================================================ */
+
+/* (a) ng-select internals — force the visible UI to actually render */
+body.router--work-packages-full-create #content .ng-select {
+  display: block !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-select-container {
+  display: flex !important;
+  align-items: center !important;
+  min-height: 44px !important;
+  height: 44px !important;
+  padding: 0 8px 0 4px !important;
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+body.router--work-packages-full-create #content .ng-select.ng-select-single .ng-select-container {
+  height: 44px !important;
+  min-height: 44px !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-value-container {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 10px !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 100% !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-value-container .ng-input {
+  position: static !important;
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-value-container .ng-input > input {
+  height: 100% !important;
+  width: 100% !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-placeholder {
+  color: #9ca3af !important;
+  font-size: 14px !important;
+  line-height: normal !important;
+  position: static !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-value {
+  font-size: 14px !important;
+  color: #0f172a !important;
+  line-height: 1 !important;
+}
+/* Visible chevron arrow on the right */
+body.router--work-packages-full-create #content .ng-select .ng-arrow-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  padding: 0 8px 0 0 !important;
+  flex: 0 0 auto !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-arrow {
+  border: solid #64748b !important;
+  border-width: 0 1.5px 1.5px 0 !important;
+  display: inline-block !important;
+  padding: 3px !important;
+  transform: rotate(45deg) !important;
+  margin-top: -3px !important;
+  background: transparent !important;
+}
+body.router--work-packages-full-create #content .ng-select.ng-select-opened .ng-arrow {
+  transform: rotate(225deg) !important;
+  margin-top: 3px !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-clear-wrapper {
+  display: none !important;
+}
+
+/* (b) Description card — kill the empty header gap */
+body.router--work-packages-full-create #content .attributes-group.description-group {
+  padding: 22px 24px !important;
+}
+body.router--work-packages-full-create #content .attributes-group.description-group .attributes-group--header:empty,
+body.router--work-packages-full-create #content .attributes-group.description-group .attributes-group--header-container:empty {
+  display: none !important;
+}
+/* Give description-group a visible header label even when OP renders none */
+body.router--work-packages-full-create #content .attributes-group.description-group::before {
+  content: "DESCRIPTION" !important;
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: #1e3a8a !important;
+  margin: 0 0 16px 0 !important;
+}
+
+/* Same trick for the subject + project context cards which lack a header */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper::before {
+  content: "BASIC INFORMATION" !important;
+  display: block !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: #1e3a8a !important;
+  margin: 0 0 16px 0 !important;
+}
+/* Merge subject + project-context visually — no bottom margin on subject card */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper {
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
+  border-radius: 18px 18px 0 0 !important;
+  padding-bottom: 8px !important;
+}
+body.router--work-packages-full-create #content .attributes-group.-project-context {
+  margin-top: 0 !important;
+  border-top: none !important;
+  border-radius: 0 0 18px 18px !important;
+  padding-top: 8px !important;
+}
+body.router--work-packages-full-create #content .attributes-group.-project-context > div {
+  padding: 0 !important;
+}
+
+/* (c) Details/People/Estimate row overlap fix.
+       CRITICAL DISCOVERY: OpenProject does NOT wrap attribute items in
+       a `.attributes-map` container. The structure is just:
+           .attributes-group
+             > .attributes-group--header
+             > ndc-dynamic              (display:contents per my rule)
+                 > .attributes-key-value   (the field rows)
+                 > .attributes-key-value
+       and stock SASS sets `.attributes-key-value { display: flex }` with
+       no grid wrapper. So earlier rules targeting `.attributes-map`
+       did nothing. The grid must live on `.attributes-group` itself. */
+body.router--work-packages-full-create #content .attributes-group {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 28px !important;
+  row-gap: 20px !important;
+  align-items: start !important;
+}
+
+/* Header (real OP one + our injected ::before) spans both columns */
+body.router--work-packages-full-create #content .attributes-group > .attributes-group--header,
+body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container,
+body.router--work-packages-full-create #content .attributes-group::before {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+}
+
+/* Description and project-context groups: single full-width column */
+body.router--work-packages-full-create #content .attributes-group.description-group,
+body.router--work-packages-full-create #content .attributes-group.-project-context {
+  grid-template-columns: 1fr !important;
+}
+
+/* Project-context inner <div> wrapper needs to also span and flow */
+body.router--work-packages-full-create #content .attributes-group.-project-context > div {
+  grid-column: 1 / -1 !important;
+  display: contents !important;
+}
+body.router--work-packages-full-create #content .attributes-group.-project-context .wp-project-context--warning {
+  grid-column: 1 / -1 !important;
+}
+
+/* Each field row: column flex (label above input), single grid cell */
+body.router--work-packages-full-create #content .attributes-group .attributes-key-value,
+body.router--work-packages-full-create #content .attributes-group .wp-attribute-group--attribute {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+/* Labels: don't truncate, sit above input */
+body.router--work-packages-full-create #content .attributes-key-value--key,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute-key {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  margin-bottom: 0 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+}
+
+/* Span-all rows (subject, description, tags, project) */
+body.router--work-packages-full-create #content .attributes-group .attributes-key-value.-span-all-columns,
+body.router--work-packages-full-create #content .attributes-group .wp-attribute-group--attribute_span-all,
+body.router--work-packages-full-create #content .attributes-group .attributes-key-value[data-field-name="subject"],
+body.router--work-packages-full-create #content .attributes-group .attributes-key-value[data-field-name="description"],
+body.router--work-packages-full-create #content .attributes-group .attributes-key-value[data-field-name="tags"] {
+  grid-column: 1 / -1 !important;
+}
+
+/* Stack to single column under 900px */
+@media (max-width: 900px) {
+  body.router--work-packages-full-create #content .attributes-group {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* (c2) ng-select value text was clipping ("Nor..." for "Normal") because
+       the value container was getting squeezed by the chevron. Give the
+       value container all the space it needs and shrink the chevron. */
+body.router--work-packages-full-create #content .ng-select .ng-value-container {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  padding: 0 8px 0 12px !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-value-container .ng-value-label,
+body.router--work-packages-full-create #content .ng-select .ng-value {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 100% !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-arrow-wrapper {
+  width: 22px !important;
+  padding-right: 6px !important;
+}
+
+/* (d) Hide empty attribute-groups (e.g. Other with no rendered fields).
+       :has() detects groups whose value containers are all blank. */
+body.router--work-packages-full-create #content .attributes-group:not(.description-group):not(.-project-context):has(.attributes-map:empty) {
+  display: none !important;
+}
+
+/* (e) Attachments — single dashed dropzone on the OUTERMOST element only.
+       The previous rule put dashed borders on every nested level
+       (op-attachments → op-attachment-list → op-file-section), producing
+       nested dashed rectangles. Now: the outer .work-packages--storages
+       container provides the card chrome, and only ONE inner element
+       carries the dashed dropzone look. All other nested wrappers are
+       reset to be borderless layout-only nodes. */
+body.router--work-packages-full-create #content .work-packages--storages {
+  padding: 22px 24px !important;
+}
+body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
+  margin: 0 0 16px 0 !important;
+}
+
+/* Strip ALL borders/backgrounds off nested attachment wrappers FIRST */
+body.router--work-packages-full-create #content op-attachments,
+body.router--work-packages-full-create #content .op-attachments,
+body.router--work-packages-full-create #content op-attachment-list,
+body.router--work-packages-full-create #content .op-attachment-list,
+body.router--work-packages-full-create #content .op-attachments--upload-section,
+body.router--work-packages-full-create #content .op-file-section,
+body.router--work-packages-full-create #content .op-attachments--drop-box,
+body.router--work-packages-full-create #content .op-file-section--drop-box {
+  display: block !important;
+  width: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  text-align: left !important;
+}
+
+/* Now apply the dashed dropzone to JUST the upload component */
+body.router--work-packages-full-create #content op-attachments-upload,
+body.router--work-packages-full-create #content .op-attachments--upload-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: 16px !important;
+  width: 100% !important;
+  border: 2px dashed #cbd5e1 !important;
+  border-radius: 14px !important;
+  background: #fafbfd !important;
+  padding: 22px 24px !important;
+  color: #475569 !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease !important;
+  flex-wrap: wrap !important;
+  white-space: normal !important;
+}
+body.router--work-packages-full-create #content op-attachments-upload:hover,
+body.router--work-packages-full-create #content .op-attachments--upload-section:hover {
+  border-color: #0c66e4 !important;
+  background: #eff6ff !important;
+}
+
+/* ── Attachments: MOCKUP MATCH ─────────────────────────────────────
+   The mockup shows a simple row inside the ATTACHMENTS card:
+       [Choose Files] No file chosen          Max file size: 50MB
+   NOT a dashed dropzone with paperclip + "Drop files here..." text.
+   Hide the OP drop-box overlay entirely and lay out the native file
+   input + a CSS-injected "Max file size: 50MB" caption. */
+
+/* Hide the heavy dropzone overlay entirely — every element involved
+   in OpenProject's drop-box rendering. The paperclip icon and the
+   "Drop files here or click to attach files" text live in nested
+   spans inside .op-file-section--drop-box; hide ALL of them. */
+body.router--work-packages-full-create #content .op-file-section--drop-box,
+body.router--work-packages-full-create #content .op-file-section--drop-box *,
+body.router--work-packages-full-create #content .op-file-section--drop-box-icon,
+body.router--work-packages-full-create #content .op-file-section--drop-box-text,
+body.router--work-packages-full-create #content .op-file-section--drop-box_float,
+body.router--work-packages-full-create #content .op-file-section--empty-list-hint,
+body.router--work-packages-full-create #content .op-attachments--drop-box,
+body.router--work-packages-full-create #content .op-attachments--drop-box *,
+body.router--work-packages-full-create #content op-attachments-upload,
+body.router--work-packages-full-create #content op-attachments-upload * {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+/* The attachments section card becomes a simple row */
+body.router--work-packages-full-create #content .work-packages--storages {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+/* Section header: keep injected (or stock) "ATTACHMENTS" label */
+body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
+  margin: 0 !important;
+}
+
+/* The inner row that holds the file input + size caption */
+body.router--work-packages-full-create #content .work-packages--storages::after {
+  content: "Max file size: 50MB" !important;
+  position: absolute !important;
+  right: 24px !important;
+  bottom: 26px !important;
+  font-size: 12.5px !important;
+  color: #64748b !important;
+  pointer-events: none !important;
+}
+body.router--work-packages-full-create #content .work-packages--storages {
+  position: relative !important;
+}
+
+/* Reset the native file input to a clean inline button + label */
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"],
+body.router--work-packages-full-create #content #attachment_files {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 60% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  font-size: 13.5px !important;
+  color: #475569 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button,
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::-webkit-file-upload-button {
+  height: 32px !important;
+  padding: 0 14px !important;
+  margin-right: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #b6c2d9 !important;
+  border-radius: 6px !important;
+  color: #0c66e4 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button:hover {
+  background: #eff6ff !important;
+  border-color: #0c66e4 !important;
+}
+body.router--work-packages-full-create #content input[type="file"] {
+  display: inline-block !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  font-size: 13px !important;
+  color: #475569 !important;
+}
+body.router--work-packages-full-create #content input[type="file"]::file-selector-button,
+body.router--work-packages-full-create #content input[type="file"]::-webkit-file-upload-button {
+  height: 36px !important;
+  padding: 0 14px !important;
+  margin-right: 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 8px !important;
+  color: #0c66e4 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease !important;
+}
+body.router--work-packages-full-create #content input[type="file"]::file-selector-button:hover {
+  background: #eff6ff !important;
+  border-color: #0c66e4 !important;
+}
+
+/* (f) Type-selector tabs row — sit ABOVE the title cleanly */
+body.router--work-packages-full-create #content .tabnav,
+body.router--work-packages-full-create #content .UnderlineNav,
+body.router--work-packages-full-create #content [class*="UnderlineNav"] {
+  margin: 6px 0 0 0 !important;
+  padding: 0 !important;
+  border-bottom: 1px solid #eef1f5 !important;
+}
+body.router--work-packages-full-create #content .UnderlineNav-item,
+body.router--work-packages-full-create #content [class*="UnderlineNav-item"] {
+  padding: 8px 14px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+  border-radius: 8px 8px 0 0 !important;
+}
+body.router--work-packages-full-create #content .UnderlineNav-item.selected,
+body.router--work-packages-full-create #content .UnderlineNav-item[aria-current="page"],
+body.router--work-packages-full-create #content [class*="UnderlineNav-item"][aria-selected="true"] {
+  color: #0c66e4 !important;
+  font-weight: 600 !important;
+}
+
+/* Editable-toolbar-title input (the dynamic page title element) — let it
+   render full-width with subdued look since the cards now own the form */
+body.router--work-packages-full-create #content .editable-toolbar-title-wrapper,
+body.router--work-packages-full-create #content .editable-toolbar-title-container {
+  width: auto !important;
+  max-width: 100% !important;
+  flex: 0 1 auto !important;
+}
+body.router--work-packages-full-create #content .editable-toolbar-title input {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  box-shadow: none !important;
+}
+
+/* Description editor — ensure toolbar wraps when narrow + min editor height */
+body.router--work-packages-full-create #content .ck.ck-toolbar {
+  flex-wrap: wrap !important;
+  row-gap: 4px !important;
+}
+body.router--work-packages-full-create #content .ck.ck-editor__main > .ck-editor__editable,
+body.router--work-packages-full-create #content .ck-content {
+  min-height: 200px !important;
+}
+
+/* Required-asterisk color */
+body.router--work-packages-full-create #content .required {
+  color: #dc2626 !important;
+  margin-left: 2px !important;
+  font-weight: 600 !important;
+}
+
+/* ================================================================
+   POLISH PASS — fields, layout, spacing, look
+   Locks every input/dropdown/textarea to identical 44px height,
+   10px radius, 1px #dfe3eb border, soft white bg, 14px text.
+   Locks every card to 22px padding + 24px bottom margin so the
+   rhythm matches the mockup precisely.
+   ================================================================ */
+
+/* ── Every interactive control: identical surface ─────────────── */
+body.router--work-packages-full-create #content input[type="text"],
+body.router--work-packages-full-create #content input[type="number"],
+body.router--work-packages-full-create #content input[type="date"],
+body.router--work-packages-full-create #content input[type="email"],
+body.router--work-packages-full-create #content input[type="search"],
+body.router--work-packages-full-create #content input[type="tel"],
+body.router--work-packages-full-create #content input[type="url"],
+body.router--work-packages-full-create #content select,
+body.router--work-packages-full-create #content .op-input,
+body.router--work-packages-full-create #content .inline-edit--field,
+body.router--work-packages-full-create #content .inline-edit--display-field,
+body.router--work-packages-full-create #content .ng-select .ng-select-container {
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  padding: 0 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #dfe3eb !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #0f172a !important;
+  font-family: inherit !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Textarea overrides height for multi-line content */
+body.router--work-packages-full-create #content textarea,
+body.router--work-packages-full-create #content textarea.op-input,
+body.router--work-packages-full-create #content textarea.inline-edit--field {
+  height: auto !important;
+  min-height: 96px !important;
+  max-height: none !important;
+  padding: 12px 14px !important;
+  display: block !important;
+  line-height: 1.55 !important;
+}
+
+/* Subject (title) input bigger and bolder */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper input,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper .inline-edit--display-field,
+body.router--work-packages-full-create #content [data-field-name="subject"] input {
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+/* Unified focus state for every control */
+body.router--work-packages-full-create #content input:focus,
+body.router--work-packages-full-create #content select:focus,
+body.router--work-packages-full-create #content textarea:focus,
+body.router--work-packages-full-create #content .op-input:focus,
+body.router--work-packages-full-create #content .inline-edit--field:focus,
+body.router--work-packages-full-create #content .ng-select.ng-select-focused .ng-select-container,
+body.router--work-packages-full-create #content .ng-select.ng-select-opened .ng-select-container {
+  outline: none !important;
+  border-color: #0c66e4 !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.15) !important;
+  background: #ffffff !important;
+}
+
+/* Unified hover state */
+body.router--work-packages-full-create #content input:not(:focus):hover,
+body.router--work-packages-full-create #content select:not(:focus):hover,
+body.router--work-packages-full-create #content textarea:not(:focus):hover,
+body.router--work-packages-full-create #content .inline-edit--display-field:hover,
+body.router--work-packages-full-create #content .ng-select:not(.ng-select-focused) .ng-select-container:hover {
+  border-color: #c5cbd6 !important;
+}
+
+/* Placeholder consistency */
+body.router--work-packages-full-create #content input::placeholder,
+body.router--work-packages-full-create #content textarea::placeholder,
+body.router--work-packages-full-create #content .ng-placeholder {
+  color: #9aa4b2 !important;
+  font-weight: 400 !important;
+  opacity: 1 !important;
+}
+
+/* ── Cards: identical chrome and rhythm ─────────────────────────── */
+body.router--work-packages-full-create #content .attributes-group:not(.description-group):not(.-project-context),
+body.router--work-packages-full-create #content .attributes-group.description-group,
+body.router--work-packages-full-create #content .attributes-group.-project-context,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper,
+body.router--work-packages-full-create #content .work-packages--storages {
+  background: #ffffff !important;
+  border: 1px solid #e6e9ef !important;
+  border-radius: 18px !important;
+  padding: 22px 24px !important;
+  margin: 0 0 24px 0 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* The merged BASIC INFORMATION card (subject + project-context) */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper {
+  padding-bottom: 16px !important;
+  margin-bottom: 0 !important;
+  border-bottom: none !important;
+  border-radius: 18px 18px 0 0 !important;
+  box-shadow: none !important;
+}
+body.router--work-packages-full-create #content .attributes-group.-project-context {
+  padding-top: 16px !important;
+  margin-top: 0 !important;
+  border-top: none !important;
+  border-radius: 0 0 18px 18px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* ── Section headers (uppercase nav-blue) ───────────────────────── */
+body.router--work-packages-full-create #content .attributes-group--header-text,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
+body.router--work-packages-full-create #content .attributes-group.description-group::before,
+body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header-text {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: #1e3a8a !important;
+  margin: 0 0 18px 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+/* ── Grid: 24px column gap, 18px row gap, even rhythm ──────────── */
+body.router--work-packages-full-create #content .attributes-group {
+  column-gap: 24px !important;
+  row-gap: 18px !important;
+}
+
+/* ── Field row: 6px gap between label and input ────────────────── */
+body.router--work-packages-full-create #content .attributes-key-value,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute {
+  gap: 6px !important;
+}
+body.router--work-packages-full-create #content .attributes-key-value--key,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute-key {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #475569 !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* ── ng-select internals — match the locked 44px surface ─────────
+   Important: do NOT set overflow:hidden on .ng-value-container — combined
+   with the stock `.ng-input { position:absolute; left:0; padding-right:50px }`
+   it was clipping the visible value text to ~4 characters ("Nor..."). */
+body.router--work-packages-full-create #content .ng-select .ng-select-container {
+  padding: 0 !important;
+  position: relative !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-value-container {
+  padding: 0 36px 0 14px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  position: static !important;
+  overflow: visible !important;
+}
+
+/* Value text — never truncate, never clip */
+body.router--work-packages-full-create #content .ng-select .ng-value,
+body.router--work-packages-full-create #content .ng-select .ng-value-label,
+body.router--work-packages-full-create #content .ng-select .ng-placeholder {
+  font-size: 14px !important;
+  color: #0f172a !important;
+  line-height: 1 !important;
+  max-width: none !important;
+  width: auto !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  display: inline !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+}
+body.router--work-packages-full-create #content .ng-select .ng-placeholder {
+  color: #9aa4b2 !important;
+  font-style: normal !important;
+}
+
+/* Single-select absolutely-positioned input — give it the full width
+   minus arrow space so the typed text fills the row */
+body.router--work-packages-full-create #content .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 36px !important;
+  bottom: 0 !important;
+  padding: 0 0 0 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+}
+body.router--work-packages-full-create #content .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input > input {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+}
+
+/* Arrow lives on the right, fixed width */
+body.router--work-packages-full-create #content .ng-select .ng-arrow-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  flex: 0 0 36px !important;
+}
+
+/* ── Hide placeholder when a value is selected ──────────────────────
+   My earlier rule put `display: inline !important` on .ng-placeholder
+   which overrode ng-select's stock `.ng-has-value .ng-placeholder
+   { display: none }`. Result: "Type to search" and the selected value
+   ("vikaram babu") rendered side-by-side, overlapping.
+   Restore the hide-on-value behavior across ALL field types. */
+body.router--work-packages-full-create #content .ng-select.ng-has-value .ng-placeholder,
+body.router--work-packages-full-create #content .ng-select .ng-has-value .ng-placeholder,
+body.router--work-packages-full-create #content .ng-select-container.ng-has-value .ng-placeholder,
+body.router--work-packages-full-create #content .ng-has-value .ng-placeholder,
+body.router--work-packages-full-create #content .ng-select-container:has(.ng-value) .ng-placeholder,
+body.router--work-packages-full-create #content .ng-value-container:has(.ng-value) .ng-placeholder,
+body.router--work-packages-full-create #content .ng-select:has(.ng-value) .ng-placeholder {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+/* While typing in the search input, ng-select also marks itself with
+   .ng-select-typing or shows the input — hide the placeholder behind
+   the input so the user only sees what they type. */
+body.router--work-packages-full-create #content .ng-select.ng-select-focused .ng-input:not(:empty) ~ .ng-placeholder,
+body.router--work-packages-full-create #content .ng-select.ng-select-filtered .ng-placeholder {
+  display: none !important;
+}
+
+/* ── Modal inner padding (form region) ─────────────────────────── */
+body.router--work-packages-full-create #content .work-packages--new,
+body.router--work-packages-full-create #content .work-package--new-state,
+body.router--work-packages-full-create #content .work-package--single-view {
+  padding: 28px 32px 12px 32px !important;
+}
+
+/* Footer buttons: OpenProject already renders icons inside the
+   Save/Cancel buttons, so we do NOT inject extra ::before icons.
+   (Removed previous SVG mask injection that produced duplicate
+   checkmarks / X icons.) */
+
+/* ── Date field — calendar icon on the right ──────────────────── */
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name*="date"] .attributes-key-value--value-container,
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name*="Date"] .attributes-key-value--value-container,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute[data-field-name*="date"] .wp-attribute-group--attribute-value-container {
+  position: relative !important;
+}
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name*="date"] .attributes-key-value--value-container::after,
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name*="Date"] .attributes-key-value--value-container::after,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute[data-field-name*="date"] .wp-attribute-group--attribute-value-container::after {
+  content: "" !important;
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 18px !important;
+  height: 18px !important;
+  background-color: #64748b !important;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='currentColor' d='M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.97 0 1.75.78 1.75 1.75v10.5c0 .97-.78 1.75-1.75 1.75H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.78 1.78 2 2.75 2H4V.75A.75.75 0 0 1 4.75 0ZM2.5 6.5v7.75c0 .14.11.25.25.25h10.5a.25.25 0 0 0 .25-.25V6.5h-11ZM2.75 3.5a.25.25 0 0 0-.25.25V5h11V3.75a.25.25 0 0 0-.25-.25H2.75Z'/></svg>") no-repeat center / contain !important;
+          mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='currentColor' d='M4.75 0a.75.75 0 0 1 .75.75V2h5V.75a.75.75 0 0 1 1.5 0V2h1.25c.97 0 1.75.78 1.75 1.75v10.5c0 .97-.78 1.75-1.75 1.75H2.75A1.75 1.75 0 0 1 1 14.25V3.75C1 2.78 1.78 2 2.75 2H4V.75A.75.75 0 0 1 4.75 0ZM2.5 6.5v7.75c0 .14.11.25.25.25h10.5a.25.25 0 0 0 .25-.25V6.5h-11ZM2.75 3.5a.25.25 0 0 0-.25.25V5h11V3.75a.25.25 0 0 0-.25-.25H2.75Z'/></svg>") no-repeat center / contain !important;
+  pointer-events: none !important;
+}
+/* Padding-right on the date field so text doesn't sit under the icon */
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name*="date"] .inline-edit--display-field,
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name*="Date"] .inline-edit--display-field {
+  padding-right: 40px !important;
+}
+
+/* (Reverted) Toolbar +Create modal section removed — the drawer
+   now opens with its native right-side design. Only the top-bar
+   +Create page route /work_packages/new still renders as a
+   centered modal (see the section above). */
+
+/* Hide ONLY the horizontal page scrollbar on the work-packages
+   page (when the right-side create drawer is open the body
+   otherwise gets a left/right scrollbar). Vertical scroll inside
+   the drawer and the table is left untouched. */
+body.controller-work_packages,
+body.controller-work-packages {
+  overflow-x: hidden !important;
+}
+
+/* ================================================================
+   UNDO CENTERED POPUP — page renders as a normal full-page form
+   --------------------------------------------------------------
+   Keep all the inner design (cards, inputs, grid, section headers,
+   attachments). ONLY undo the modal positioning wrapper:
+     - no dark backdrop
+     - body scrolls normally
+     - #content is a static block, not a centered floating card
+   These rules sit at the end of the file so they win the cascade.
+   ================================================================ */
+
+/* Remove the dim backdrop */
+body.router--work-packages-full-create::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Allow normal page scrolling */
+body.router--work-packages-full-create {
+  overflow: visible !important;
+  overflow-x: hidden !important;
+}
+
+/* #content goes back to static positioning, full width */
+body.router--work-packages-full-create #main #content,
+body.router--work-packages-full-create #content {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  max-height: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: #f6f7fb !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  display: block !important;
+  z-index: auto !important;
+  animation: none !important;
+}
+
+/* Inner form region: keep the soft gray bg and breathing-room padding,
+   but stop being a scroll container so the page scrolls instead */
+body.router--work-packages-full-create #content .work-packages--new,
+body.router--work-packages-full-create #content .work-package--new-state,
+body.router--work-packages-full-create #content .wp-new-create-form,
+body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  overflow: visible !important;
+  flex: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 24px 32px !important;
+}
+
+/* Header band: no longer sticky inside a modal — render inline */
+body.router--work-packages-full-create #content .toolbar-container,
+body.router--work-packages-full-create #content .work-packages--toolbar-container,
+body.router--work-packages-full-create #content .PageHeader {
+  position: static !important;
+  border-radius: 0 !important;
+  z-index: auto !important;
+}
+
+/* Footer (Save/Cancel row): no longer sticky inside a modal */
+body.router--work-packages-full-create #content .toolbar-container_bottom,
+body.router--work-packages-full-create #content .work-packages--panel-inner-actions,
+body.router--work-packages-full-create #content .work-packages--action-buttons,
+body.router--work-packages-full-create #content [class*="action-buttons"],
+body.router--work-packages-full-create #content [class*="submit-buttons"] {
+  position: static !important;
+  bottom: auto !important;
+  border-radius: 0 !important;
+  z-index: auto !important;
+}
+
+/* Sidebar regains interactivity (we'd disabled clicks under the modal) */
+body.router--work-packages-full-create #main-menu,
+body.router--work-packages-full-create nav#main-menu {
+  pointer-events: auto !important;
+  user-select: auto !important;
 }
