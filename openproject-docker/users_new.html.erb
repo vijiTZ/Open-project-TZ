@@ -27,12 +27,14 @@ See COPYRIGHT and LICENSE files for more details.
 
 ++#%>
 
-<%# tz: customised copy of app/views/users/new.html.erb — bind-mounted via
-    docker-compose.override.yml. Only difference from the upstream file is
-    the <button class="tz-back-btn"> added to the action row below, so the
-    Back button is rendered server-side in the same row as Create /
-    Create and continue (no JS timing or browser-cache races). Styled by
-    section 15 of openproject-custom.css. %>
+<%# tz: bind-mounted copy of app/views/users/new.html.erb (via
+    docker-compose.override.yml). Previously this override added a
+    server-rendered Back button to the action row; the button has been
+    removed because window.history.back() proved unreliable (sometimes
+    bounced through unrelated pages or did nothing when history was
+    short). The file is otherwise identical to upstream and is kept
+    bind-mounted so the override slot stays available for future
+    customisations. %>
 
 <% html_title t(:label_administration), t("label_user_new") %>
 
@@ -64,11 +66,5 @@ See COPYRIGHT and LICENSE files for more details.
   <p>
     <%= styled_button_tag t(:button_create), class: "-primary -with-icon icon-checkmark" %>
     <%= styled_button_tag t(:button_create_and_continue), name: "continue", class: "-primary -with-icon icon-checkmark" %>
-    <button type="button"
-            class="tz-back-btn"
-            aria-label="Back"
-            onclick="if(window.history.length>1){window.history.back()}else{window.location.href='<%= users_path %>'}">
-      <span class="tz-back-arrow" aria-hidden="true">&larr;</span> Back
-    </button>
   </p>
 <% end %>

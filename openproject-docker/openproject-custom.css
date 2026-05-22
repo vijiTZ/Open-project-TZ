@@ -1516,6 +1516,16 @@ body.controller-users.action-new form > p:last-of-type button.-primary .icon-che
   display: none !important;
 }
 
+/* Back button — push to the far right edge of the action row so it sits
+   visually separated from the [Create] / [Create and continue] pair.
+   `margin-left: auto` in a flex container consumes all remaining free
+   space on the left side of the item, snapping it to the right edge.
+   This overrides the `margin-left: 10px` from the generic .tz-back-btn
+   rule in section 15 (the inline-row default for other admin pages). */
+body.controller-users.action-new form > p:last-of-type .tz-back-btn {
+  margin-left: auto !important;
+}
+
 
 /* ── 6. TZ TABLE — REUSABLE STYLING FOR EVERY .generic-table ──────
    OpenProject ships nearly every admin index page on the same markup:
@@ -1531,8 +1541,10 @@ body.controller-users.action-new form > p:last-of-type button.-primary .icon-che
    Placeholder users, Permissions report, Enumerations, Work-package
    types/statuses/priorities, Custom fields, OAuth apps, etc.
 
-   The projects-index page also uses .generic-table and now picks up
-   these same rules (the prior card-grid override has been removed).
+   The projects-index page also uses .generic-table but section 2
+   above converts its tbody into a card grid — those rules have
+   higher specificity (body.controller-projects.action-index ...) and
+   continue to win there. No conflict.
 
    To opt any custom table into the same look, give it the class
    `tz-table` and these rules apply.                                 */
@@ -3515,10 +3527,16 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
   margin: 0 !important;
 }
 
-/* Each <li> filter row is a small inline-flex pair: label + control. */
+/* Each <li> filter row is a small inline-flex pair: label + control.
+   flex-direction: row + align-self: center are explicit because stock
+   OP CSS sets flex-direction: column on .simple-filters--filter and
+   align-items: end on the parent ul — without overrides, the items
+   would stack label-above-input and align to the row's bottom edge. */
 body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--filter {
   display: inline-flex !important;
+  flex-direction: row !important;
   align-items: center !important;
+  align-self: center !important;
   gap: 8px !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -3566,14 +3584,15 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
 
 /* Apply / Clear row — sits at the end of the flex .simple-filters--filters
    list, wraps as a pair if the previous controls fill the row.
-   Important: OpenProject's stock CSS adds `margin-top: 1rem` to
-   .simple-filters--controls (a holdover from its old grid layout).
-   That margin breaks vertical centering in a flex row, so we zero
-   it out. The flex container's align-items: center handles the rest
-   without forcing row heights (which would collapse the card).    */
+   Important: OpenProject's stock CSS adds `margin-top: 1rem` AND
+   `align-self: flex-end` to .simple-filters--controls (holdovers from
+   its old label-on-top grid layout). Both push the buttons off the
+   row's center line. We zero the margin and force align-self: center
+   so the buttons line up with the input fields' vertical midline. */
 body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls {
   display: inline-flex !important;
   align-items: center !important;
+  align-self: center !important;
   gap: 8px !important;
   margin: 0 !important;
   margin-top: 0 !important;
@@ -3581,7 +3600,13 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
   list-style: none !important;
 }
 
-/* Apply button (submit) — green primary, 36px tall to match inputs. */
+/* Apply button (submit) — green primary, 36px tall to match inputs.
+   margin: 0 is critical: stock OP's `.button` rule sets
+   `margin: 0 1rem 1rem 0`. In a flex row with align-items: center, that
+   16px margin-bottom is included in the item's outer height, which
+   shifts the button's visible content UP relative to the inputs (which
+   have margin: 0). Zeroing the margin restores true center alignment.
+   box-sizing: border-box keeps the 1px border inside the 36px height. */
 body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls input[type="submit"],
 body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls button[type="submit"] {
   background-color: var(--op-green) !important;
@@ -3590,6 +3615,10 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
   border-radius: 8px !important;
   padding: 0 18px !important;
   height: 36px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
   font-weight: 600 !important;
   font-size: 13px !important;
   box-shadow: none !important;
@@ -3601,7 +3630,9 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
   border-color: #155032 !important;
 }
 
-/* Clear link — white outlined secondary button. */
+/* Clear link — white outlined secondary button.
+   Same margin: 0 / box-sizing override as the Apply button — stock
+   `.button` margin shifts items off the row's center line. */
 body:is(.controller-users, .controller-groups, .controller-placeholder_users, .controller-roles).action-index li.simple-filters--controls a.button {
   background-color: #ffffff !important;
   border: 1px solid #d1d5db !important;
@@ -3609,6 +3640,10 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
   border-radius: 8px !important;
   padding: 0 14px !important;
   height: 36px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
   font-weight: 500 !important;
   font-size: 13px !important;
   display: inline-flex !important;
@@ -9972,3 +10007,792 @@ body.controller-admin.action-index .menu-blocks--container,
 .menu-blocks--container a.menu-block[href$="/info"]::before {
   background-image: url("/tz-assets/ICONS%208/Information.png") !important;
 }
+
+/* ================================================================
+   ADD TASK PAGE — breadcrumb dropdown pills ("New ▼" / "Task ▼")
+   --------------------------------------------------------------
+   The two buttons that sit under the breadcrumb on the create
+   work-package page are Primer ActionMenu triggers. Their stock
+   render hides the chevron until hover/focus or the SVG is so
+   small/light it looks missing. This block:
+     1) Lays the row out as two clean pills under the breadcrumb
+     2) Forces the dropdown chevron to render at ALL times in a
+        readable size and contrast (independent of hover state)
+   Scoped to body.router--work-packages-full-create so it never
+   touches dropdowns elsewhere.
+   ================================================================ */
+
+/* Row wrapping the two type dropdowns directly under the breadcrumb */
+body.router--work-packages-full-create #content .toolbar-container .toolbar,
+body.router--work-packages-full-create #content .toolbar-container .title-container,
+body.router--work-packages-full-create #content .PageHeader .PageHeader-titleArea {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Every action-menu / dropdown trigger sitting in the toolbar of the
+   create page → pill button look (white bg, rounded, 1px border, chevron). */
+body.router--work-packages-full-create #content .toolbar-container action-menu > button,
+body.router--work-packages-full-create #content .toolbar-container action-menu .Button,
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"],
+body.router--work-packages-full-create #content .toolbar-container button[data-show-dialog-id],
+body.router--work-packages-full-create #content .PageHeader action-menu > button,
+body.router--work-packages-full-create #content .PageHeader button[aria-haspopup="true"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  min-width: 92px !important;
+  padding: 0 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #d6dce5 !important;
+  border-radius: 10px !important;
+  color: #0f172a !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  box-shadow: 0 1px 1px rgba(15, 23, 42, 0.03) !important;
+  cursor: pointer !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+body.router--work-packages-full-create #content .toolbar-container action-menu > button:hover,
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"]:hover,
+body.router--work-packages-full-create #content .PageHeader action-menu > button:hover {
+  background: #f6f8fa !important;
+  border-color: #b6c2d9 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06) !important;
+}
+
+body.router--work-packages-full-create #content .toolbar-container action-menu > button:focus,
+body.router--work-packages-full-create #content .toolbar-container action-menu > button:focus-visible,
+body.router--work-packages-full-create #content .PageHeader action-menu > button:focus,
+body.router--work-packages-full-create #content .PageHeader action-menu > button:focus-visible {
+  outline: none !important;
+  border-color: #0c66e4 !important;
+  box-shadow: 0 0 0 3px rgba(12, 102, 228, 0.15) !important;
+}
+
+/* ── ALWAYS-VISIBLE chevron on those dropdown pills ────────────
+   The Primer button hides triangle/chevron on the type-selector
+   triggers; this rule force-renders them in a readable size,
+   independent of hover state. */
+body.router--work-packages-full-create #content .toolbar-container action-menu > button .octicon-triangle-down,
+body.router--work-packages-full-create #content .toolbar-container action-menu > button .octicon-chevron-down,
+body.router--work-packages-full-create #content .toolbar-container action-menu > button [class*="octicon-triangle-down"],
+body.router--work-packages-full-create #content .toolbar-container action-menu > button [class*="octicon-chevron-down"],
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"] .octicon-triangle-down,
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"] .octicon-chevron-down,
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"] svg:last-child,
+body.router--work-packages-full-create #content .PageHeader action-menu > button .octicon-triangle-down,
+body.router--work-packages-full-create #content .PageHeader action-menu > button .octicon-chevron-down,
+body.router--work-packages-full-create #content .PageHeader action-menu > button svg:last-child {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin-left: 6px !important;
+  flex: 0 0 14px !important;
+  color: #475569 !important;
+  fill: currentColor !important;
+  vertical-align: middle !important;
+  pointer-events: none !important;
+}
+
+/* If neither octicon SVG is rendered by Primer (some triggers omit
+   it entirely), inject a CSS-only chevron via ::after so the user
+   ALWAYS sees a dropdown indicator on the trigger. The injected
+   chevron is suppressed when an octicon child is already present
+   via :has(), so we never render two chevrons side-by-side. */
+body.router--work-packages-full-create #content .toolbar-container action-menu > button:not(:has(.octicon-triangle-down)):not(:has(.octicon-chevron-down))::after,
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"]:not(:has(.octicon-triangle-down)):not(:has(.octicon-chevron-down))::after,
+body.router--work-packages-full-create #content .PageHeader action-menu > button:not(:has(.octicon-triangle-down)):not(:has(.octicon-chevron-down))::after {
+  content: "" !important;
+  display: inline-block !important;
+  width: 8px !important;
+  height: 8px !important;
+  margin-left: 6px !important;
+  border-right: 1.5px solid #475569 !important;
+  border-bottom: 1.5px solid #475569 !important;
+  transform: rotate(45deg) translateY(-2px) !important;
+  flex: 0 0 8px !important;
+  pointer-events: none !important;
+}
+
+/* Label text inside the trigger (e.g. "New", "Task") — keep on a
+   single line, never truncate so the user can read it fully. */
+body.router--work-packages-full-create #content .toolbar-container action-menu > button .Button-label,
+body.router--work-packages-full-create #content .toolbar-container action-menu > button .Truncate,
+body.router--work-packages-full-create #content .toolbar-container action-menu > button .Truncate-text,
+body.router--work-packages-full-create #content .toolbar-container button[aria-haspopup="true"] .Button-label,
+body.router--work-packages-full-create #content .PageHeader action-menu > button .Button-label {
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+}
+
+/* Make sure the breadcrumb itself stays small and grey on its own
+   line ABOVE the dropdown pills (not inline with them). */
+body.router--work-packages-full-create #content .op-breadcrumb {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  width: 100% !important;
+}
+
+/* ================================================================
+   ADD TASK PAGE — MATCH PROJECT SETTINGS CARD DESIGN
+   --------------------------------------------------------------
+   Mirror the visual language used on /projects/X/settings (the
+   .op-settings-card pattern visible in the user's mockup):
+     • White page background (no soft-gray fill behind cards)
+     • Each card: white body, sentence-case title sitting in a
+       light gray header strip (#f6f8fa) at the top of the card
+     • 1px #e4e8f0 border, 10px radius, soft #0,0,0/0.04 shadow
+   These rules sit at the END of the file so they win the cascade
+   against the earlier "uppercase blue eyebrow" styling — without
+   deleting any of it.
+   ================================================================ */
+
+/* (1) Page background → flat white (was #f6f7fb soft gray) */
+body.router--work-packages-full-create #main #content,
+body.router--work-packages-full-create #content,
+body.router--work-packages-full-create #content .work-packages--new,
+body.router--work-packages-full-create #content .work-package--new-state,
+body.router--work-packages-full-create #content .wp-new-create-form,
+body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  background: #ffffff !important;
+}
+
+/* (2) Every card: same chrome as .op-settings-card.
+       overflow:hidden lets the header strip's gray fill clip cleanly
+       to the rounded corners. */
+body.router--work-packages-full-create #content .attributes-group:not(.description-group):not(.-project-context),
+body.router--work-packages-full-create #content .attributes-group.description-group,
+body.router--work-packages-full-create #content .attributes-group.-project-context,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper,
+body.router--work-packages-full-create #content .work-packages--storages {
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden !important;
+  background: #ffffff !important;
+}
+
+/* (3) Real OpenProject-rendered headers (e.g. "People", "Details",
+       "Estimate & Progress") become the gray header strip. */
+body.router--work-packages-full-create #content .attributes-group > .attributes-group--header,
+body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container {
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  /* Pull the strip out to the card edges, then push the field grid
+     down with a positive bottom margin. The negative side margins
+     match the card's inner horizontal padding (24px). */
+  margin: -22px -24px 18px -24px !important;
+  padding: 14px 22px !important;
+  grid-column: 1 / -1 !important;
+}
+
+/* Same strip treatment for the ATTACHMENTS card header */
+body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  margin: -22px -24px 18px -24px !important;
+  padding: 14px 22px !important;
+}
+
+/* Title text inside the gray strip: sentence-case, dark, medium weight
+   (overrides the earlier uppercase 11px blue eyebrow style). */
+body.router--work-packages-full-create #content .attributes-group--header-text,
+body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header-text {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* (4) ::before-injected headers ("BASIC INFORMATION", "DESCRIPTION")
+       — re-purpose them as the same gray strip, sentence-case. The
+       content string is rewritten here from uppercase to sentence-case
+       so the user sees "Basic information" / "Description". */
+body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
+body.router--work-packages-full-create #content .attributes-group.description-group::before {
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  margin: -22px -24px 18px -24px !important;
+  padding: 14px 22px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+}
+body.router--work-packages-full-create #content .wp-new--subject-wrapper::before {
+  content: "Basic information" !important;
+}
+body.router--work-packages-full-create #content .attributes-group.description-group::before {
+  content: "Description" !important;
+}
+
+/* (5) Card inner padding — restore tighter rhythm that lets the
+       gray strip pull cleanly to the edge. */
+body.router--work-packages-full-create #content .attributes-group:not(.description-group):not(.-project-context),
+body.router--work-packages-full-create #content .attributes-group.description-group,
+body.router--work-packages-full-create #content .attributes-group.-project-context,
+body.router--work-packages-full-create #content .wp-new--subject-wrapper,
+body.router--work-packages-full-create #content .work-packages--storages {
+  padding: 22px 24px !important;
+  margin: 0 0 20px 0 !important;
+}
+
+/* (6) Save / Update button — pill blue matching the .op-settings-card
+       submit button in the mockup ("Update details") */
+body.router--work-packages-full-create #content #work-packages--edit-actions-save,
+body.router--work-packages-full-create #content button.-primary,
+body.router--work-packages-full-create #content button.-highlight {
+  border-radius: 8px !important;
+}
+
+/* (7) Field labels above inputs: keep slate text but match the
+       weight used by the settings-card form labels ("Name *",
+       "Identifier", "Description"). */
+body.router--work-packages-full-create #content .attributes-key-value--key,
+body.router--work-packages-full-create #content .wp-attribute-group--attribute-key {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #1a1a2e !important;
+}
+
+/* (8) Inputs: 8px radius (matches settings-card text-fields) */
+body.router--work-packages-full-create #content input[type="text"],
+body.router--work-packages-full-create #content input[type="number"],
+body.router--work-packages-full-create #content input[type="date"],
+body.router--work-packages-full-create #content input[type="email"],
+body.router--work-packages-full-create #content input[type="search"],
+body.router--work-packages-full-create #content select,
+body.router--work-packages-full-create #content .op-input,
+body.router--work-packages-full-create #content .inline-edit--field,
+body.router--work-packages-full-create #content .inline-edit--display-field,
+body.router--work-packages-full-create #content .ng-select .ng-select-container {
+  border-radius: 8px !important;
+  border-color: #d1d5db !important;
+}
+
+/* ================================================================
+   ADD TASK PAGE — 2-COLUMN CARD GRID (matches mockup pairing)
+   --------------------------------------------------------------
+   Mirror the Project Settings 2-up layout: pair the small cards
+   side-by-side (People | Estimates, Details | Other), while the
+   wide cards (Subject, Description, Project context, Attachments)
+   continue to span the full row.
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* (A) Make .work-package--single-view a 2-column grid that holds
+         the cards. Existing rule keeps it display:block; this
+         override fires only at ≥1024px so mobile/tablet still
+         stacks single-column safely. */
+  body.router--work-packages-full-create #content .work-package--single-view {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 20px !important;
+    row-gap: 0 !important;
+    align-items: start !important;
+  }
+
+  /* (B) Full-width cards span both columns */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context,
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* (C) Narrow cards: collapse the INNER field grid to a single
+         column so two fields don't fight for ~440px of card width.
+         (The earlier rule .attributes-group{ grid-template-columns:
+         repeat(2, minmax(0, 1fr)) } would otherwise produce cramped
+         Assignee | Accountable rows.) */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:not(.description-group):not(.-project-context) {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* (D) Equalise the bottom margin between paired rows — the
+         existing 0 0 20px 0 margin on each card still applies,
+         and align-items:start makes paired cards top-align. */
+}
+
+/* Below 1024px keep the existing single-column stack (no changes) */
+
+/* ================================================================
+   ADD TASK PAGE — ALL CARDS PAIRED 2-UP (no full-width spans)
+   --------------------------------------------------------------
+   Override the previous block's grid-column: 1 / -1 spans so
+   the layout becomes a clean 2-column grid for every card:
+
+     Row 1: Basic information | Description
+     Row 2: People            | Estimates and progress
+     Row 3: Details           | Attachments
+
+   (Project-context stays full-width because it's a warning
+   banner, not a card.) Later rules win the cascade.
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* (A) Force half-width on Subject, Description, Attachments —
+         dropping the earlier 1 / -1 span so they pair side-by-side
+         with their DOM-neighbour card. */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group,
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: span 1 !important;
+  }
+
+  /* (B) Project-context warning banner stays full-width */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* (C) Inner field grid → single column for ALL cards now.
+         Each card is ~half the form width (~440-540px), too tight
+         for the original 2-col field grid. Stack fields vertically
+         so the subject input, description editor, Assignee, etc.
+         all fill the card width cleanly. */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:not(.-project-context) {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* (D) Row spacing so the paired rows breathe vertically */
+  body.router--work-packages-full-create #content .work-package--single-view {
+    row-gap: 20px !important;
+  }
+
+  /* (E) Description editor — let the CKEditor toolbar wrap onto a
+         second row inside the narrower card instead of overflowing. */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group .ck.ck-toolbar {
+    flex-wrap: wrap !important;
+    row-gap: 6px !important;
+  }
+
+  /* (F) Equalise paired-row heights visually by removing the per-
+         card bottom margin (row-gap on the grid now drives spacing). */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group,
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* ================================================================
+   ADD TASK PAGE — FORCE CARD PAIRING ORDER
+   --------------------------------------------------------------
+   OpenProject's wp-single-view emits the .attributes-group cards
+   in a fixed DOM sequence (subject → people → description → …)
+   that doesn't match the visual pairing the user wants. Use the
+   CSS `order` property — which works inside CSS Grid the same way
+   as in flexbox — to override placement so the layout becomes:
+
+     Row 1: Basic information | Description
+     Row 2: People            | Estimates and progress
+     Row 3: Details           | Attachments
+
+   Card matching is by `data-group-name` (set by OpenProject in
+   wp-single-view.component.html) with a case-insensitive
+   substring match so the rule works across locales where the
+   names are translated.
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* Default order: any unmatched group sinks to the end so the
+     deliberate positions below aren't disturbed. */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group {
+    order: 99 !important;
+  }
+
+  /* Slot 1 — Basic information (the subject-input wrapper) */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper {
+    order: 1 !important;
+  }
+
+  /* Slot 2 — Description */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    order: 2 !important;
+  }
+
+  /* Slot 3 — People */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i] {
+    order: 3 !important;
+  }
+
+  /* Slot 4 — Estimates and progress */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+    order: 4 !important;
+  }
+
+  /* Slot 5 — Details */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
+    order: 5 !important;
+  }
+
+  /* Slot 6 — Attachments */
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    order: 6 !important;
+  }
+
+  /* Project-context warning banner (Public-project notice) — keep
+     it visually FIRST (before the grid pairs) so it doesn't slot
+     into the middle of the row pattern. order: 0 places it ahead
+     of slot 1. */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    order: 0 !important;
+  }
+}
+
+/* ================================================================
+   ADD TASK PAGE — EXPLICIT GRID PLACEMENT (deterministic)
+   --------------------------------------------------------------
+   The `order:` rule above relies on grid auto-flow + DOM order.
+   If any earlier rule sets grid-column: 1 / -1 on a card with
+   matching specificity, the placement breaks. This block pins
+   each card to an exact (grid-row, grid-column) cell so the
+   layout is locked regardless of cascade or DOM order.
+
+     Row 1: (col 1) Basic information   (col 2) Description
+     Row 2: (col 1) People              (col 2) Estimates
+     Row 3: (col 1) Details             (col 2) Attachments
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  body.router--work-packages-full-create #content .work-package--single-view {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto !important;
+    grid-auto-rows: auto !important;
+    column-gap: 20px !important;
+    row-gap: 20px !important;
+    align-items: start !important;
+  }
+
+  /* (1, 1) Basic information */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 / 2 !important;
+  }
+  /* (1, 2) Description */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 / 2 !important;
+  }
+  /* (2, 1) People */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+  }
+  /* (2, 2) Estimates and progress */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+    grid-column: 2 / 3 !important;
+    grid-row: 2 / 3 !important;
+  }
+  /* (3, 1) Details */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 / 4 !important;
+  }
+  /* (3, 2) Attachments */
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 4 !important;
+  }
+
+  /* Project-context banner stays full-width (auto row position
+     handled by grid-row: auto means it gets its own row before
+     the explicit rows above). */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+}
+
+/* ================================================================
+   DARK NAVY PRIMARY BUTTONS — match the design mockup
+   --------------------------------------------------------------
+   Mockup shows "Update Details", "Change Identifier", and the
+   work-package "Save" button in dark navy (#1a1a2e), not blue.
+   Override the earlier blue rules — late-cascade wins.
+   ================================================================ */
+
+/* Project Settings cards: every CTA inside .op-settings-card
+   becomes dark navy (matches "Update Details" / "Change Identifier"
+   in the mockup). */
+.op-settings-card .Button,
+.op-settings-card .Button--default,
+.op-settings-card .Button--primary,
+.op-settings-card button[type="submit"],
+.op-settings-card input[type="submit"] {
+  background-color: #1a1a2e !important;
+  background-image: none !important;
+  border: 1px solid #1a1a2e !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.20) !important;
+}
+.op-settings-card .Button:hover,
+.op-settings-card .Button--default:hover,
+.op-settings-card .Button--primary:hover,
+.op-settings-card button[type="submit"]:hover,
+.op-settings-card input[type="submit"]:hover {
+  background-color: #0f0f1f !important;
+  border-color: #0f0f1f !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25) !important;
+  color: #ffffff !important;
+}
+.op-settings-card .Button svg,
+.op-settings-card .Button--primary svg,
+.op-settings-card button[type="submit"] svg {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+
+/* Work-package create page Save button → dark navy
+   (overrides the earlier blue gradient rule). */
+body.router--work-packages-full-create #content #work-packages--edit-actions-save,
+body.router--work-packages-full-create #content button.-primary,
+body.router--work-packages-full-create #content button.-highlight,
+body.router--work-packages-full-create #content [class*="action-buttons"] button.-primary {
+  background: #1a1a2e !important;
+  background-image: none !important;
+  border: 1px solid #1a1a2e !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.20) !important;
+}
+body.router--work-packages-full-create #content #work-packages--edit-actions-save:hover,
+body.router--work-packages-full-create #content button.-primary:hover,
+body.router--work-packages-full-create #content button.-highlight:hover {
+  background: #0f0f1f !important;
+  background-image: none !important;
+  border-color: #0f0f1f !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.25) !important;
+}
+body.router--work-packages-full-create #content #work-packages--edit-actions-save svg,
+body.router--work-packages-full-create #content button.-primary svg {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+
+/* ================================================================
+   ADD TASK PAGE — 2-COLUMN GRID with DESCRIPTION ROW-SPAN
+   --------------------------------------------------------------
+   Final layout — Description spans 2 rows on the right so the
+   gap under the short Basic info card is filled by People:
+
+     Col 1            Col 2
+     ─────────────    ───────────────
+     Basic info  ←┐
+                  ├─ Description (spans rows 1–2)
+     People      ←┘
+     Estimates        Details
+     ─── Attachments (full-width row) ───
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* (A) Outer container as 2-column grid */
+  body.router--work-packages-full-create #content .work-package--single-view {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-auto-rows: auto !important;
+    column-gap: 20px !important;
+    row-gap: 20px !important;
+    align-items: start !important;
+  }
+
+  /* (B) Explicit placement — each card pinned to a specific cell */
+
+  /* (1, 1) Basic information */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 / 2 !important;
+  }
+
+  /* (1–2, 2) Description spans both rows on the right */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 / 3 !important;
+  }
+
+  /* (2, 1) People — fills the gap under Basic info */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+  }
+
+  /* (3, 1) Estimates and progress */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 / 4 !important;
+  }
+
+  /* (3, 2) Details */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 4 !important;
+  }
+
+  /* (4, 1-2) Attachments full-width */
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: 1 / -1 !important;
+    grid-row: 4 / 5 !important;
+  }
+
+  /* Project-context banner stays full-width above the layout */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+
+  /* (C) Reset card margins — grid row-gap is the only spacing */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group,
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* (D) Inner field grid for half-width cards → 1 col so Assignee
+         / Accountable, Work / Remaining work, etc. stack inside */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+    row-gap: 14px !important;
+  }
+
+  /* (E) Subject + Description = block layout */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    display: block !important;
+  }
+
+  /* (F) CKEditor toolbar wraps inside the half-width Description card */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group .ck.ck-toolbar {
+    flex-wrap: wrap !important;
+    row-gap: 6px !important;
+  }
+
+  /* (G) Below 1024px keep stacked single-column (no media-query rule
+         below this width — the cards fall back to natural block flow) */
+}
+
+/* ================================================================
+   ADD TASK PAGE — RE-SLOT ATTACHMENTS UNDER ESTIMATES
+   --------------------------------------------------------------
+   Final tweak: Attachments was on a full-width row 4 below the
+   Estimates | Details row, leaving a large empty gap under
+   Estimates (because Details is taller). Move Attachments INTO
+   that gap by placing it at (row 4, col 1), and let Details span
+   rows 3–4 on the right so the two columns balance.
+
+     Col 1                Col 2
+     ──────────────       ──────────────
+     Basic info  ─┐
+                   ├── Description (rows 1–2)
+     People       ─┘
+     Estimates  ──┐
+                   ├── Details (rows 3–4)
+     Attachments ─┘
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* Details now spans rows 3–4 in the right column */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 5 !important;
+  }
+
+  /* Attachments drops into (row 4, col 1) — fills the gap under
+     Estimates instead of taking a full-width row */
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: 1 / 2 !important;
+    grid-row: 4 / 5 !important;
+  }
+}
+
+/* ================================================================
+   ADD TASK PAGE — ROBUST FALLBACK PLACEMENT
+   --------------------------------------------------------------
+   If the previous rules' [data-group-name*="Detail" i] doesn't
+   match (because OpenProject is rendering a different value for
+   the Details group), this block identifies the Details card by
+   the fields it CONTAINS using :has(). Priority + Version +
+   Category are reliably inside the Details group only.
+
+   Also boosts specificity with the `html` prefix so no earlier
+   rule can outrank these.
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* Details card — match by group name OR by containing a
+     priority/status/version field (these only ever live in Details) */
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="priority"]),
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="status"]),
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="version"]),
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="category"]) {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 5 !important;
+  }
+
+  /* Attachments at (row 4, col 1) — boosted specificity + width
+     reset so no earlier full-width rule sneaks through */
+  html body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages.work-packages--storages {
+    grid-column: 1 / 2 !important;
+    grid-row: 4 / 5 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  /* Estimates stays in (row 3, col 1) — also robust fallback by
+     :has() in case data-group-name doesn't carry "Estimate" */
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="estimatedTime"]),
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="remainingTime"]),
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name*="percentageDone" i]) {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 / 4 !important;
+  }
+
+  /* People stays in (row 2, col 1) — fallback by :has(assignee) */
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i],
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="assignee"]) {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+  }
+}
+
+
+
