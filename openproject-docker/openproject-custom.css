@@ -1680,7 +1680,9 @@ table.work-package-table thead th {
   font-family:product-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
   /* font-weight: 600 !important; */
   color: #ffffff !important;
-  padding: 14px 18px !important;
+  padding: 2px 14px !important;
+  line-height: 1.2 !important;
+  height: 26px !important;
   border-bottom: none !important;
   border-top: none !important;
   background: #0C3688 !important;
@@ -1745,7 +1747,9 @@ table.tz-table tbody tr:hover {
 }
 table.generic-table tbody tr td,
 table.tz-table tbody tr td {
-  padding: 16px 18px !important;
+  padding: 3px 14px !important;
+  line-height: 1.25 !important;
+  height: 28px !important;
   border-bottom: 1px solid #f3f4f6 !important;
   border-top: none !important;
   vertical-align: middle !important;
@@ -2002,7 +2006,13 @@ table.work-package-table thead tr:first-child th:last-child {
 
 /* Hide OpenProject's per-column sort-arrow glyphs in the WP header —
    the ↑ / ⇅ icons next to "ID" and "Subject". Header text remains
-   clickable to sort; we just drop the visual clutter. */
+   clickable to sort; we just drop the visual clutter.
+
+   IMPORTANT: OpenProject's compiled frontend CSS (styles-*.css) renders
+   the active sort indicator with an icon-font glyph via:
+     .generic-table--sort-header span:after { content:"\f1f4"|"\f1f2" }
+   That selector slipped past the earlier hide-list and was the source
+   of the doubled / floating chevrons in the WP header. Hide it too. */
 table.work-package-table thead th .icon-sort,
 table.work-package-table thead th .icon-sort-by,
 table.work-package-table thead th .icon-sort-up,
@@ -2019,15 +2029,63 @@ table.work-package-table thead th .generic-table--sort-header .icon::before,
 table.work-package-table thead th a.sort-header:after,
 table.work-package-table thead th a.sort-header::after,
 table.work-package-table thead th a.asc:after,
-table.work-package-table thead th a.desc:after {
+table.work-package-table thead th a.desc:after,
+table.work-package-table thead th .generic-table--sort-header span:after,
+table.work-package-table thead th .generic-table--sort-header span::after,
+table.work-package-table thead th .generic-table--sort-header span:before,
+table.work-package-table thead th .generic-table--sort-header span::before,
+table.generic-table thead th .generic-table--sort-header span:after,
+table.generic-table thead th .generic-table--sort-header span::after {
   display: none !important;
   content: none !important;
 }
 
+/* Custom up/down chevron indicator on every sortable WP column header.
+   Attached to the column title <a> so the chevron sits INLINE right
+   after the text (e.g. "ID ⇕"). The outer .generic-table--sort-header
+   wrapper is a flex container, so an ::after on it would render as a
+   floating flex-child above the cell — we deliberately avoid that.
+   pointer-events:none lets the click pass through to the anchor, which
+   is what opens OpenProject's column menu (Sort asc/desc, Move, Hide,
+   Insert columns).                                                   */
+table.work-package-table thead th .generic-table--sort-header > a::after,
+table.work-package-table thead th .generic-table--sort-header > span > a::after {
+  content: "" !important;
+  display: inline-block !important;
+  width: 9px !important;
+  height: 12px !important;
+  margin-left: 6px !important;
+  vertical-align: -2px !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 12' fill='%23ffffff'><path d='M4.5 0 L8.5 4 L0.5 4 Z'/><path d='M4.5 12 L8.5 8 L0.5 8 Z'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 9px 12px !important;
+  opacity: 0.85 !important;
+  pointer-events: none !important;
+}
+/* Brighten the chevron when the column is the active sort target */
+table.work-package-table thead th.sort-header-active .generic-table--sort-header > a::after,
+table.work-package-table thead th .generic-table--sort-header.asc > a::after,
+table.work-package-table thead th .generic-table--sort-header.desc > a::after {
+  opacity: 1 !important;
+}
+/* Suppress the chevron on non-sortable / utility cells (empty header
+   slot at the far right that holds the settings gear, internal cols,
+   and the timeline toggle). */
+table.work-package-table thead th .generic-table--empty-header::after,
+table.work-package-table thead th.internal-sort-header > *::after,
+table.work-package-table thead th.timeline > *::after,
+table.work-package-table thead th[class*="timeline"] > *::after {
+  content: none !important;
+  display: none !important;
+}
+
 /* Reduce row vertical padding — section 6 sets 16px; WP rows look
-   spaced out at that height. 10px reads tighter, like the mock. */
+   spaced out at that height. 6px reads tighter, like the mock. */
 table.work-package-table tbody tr td {
-  padding: 10px 18px !important;
+  padding: 3px 14px !important;
+  line-height: 1.25 !important;
+  height: 28px !important;
 }
 
 /* Column widths — driven entirely from cell-level class selectors.
@@ -7108,4 +7166,80 @@ modal-dialog#edit-project-life-cycle-dialog > .Overlay {
 .flatpickr-calendar ::-webkit-scrollbar:horizontal {
   height: 0 !important;
   display: none !important;
+}
+
+.icon-settings:before,
+.icon-gear:before,
+.op-app-menu--item-action[href*="settings"]::before {
+  color: #ffffff !important;
+  font-size: 13px !important;
+}
+
+/* Always show the work package row icons (info + context menu "...")
+   and the drag handle. Upstream hides them with opacity:0 until the
+   row is hovered (see frontend/src/global_styles/content/work_packages/
+   _table_drag_and_drop.sass). Force them visible on every row. */
+html:not(.-browser-mobile) .wp-table-context-menu-icon,
+html:not(.-browser-mobile) .wp-table--drag-and-drop-handle {
+  opacity: 1 !important;
+}
+
+/* "Manage roles" on the project Members page should appear as a
+   centered popup (like the "Remove member" dialog), not as inline
+   edit inside the row. Upstream renders the role form inside the
+   Roles cell with `style="display:none"` and the `members-form`
+   Stimulus controller toggles it to visible on click — we keep that
+   toggle mechanism untouched and only change the painted layout:
+   when shown, the form is positioned fixed-centered, dressed as a
+   card, with a translucent backdrop drawn via the box-shadow halo
+   trick (no extra DOM required). See
+   openproject-source/app/components/members/role_form_component.{rb,html.erb}
+   for the upstream form and id/class pattern we hook into. */
+form[id$="-roles-form"][class*="--edit-toggle-item"] {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 1050;
+  margin: 0 !important;
+  min-width: 360px;
+  max-width: 92vw;
+  padding: 24px 28px 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 100vmax rgba(0, 0, 0, 0.5),
+    0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+form[id$="-roles-form"][class*="--edit-toggle-item"]::before {
+  content: "Manage roles";
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6;
+  color: #24292f;
+}
+
+form[id$="-roles-form"][class*="--edit-toggle-item"] > p {
+  margin: 0 0 12px;
+}
+
+form[id$="-roles-form"][class*="--edit-toggle-item"] label.form--label-with-check-box {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-weight: 400;
+}
+
+form[id$="-roles-form"][class*="--edit-toggle-item"] > p:last-of-type {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid #e6e6e6;
 }
