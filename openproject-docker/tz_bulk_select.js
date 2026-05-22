@@ -79,6 +79,18 @@
   // to retry — body or .PageHeader isn't in the DOM yet. The bootstrap
   // observer below keeps retrying until this returns true (or times out).
   function injectBackButton() {
+    // DISABLED: The Back button used `window.history.back()` with a
+    // fallback URL, which proved unreliable — sometimes it bounced
+    // through unrelated pages (a redirect chain after login, an
+    // earlier turbo navigation, a non-OP referrer) or did nothing
+    // when history was short. Removed entirely per user request;
+    // navigation now relies on breadcrumbs and the left-side admin
+    // nav menu. The function body is preserved below the early-return
+    // so the implementation can be revived by deleting these lines
+    // if a working Back button is wired up later (e.g. using the
+    // referrer header or an explicit fallback per controller).
+    return true;
+    // eslint-disable-next-line no-unreachable
     var body = document.body;
     if (!body) return false; // DOM not ready — keep watching
     // If a back button is already on the page, we're done. This catches
