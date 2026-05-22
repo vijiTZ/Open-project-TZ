@@ -9245,3 +9245,11 @@ body.router--work-packages-full-create nav#main-menu {
   pointer-events: auto !important;
   user-select: auto !important;
 }
+
+/* ── Top-bar "+ Create" button: hide the trailing ▼ caret ──────────
+   Rendered by quick_add_menu.rb as a Primer Octicon (triangle-down)
+   inside the show_button. The leading "+" icon stays. */
+[data-test-selector="quick-add-menu-button"] .octicon-triangle-down,
+button[data-test-selector="quick-add-menu-button"] svg.octicon-triangle-down {
+  display: none !important;
+}
