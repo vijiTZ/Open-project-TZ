@@ -4220,14 +4220,32 @@ nav#main-menu .main-menu-item .icon2 {
   transition: color 0.14s ease !important;
 }
 
+/* HOVER — paint the highlight on the WRAPPER (not just the anchor) so
+   the soft tint covers both the link AND the toggler chevron next to
+   it. Mirrors the selected/open pill approach below. */
+nav#main-menu .main-item-wrapper:hover,
+nav#main-menu .main-item-wrapper:has(> a:not(.Button):hover),
+nav#main-menu .main-item-wrapper:has(> a:not(.Button):focus),
+nav#main-menu ul li:hover > .main-item-wrapper {
+  background: rgba(31, 35, 40, 0.04) !important;
+  border-radius: 22px !important;
+}
+
+/* Anchor + toggler stay transparent on hover — wrapper paints the tint */
 nav#main-menu .main-item-wrapper a:not(.Button):hover,
 nav#main-menu .main-item-wrapper a:not(.Button):focus,
 nav#main-menu .main-menu-item a:not(.Button):hover,
 nav#main-menu ul li:hover > a:not(.Button) {
-  background: rgba(31, 35, 40, 0.04) !important;
+  background: transparent !important;
   color: #1F2328 !important;
   border: 1px solid transparent !important;
   padding-left: var(--main-menu-x-spacing) !important;
+}
+nav#main-menu .main-item-wrapper:hover > .toggler,
+nav#main-menu .main-item-wrapper:has(> a:not(.Button):hover) > .toggler,
+nav#main-menu ul li:hover > .main-item-wrapper > .toggler {
+  background: transparent !important;
+  border-radius: 0 22px 22px 0 !important;
 }
 nav#main-menu .main-item-wrapper a:not(.Button):hover .menu-item--icon,
 nav#main-menu .main-menu-item a:not(.Button):hover .menu-item--icon {
@@ -4491,7 +4509,11 @@ nav#main-menu .op-submenu--search,
 
 /* Force the entire submenu container chain to be full-width so the
    ::after chevron on each title lands at the right edge of the sidebar
-   (the "corner"), instead of sitting next to the title text. */
+   (the "corner"), instead of sitting next to the title text.
+
+   Right inset: 8px keeps a small gap between the submenu title pill and
+   the sidebar's right edge so the highlight doesn't bleed all the way
+   to the rail border. */
 nav#main-menu .op-submenu,
 .op-submenu,
 nav#main-menu .op-submenu--body,
@@ -4502,7 +4524,7 @@ nav#main-menu .op-submenu--items,
   width: 100% !important;
   box-sizing: border-box !important;
   padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding-right: 8px !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
@@ -4514,6 +4536,64 @@ nav#main-menu .op-submenu--body,
 nav#main-menu .op-submenu--body > .op-submenu--title:first-child,
 .op-submenu--body > .op-submenu--title:first-child {
   margin-top: 4px !important;
+}
+
+/* ─── Submenu tree-connector lines ────────────────────────────────
+   Markup (from openproject-source/app/components/open_project/common/
+   submenu_component.html.erb):
+     <div class="op-submenu">
+       <div class="op-submenu--body">
+         <div data-controller="menus--submenu">
+           <button class="op-submenu--title">…header…</button>
+           <ul class="op-submenu--items">
+             <li class="op-submenu--item">…</li>
+           </ul>
+         </div>
+       </div>
+     </div>
+
+   Each .op-submenu--items list gets a vertical guide line on its left,
+   and each .op-submenu--item gets a short horizontal branch from that
+   guide to the item — producing a proper tree-connector look between
+   the submenu title and its children. */
+
+nav#main-menu .op-submenu--items,
+.op-submenu--items {
+  position: relative !important;
+  padding-left: 18px !important;
+}
+
+/* Vertical guide line — runs the length of the items list */
+nav#main-menu .op-submenu--items::before,
+.op-submenu--items::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 4px !important;
+  bottom: 4px !important;
+  width: 1px !important;
+  background: #E5E7EB !important;
+  pointer-events: none !important;
+}
+
+/* Each item — relative-positioned so its ::before branch anchors here */
+nav#main-menu .op-submenu--item,
+.op-submenu--item {
+  position: relative !important;
+  list-style: none !important;
+}
+
+/* Horizontal branch — short line from the vertical guide to the item */
+nav#main-menu .op-submenu--item::before,
+.op-submenu--item::before {
+  content: '' !important;
+  position: absolute !important;
+  left: -10px !important;
+  top: 50% !important;
+  width: 9px !important;
+  height: 1px !important;
+  background: #E5E7EB !important;
+  pointer-events: none !important;
 }
 
 /* Section-title indicator — hide native chevron, draw matching CSS
