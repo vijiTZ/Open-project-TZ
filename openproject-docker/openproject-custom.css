@@ -7648,9 +7648,9 @@ body.router--work-packages-full-create #content .op-attachments,
 body.router--work-packages-full-create #content .op-file-section {
   background: #ffffff !important;
   border: 1px solid #e6e9ef !important;
-  border-radius: 18px !important;
-  padding: 22px 24px !important;
-  margin: 0 0 24px 0 !important;
+  border-radius: 16px !important;
+  padding: 18px 22px !important;
+  margin: 0 0 16px 0 !important;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
 }
 
@@ -7669,7 +7669,7 @@ body.router--work-packages-full-create #content .op-attributes-group--header-tex
   letter-spacing: 0.10em !important;
   text-transform: uppercase !important;
   color: #1e3a8a !important;
-  margin: 0 0 16px 0 !important;
+  margin: 0 0 12px 0 !important;
   padding: 0 !important;
   border: none !important;
 }
@@ -8185,22 +8185,78 @@ body.router--work-packages-full-create #content .work-packages--details--descrip
 body.router--work-packages-full-create #content .work-packages--storages {
   background: #ffffff !important;
   border: 1px solid #e6e9ef !important;
-  border-radius: 18px !important;
-  padding: 22px 24px !important;
-  margin: 0 0 24px 0 !important;
+  border-radius: 16px !important;
+  padding: 18px 22px !important;
+  margin: 0 0 16px 0 !important;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 1px 3px rgba(15, 23, 42, 0.04) !important;
 }
 body.router--work-packages-full-create #content .op-tab-content--header {
-  margin: 0 0 16px 0 !important;
+  margin: 0 0 14px 0 !important;
   padding: 0 !important;
   border: none !important;
+  background: transparent !important;
 }
 body.router--work-packages-full-create #content .op-tab-content--header .op-tab-content--header-text {
+  display: inline-block !important;
   font-size: 11px !important;
   font-weight: 700 !important;
   letter-spacing: 0.10em !important;
   text-transform: uppercase !important;
   color: #1e3a8a !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+/* Attachments row — Choose files button + filename + "Max file size"
+   arranged on a single row with proper alignment. */
+body.router--work-packages-full-create #content .work-packages--storages > * {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Choose files button inside the Attachments card — match the form's
+   pill style (light border, blue label) instead of the raw native look. */
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"] {
+  width: fit-content !important;
+  height: 36px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #475569 !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+}
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button {
+  height: 34px !important;
+  padding: 0 16px !important;
+  border: 1px solid #c5cbd6 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  color: #0c66e4 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  margin-right: 10px !important;
+  transition: background-color 0.12s, border-color 0.12s !important;
+}
+body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button:hover {
+  background: #eef4ff !important;
+  border-color: #0c66e4 !important;
+}
+
+/* "Max file size: 50MB" — push to the far right of the row, mute the
+   color so it reads as a hint, not a heading. */
+body.router--work-packages-full-create #content .work-packages--storages .op-file-upload--max-size,
+body.router--work-packages-full-create #content .work-packages--storages [class*="max-size"],
+body.router--work-packages-full-create #content .work-packages--storages [class*="max_size"] {
+  margin-left: auto !important;
+  font-size: 12px !important;
+  color: #64748b !important;
+  white-space: nowrap !important;
 }
 
 /* Dashed upload zone — for the native attachment list/upload component */
@@ -8521,18 +8577,21 @@ body.router--work-packages-full-create #content .wp-new--subject-wrapper::before
   color: #1e3a8a !important;
   margin: 0 0 16px 0 !important;
 }
-/* Merge subject + project-context visually — no bottom margin on subject card */
+/* Basic Information card — full card chrome (all 4 corners rounded,
+   16px bottom margin matching every other card). An earlier rule
+   stripped the bottom border / corners to merge it with the
+   -project-context card below, but that card no longer renders
+   on this page, so Basic Info was left with a missing bottom. */
 body.router--work-packages-full-create #content .wp-new--subject-wrapper {
-  margin-bottom: 0 !important;
-  border-bottom: none !important;
-  border-radius: 18px 18px 0 0 !important;
-  padding-bottom: 8px !important;
+  margin-bottom: 16px !important;
+  border-bottom: 1px solid #e6e9ef !important;
+  border-radius: 16px !important;
+  padding-bottom: 18px !important;
 }
+/* (Kept for the rare case the -project-context card is present) */
 body.router--work-packages-full-create #content .attributes-group.-project-context {
   margin-top: 0 !important;
-  border-top: none !important;
-  border-radius: 0 0 18px 18px !important;
-  padding-top: 8px !important;
+  border-radius: 16px !important;
 }
 body.router--work-packages-full-create #content .attributes-group.-project-context > div {
   padding: 0 !important;
@@ -8647,6 +8706,22 @@ body.router--work-packages-full-create #content .ng-select .ng-arrow-wrapper {
 /* (d) Hide empty attribute-groups (e.g. Other with no rendered fields).
        :has() detects groups whose value containers are all blank. */
 body.router--work-packages-full-create #content .attributes-group:not(.description-group):not(.-project-context):has(.attributes-map:empty) {
+  display: none !important;
+}
+
+/* (d2) Hide the Costs, Budget, and Other groups + the Budget field
+       unconditionally on the WP create form.
+       Group identity comes from <div data-group-name="..."> set in
+       wp-single-view.component.html (L100). The attribute value is
+       the localised group title; the [...="Foo" i] case-insensitive
+       match keeps it working across locales. */
+body.router--work-packages-full-create #content .attributes-group[data-group-name="Costs" i],
+body.router--work-packages-full-create #content .attributes-group[data-group-name="Other" i],
+body.router--work-packages-full-create #content .attributes-group[data-group-name="Budget" i],
+body.router--work-packages-full-create #content .attributes-group[data-group-name*="Cost" i],
+body.router--work-packages-full-create #content .attributes-key-value[data-field-name="budget"],
+body.router--work-packages-full-create #content .wp-edit-field[data-field-name="budget"],
+body.router--work-packages-full-create #content [data-field-name="budget"] {
   display: none !important;
 }
 
@@ -8867,14 +8942,127 @@ body.router--work-packages-full-create #content .editable-toolbar-title input {
   box-shadow: none !important;
 }
 
-/* Description editor — ensure toolbar wraps when narrow + min editor height */
-body.router--work-packages-full-create #content .ck.ck-toolbar {
+/* Description editor — toolbar alignment.
+   Every direct child of .ck-toolbar (and the inner __items wrapper) is
+   pinned to a 32px row with a uniform 6px gap, regardless of whether
+   it's a CKEditor button, a Primer-wrapped pill button, a dropdown,
+   a separator, or the file-upload widget. */
+body.router--work-packages-full-create #content .ck.ck-toolbar,
+body.router--work-packages-full-create #content .ck.ck-toolbar__items {
+  display: flex !important;
   flex-wrap: wrap !important;
-  row-gap: 4px !important;
+  align-items: center !important;
+  column-gap: 6px !important;
+  row-gap: 6px !important;
 }
+body.router--work-packages-full-create #content .ck.ck-toolbar__items {
+  flex: 1 1 100% !important;
+  min-width: 0 !important;
+}
+
+/* Every direct child sits on the same 32px centerline */
+body.router--work-packages-full-create #content .ck.ck-toolbar > *,
+body.router--work-packages-full-create #content .ck.ck-toolbar__items > *,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-form__row,
+body.router--work-packages-full-create #content .ck.ck-toolbar input[type="file"],
+body.router--work-packages-full-create #content .ck.ck-toolbar label[for*="file"] {
+  height: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+  align-self: center !important;
+  box-sizing: border-box !important;
+}
+
+/* Heading / paragraph dropdown — let the label expand to its natural
+   width so "Heading 1" / "Paragraph" renders in full instead of "P..." */
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-heading-dropdown,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-heading-dropdown .ck-button,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown:has(.ck-heading-dropdown),
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown__button:has(.ck-button__label) {
+  min-width: 96px !important;
+  width: auto !important;
+  max-width: none !important;
+}
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button__label {
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+/* Native file-input area inside the toolbar.
+   Hide the browser's "No file chosen" filename text (cosmetic clutter
+   in a rich-text toolbar) by making the input's text invisible, then
+   re-enable visibility on the ::file-selector-button only. The input
+   width is capped at "fit-content" so the empty filename area doesn't
+   reserve dead space after the button. */
+body.router--work-packages-full-create #content .ck.ck-toolbar input[type="file"] {
+  width: fit-content !important;
+  max-width: 130px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: transparent !important;
+  text-shadow: none !important;
+  cursor: pointer !important;
+  overflow: hidden !important;
+}
+body.router--work-packages-full-create #content .ck.ck-toolbar input[type="file"]::file-selector-button {
+  height: 28px !important;
+  padding: 0 12px !important;
+  border: 1px solid #d6dce5 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #0c66e4 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  margin-right: 0 !important;
+}
+
+/* Every CKEditor toolbar icon: same 16×16 visual weight so the bullet
+   list / link / undo / etc. don't look smaller than the pill-styled
+   B / I / S buttons. */
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button .ck-icon,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button > svg,
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown__button .ck-icon {
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px !important;
+  fill: currentColor !important;
+}
+
+/* Vertical separator between toolbar groups — visible thin divider */
+body.router--work-packages-full-create #content .ck.ck-toolbar .ck-toolbar__separator {
+  width: 1px !important;
+  height: 18px !important;
+  background: #d6dce5 !important;
+  flex: 0 0 1px !important;
+}
+
+/* Editor body — empty-state height kept compact so the Description
+   card doesn't have a large blank area when no description is typed. */
 body.router--work-packages-full-create #content .ck.ck-editor__main > .ck-editor__editable,
 body.router--work-packages-full-create #content .ck-content {
-  min-height: 200px !important;
+  min-height: 96px !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+/* CKEditor placeholder — render the "Click to add description…" text
+   normally. Reset any inherited font-size: 0 or color: transparent
+   that could leave a stray empty-box artifact at the cursor position. */
+body.router--work-packages-full-create #content .ck.ck-content .ck-placeholder::before,
+body.router--work-packages-full-create #content .ck-editor__editable .ck-placeholder::before {
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  font-style: normal !important;
+  opacity: 1 !important;
 }
 
 /* Required-asterisk color */
