@@ -9490,3 +9490,187 @@ body.router--work-packages-full-create nav#main-menu {
 button[data-test-selector="quick-add-menu-button"] svg.octicon-triangle-down {
   display: none !important;
 }
+
+/* ── ALL PAGES: Primary buttons → blue (match + Create btn) ─────────────
+   Global override for .Button--primary. The header buttons and
+   dialog#create-work-package-dialog buttons have their own higher-
+   specificity rules above, so they are NOT affected.                     */
+#content .Button--primary,
+#content a.Button--primary,
+.content--split .Button--primary,
+.PageHeader .Button--primary {
+  background-color: #0c66e4 !important;
+  border: 1px solid #0c66e4 !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 2px rgba(12,102,228,0.25) !important;
+}
+
+#content .Button--primary:hover:not([disabled]):not(:disabled),
+.content--split .Button--primary:hover:not([disabled]):not(:disabled),
+.PageHeader .Button--primary:hover:not([disabled]):not(:disabled) {
+  background-color: #0055cc !important;
+  border-color: #0055cc !important;
+  box-shadow: 0 4px 12px rgba(12,102,228,0.30) !important;
+  color: #FFFFFF !important;
+}
+
+#content .Button--primary:active:not([disabled]):not(:disabled) {
+  background-color: #004bb5 !important;
+  border-color: #004bb5 !important;
+}
+
+#content .Button--primary[disabled],
+#content .Button--primary:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+}
+
+#content .Button--primary svg,
+.PageHeader .Button--primary svg {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+
+/* "On track" / status dropdown button — override the green highlight bg */
+.op-status-button .Button[class*="__hl_background"],
+.op-status-button button[class*="__hl_background"] {
+  background-color: #0c66e4 !important;
+  border: 1px solid #0c66e4 !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 2px rgba(12,102,228,0.25) !important;
+}
+
+.op-status-button .Button[class*="__hl_background"]:hover,
+.op-status-button button[class*="__hl_background"]:hover {
+  background-color: #0055cc !important;
+  border-color: #0055cc !important;
+  box-shadow: 0 4px 12px rgba(12,102,228,0.30) !important;
+}
+
+.op-status-button .Button[class*="__hl_background"] svg {
+  color: #ffffff !important;
+  fill: currentColor !important;
+}
+
+/* ── Project Settings: submit buttons → blue ── */
+.op-settings-card .Button--default,
+.op-settings-card button[type="submit"],
+.op-settings-card input[type="submit"] {
+  background-color: #0c66e4 !important;
+  border: 1px solid #0c66e4 !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 2px rgba(12,102,228,0.25) !important;
+}
+.op-settings-card .Button--default:hover,
+.op-settings-card button[type="submit"]:hover,
+.op-settings-card input[type="submit"]:hover {
+  background-color: #0055cc !important;
+  border-color: #0055cc !important;
+}
+
+/* ── PROJECT SETTINGS: Card layout & Jump-to navigation ─────────────── */
+
+/* -- Jump-to navigation bar -- */
+.op-settings-nav {
+  display: flex !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
+  margin-bottom: 20px !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f6f8fa !important;
+}
+
+.op-settings-nav--label {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: #656d76 !important;
+  margin-right: 4px !important;
+}
+
+.op-settings-nav--link {
+  padding: 5px 14px !important;
+  font-size: 13px !important;
+  color: #111111 !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 20px !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s !important;
+  cursor: pointer !important;
+}
+
+.op-settings-nav--link:hover {
+  background: #f0f0f0 !important;
+  border-color: #111111 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10) !important;
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+/* -- 2-column grid for card pairs -- */
+div.op-settings-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 20px !important;
+  margin-bottom: 20px !important;
+  width: 100% !important;
+}
+
+div.op-settings-grid > .op-settings-card {
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 900px) {
+  div.op-settings-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* -- Settings card (each section) -- */
+.op-settings-card {
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  margin-bottom: 20px !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+  overflow: hidden !important;
+}
+
+.op-settings-card--header {
+  padding: 14px 20px !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  background-color: #f6f8fa !important;
+}
+
+.op-settings-card--title {
+  margin: 0 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #1a1a2e !important;
+}
+
+.op-settings-card--body {
+  padding: 20px !important;
+}
+
+.op-settings-card--actions {
+  margin-top: 14px !important;
+}
+
+/* Hide redundant Primer Subhead inside cards */
+.op-settings-card .Subhead {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  display: none !important;
+}

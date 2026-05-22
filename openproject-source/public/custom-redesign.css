@@ -230,20 +230,8 @@ wp-single-view .inline-edit--container {
 }
 
 /* ---------------------------------------------------------------
-   9. SAVE / CANCEL BUTTONS — green accent
+   9. SAVE / CANCEL BUTTONS — now blue (see section 14a)
 --------------------------------------------------------------- */
-.button.-highlight,
-.button[data-qa-selector*="save"],
-input[type="submit"].button.-highlight {
-  background-color: #1a7f4b !important;
-  border-color: #1a7f4b !important;
-  color: #fff !important;
-}
-
-.button.-highlight:hover {
-  background-color: #15693e !important;
-  border-color: #15693e !important;
-}
 
 /* ---------------------------------------------------------------
    10. WORK PACKAGE PAGE BACKGROUND
@@ -958,8 +946,154 @@ dialog#create-work-package-dialog ::-webkit-scrollbar-thumb:hover {
   background-color: #666768;
 }
 
+/* ---------------------------------------------------------------
+   14a. PRIMARY BUTTONS — green → blue (match Create button)
+   All Primer primary buttons + OpenProject highlight buttons
+   now use the same blue (#0C66E4) as the Create dialog.
+--------------------------------------------------------------- */
+.Button--primary,
+.Button--primary:visited,
+a.Button--primary {
+  background-color: #0C66E4 !important;
+  border-color: #0C66E4 !important;
+  color: #FFFFFF !important;
+}
+
+.Button--primary:hover:not([disabled]):not(:disabled) {
+  background-color: #0055CC !important;
+  border-color: #0055CC !important;
+  color: #FFFFFF !important;
+}
+
+.Button--primary:active:not([disabled]):not(:disabled) {
+  background-color: #003d99 !important;
+  border-color: #003d99 !important;
+}
+
+.Button--primary[disabled],
+.Button--primary:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed !important;
+}
+
+/* PageHeader action button (+ Subproject etc.) */
+.PageHeader-actions .Button--primary,
+.PageHeader .Button--primary {
+  background-color: #0C66E4 !important;
+  border-color: #0C66E4 !important;
+  color: #FFFFFF !important;
+}
+
+.PageHeader-actions .Button--primary:hover,
+.PageHeader .Button--primary:hover {
+  background-color: #0055CC !important;
+  border-color: #0055CC !important;
+}
+
+/* Also override the older OpenProject .button.-highlight (green) */
+.button.-highlight,
+.button[data-qa-selector*="save"],
+input[type="submit"].button.-highlight {
+  background-color: #0C66E4 !important;
+  border-color: #0C66E4 !important;
+  color: #fff !important;
+}
+
+.button.-highlight:hover {
+  background-color: #0055CC !important;
+  border-color: #0055CC !important;
+}
+
+/* ---------------------------------------------------------------
+   14b. PROJECT SETTINGS — CARD LAYOUT & JUMP-TO NAV
+   Targets: Project > Settings > Information page
+   Each section (Basic details, Identifier, Status, Relations)
+   is wrapped in a card with header + body.
+--------------------------------------------------------------- */
+
+/* -- Jump-to navigation bar ----------------------------------- */
+.op-settings-nav {
+  display: flex !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  padding: 12px 16px !important;
+  margin-bottom: 20px !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  background-color: #f6f8fa !important;
+}
+
+.op-settings-nav--label {
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  color: #656d76 !important;
+  margin-right: 4px !important;
+}
+
+.op-settings-nav--link {
+  padding: 5px 14px !important;
+  font-size: 13px !important;
+  color: #1a7f4b !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 20px !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s !important;
+  cursor: pointer !important;
+}
+
+.op-settings-nav--link:hover {
+  background: #e8f8f0 !important;
+  border-color: #1a7f4b !important;
+  box-shadow: 0 1px 4px rgba(26,127,75,0.12) !important;
+  color: #15693e !important;
+  text-decoration: none !important;
+}
+
+/* -- Settings card (each section) ----------------------------- */
+.op-settings-card {
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  margin-bottom: 20px !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+  overflow: hidden !important;
+}
+
+.op-settings-card--header {
+  padding: 14px 20px !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  background-color: #f6f8fa !important;
+}
+
+.op-settings-card--title {
+  margin: 0 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #1a1a2e !important;
+}
+
+.op-settings-card--body {
+  padding: 20px !important;
+}
+
+.op-settings-card--actions {
+  margin-top: 14px !important;
+}
+
+/* Override Primer Subhead borders inside cards (they're redundant) */
+.op-settings-card .Subhead {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  display: none !important;
+}
+
 /* =============================================================
-   14. PROJECT TABLE → CARD GRID (fallback CSS)
+   15. PROJECT TABLE → CARD GRID (fallback CSS)
+   (was section 14)
    Scoped to body.controller-projects.action-index only.
    Overrides table display so each <tr.op-project-row-component>
    looks like a card. Works even when ViewComponent renders the

@@ -22,6 +22,9 @@ services:
       # tz: server-side override of the New User view to add the Back
       # button into the Create / Create-and-continue action row.
       - "./users_new.html.erb:/app/app/views/users/new.html.erb"
+      # tz: project settings information page — card layout redesign
+      - "../openproject-source/app/views/projects/settings/general/show.html.erb:/app/app/views/projects/settings/general/show.html.erb"
+      - "../openproject-source/app/components/projects/settings/general/show_component.html.erb:/app/app/components/projects/settings/general/show_component.html.erb"
 
   worker:
     volumes:
