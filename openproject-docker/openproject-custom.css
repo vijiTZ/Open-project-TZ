@@ -4031,196 +4031,693 @@ body.controller-members .simple-filters--filter-name {
 
 
 /* ══════════════════════════════════════════════════════════════
-   SIDEBAR (MAIN MENU) — LIGHT SKY-BLUE MODERN REDESIGN
+   SIDEBAR (MAIN MENU) — ICON-TILE DESIGN + INLINE EXPANSION
    ----------------------------------------------------------------
-   Reskins nav#main-menu by overriding OpenProject's design-token
-   CSS variables. No layout changes (width/flex/position) so the
-   resize handle and collapse JS keep working.
+   • Each item's icon sits in a 28px rounded-square tile
+   • Active parent: white pill border around row + dark filled tile
+   • Active sub-item: soft gray pill-fill background (no left bar)
+   • Children expand INLINE under parent (no drill-down) — achieved
+     by overriding the source's .closed-state CSS so siblings stay
+     visible; the Stimulus JS is untouched
+   • Tree connector line on the left of children
    ══════════════════════════════════════════════════════════════ */
-nav#main-menu {
-  --main-menu-bg-color:            #eef4fa !important;
-  --main-menu-font-color:          #1e2a3f !important;
-  --main-menu-font-size:           13.5px !important;
-  --main-menu-item-height:         36px !important;
-  --main-menu-border-color:        #d5e3f1 !important;
-  --main-menu-hover-border-color:  transparent !important;
-  --main-menu-bg-selected-background: #0c66e4 !important;
-  --main-menu-bg-selected-border:     transparent !important;
-  --main-menu-selected-font-color:    #0c66e4 !important;
-  --control-transparent-bgColor-hover:    rgba(12, 102, 228, 0.08) !important;
-  --control-transparent-bgColor-selected: rgba(12, 102, 228, 0.13) !important;
-  --borderRadius-medium: 8px !important;
 
-  background: linear-gradient(180deg, #f0f6fc 0%, #e6eff8 100%) !important;
-  border-right: 1px solid #d5e3f1 !important;
-  box-shadow: inset -1px 0 0 rgba(255,255,255,0.5) !important;
+/* ─── 1. Base — variables + container ─────────────────────────── */
+nav#main-menu {
+  --main-menu-bg-color:                   #FAFAFA !important;
+  --main-menu-font-color:                 #1F2328 !important;
+  --main-menu-font-size:                  13.5px  !important;
+  --main-menu-item-height:                38px    !important;
+  --main-menu-border-color:               #E5E7EB !important;
+  --main-menu-border-width:               1px     !important;
+  --main-menu-bg-selected-background:     transparent !important;
+  --main-menu-bg-selected-border:         transparent !important;
+  --main-menu-selected-font-color:        #1F2328 !important;
+  --main-menu-hover-border-color:         transparent !important;
+  --control-transparent-bgColor-hover:    rgba(31, 35, 40, 0.04) !important;
+  --control-transparent-bgColor-selected: transparent !important;
+  --borderRadius-medium:                  8px  !important;
+  --main-menu-folded-width:               56px !important;
+  --main-menu-x-spacing:                  10px !important;
+
+  background: #FAFAFA !important;
+  border-right: 1px solid #E5E7EB !important;
+  box-shadow: none !important;
 }
 
-/* Sticky top container (project picker area) */
+/* Top container (project picker area) — flat, no shadow */
 nav#main-menu .main-menu--top-container {
-  background: transparent !important;
+  background: #FAFAFA !important;
   padding-top: 6px !important;
 }
 nav#main-menu .main-menu--projects-divider {
-  background: #d5e3f1 !important;
-  margin: 12px 4px !important;
+  background: #E5E7EB !important;
+  margin: 10px 4px !important;
   height: 1px !important;
   border: none !important;
 }
 
 /* Project picker trigger button */
 nav#main-menu .op-project-select--trigger-button {
+  position: relative !important;
   border-radius: 8px !important;
   font-weight: 600 !important;
-  color: #1a2236 !important;
+  color: #1F2328 !important;
+  border: 1px solid transparent !important;
+  padding-right: 32px !important;
+  transition: background 0.14s ease, border-color 0.14s ease !important;
+}
+nav#main-menu .op-project-select--trigger-button:hover,
+nav#main-menu .op-project-select--trigger-button:focus {
+  background: rgba(31, 35, 40, 0.04) !important;
+  border-color: #E5E7EB !important;
 }
 
-/* Menu item rows */
+/* Hide the native ▼ caret/icon inside the trigger so we can replace it
+   with the same chevron style as the main-menu togglers (⌃/⌄). */
+nav#main-menu .op-project-select--trigger-button svg,
+nav#main-menu .op-project-select--trigger-button .octicon,
+nav#main-menu .op-project-select--trigger-button [class*="octicon-"],
+nav#main-menu .op-project-select--trigger-button [class*="icon-arrow"],
+nav#main-menu .op-project-select--trigger-button [class*="icon-triangle"],
+nav#main-menu .op-project-select--trigger-button [class*="icon-chevron"] {
+  display: none !important;
+}
+
+/* CSS-drawn DOWN chevron — same geometry as the main-menu .toggler::after
+   so the project selector's arrow visually matches the section togglers
+   (e.g. the ⌃/⌄ next to "Work packages"). */
+nav#main-menu .op-project-select--trigger-button::after {
+  content: '' !important;
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-right: 1.5px solid #9CA3AF !important;
+  border-bottom: 1.5px solid #9CA3AF !important;
+  transform: translateY(-65%) rotate(45deg) !important;
+  transform-origin: center center !important;
+  transition: transform 0.18s ease, border-color 0.14s ease !important;
+  pointer-events: none !important;
+}
+
+/* When the project select panel is open, the trigger usually gets
+   aria-expanded="true" — flip the chevron UP to mirror toggler behavior. */
+nav#main-menu .op-project-select--trigger-button[aria-expanded="true"]::after,
+nav#main-menu .op-project-select--trigger-button.open::after {
+  transform: translateY(-35%) rotate(225deg) !important;
+}
+
+/* Hover — darker chevron, matches main-menu toggler hover */
+nav#main-menu .op-project-select--trigger-button:hover::after,
+nav#main-menu .op-project-select--trigger-button:focus::after {
+  border-right-color: #1F2328 !important;
+  border-bottom-color: #1F2328 !important;
+}
+
+/* ─── 1.5. Projects dropdown panel — constrain width ──────────────
+   The "Projects" popover that opens from the project selector trigger
+   defaults to a wide flyout. Cap its width so it doesn't extend far
+   past the sidebar's right edge. */
+op-sidemenu-projects,
+.op-sidemenu-projects,
+[data-test-selector="op-side-menu-projects"],
+op-side-menu-projects,
+.op-side-menu-projects,
+.op-side-menu--projects,
+op-projects-side-menu,
+.op-projects-side-menu,
+nav#main-menu ~ op-sidemenu-projects,
+body > op-sidemenu-projects,
+body > .op-sidemenu-projects {
+  width: 320px !important;
+  max-width: 320px !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Inside the panel, ensure the search/list don't overflow the
+   constrained width. */
+op-sidemenu-projects .op-sidemenu--search,
+.op-sidemenu-projects .op-sidemenu--search,
+op-sidemenu-projects input[type="search"],
+.op-sidemenu-projects input[type="search"],
+op-sidemenu-projects input[type="text"],
+.op-sidemenu-projects input[type="text"] {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ─── 2. ICON TILES on every menu item ────────────────────────── */
+nav#main-menu .main-menu-item .menu-item--icon,
+nav#main-menu .main-item-wrapper a:not(.Button) .menu-item--icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 7px !important;
+  background: #FFFFFF !important;
+  margin-right: 10px !important;
+  flex-shrink: 0 !important;
+  color: #4B5563 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  transition: background 0.14s, border-color 0.14s, color 0.14s !important;
+}
+/* The icon glyph itself inherits color from the tile */
+nav#main-menu .main-menu-item .menu-item--icon.icon2,
+nav#main-menu .main-menu-item .menu-item--icon .icon2 {
+  color: inherit !important;
+}
+
+/* ─── 3. Item rows — baseline + hover (subtle, no left bar) ──── */
 nav#main-menu ul .main-item-wrapper,
 nav#main-menu ul .main-menu-item {
   margin-bottom: 3px !important;
 }
 
-/* Item link baseline */
 nav#main-menu ul li a:not(.Button) {
-  color: #1e2a3f !important;
+  color: #4B5563 !important;
   font-weight: 500 !important;
   border-radius: 8px !important;
-  transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease !important;
+  transition: background 0.14s, color 0.14s, font-weight 0.14s, border-color 0.14s !important;
 }
 
-/* Icons inside menu items */
 nav#main-menu [class*="-menu-item"] .icon2,
-nav#main-menu [class*="-menu-item"] .menu-item--icon,
 nav#main-menu .main-menu-item .icon2 {
-  color: #54657d !important;
   transition: color 0.14s ease !important;
 }
 
-/* Hover — light blue tint, blue text + icon */
-nav#main-menu ul li a:not(.Button):hover,
-nav#main-menu ul li a:not(.Button):focus,
-nav#main-menu ul li a:not(.Button):active,
+nav#main-menu .main-item-wrapper a:not(.Button):hover,
+nav#main-menu .main-item-wrapper a:not(.Button):focus,
+nav#main-menu .main-menu-item a:not(.Button):hover,
 nav#main-menu ul li:hover > a:not(.Button) {
-  color: #0c66e4 !important;
+  background: rgba(31, 35, 40, 0.04) !important;
+  color: #1F2328 !important;
+  border: 1px solid transparent !important;
+  padding-left: var(--main-menu-x-spacing) !important;
 }
-nav#main-menu ul li a:not(.Button):hover [class*="-menu-item"] .icon2,
-nav#main-menu ul li a:not(.Button):hover [class*="-menu-item"] .menu-item--icon,
-nav#main-menu ul li:hover > a:not(.Button) [class*="-menu-item"] .icon2 {
-  color: #0c66e4 !important;
+nav#main-menu .main-item-wrapper a:not(.Button):hover .menu-item--icon,
+nav#main-menu .main-menu-item a:not(.Button):hover .menu-item--icon {
+  border-color: #D1D5DB !important;
+  color: #1F2328 !important;
 }
 
-/* Selected (active) — bold + blue icon */
-nav#main-menu ul li a:not(.Button).selected,
-nav#main-menu ul li a:not(.Button).selected:hover {
+/* ─── 4. Active TOP-LEVEL item — pill border + dark icon tile ──
+   The pill is painted on the .main-item-wrapper (flex row holding the
+   link + the toggler chevron) so it wraps the ENTIRE row including the
+   ⌃/⌄ chevron — not just the anchor. The anchor itself stays transparent
+   in selected/open states so we don't get a nested pill-on-pill look. */
+nav#main-menu .main-item-wrapper:has(> a:not(.Button).selected),
+nav#main-menu .main-item-wrapper:has(> a.main-menu-item.selected),
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper,
+nav#main-menu li.open > .main-item-wrapper {
+  background: #FFFFFF !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 22px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Inside the pill, the link is transparent (the wrapper paints the pill).
+   Text color + weight still belong to the anchor for proper inheritance. */
+nav#main-menu .main-item-wrapper a:not(.Button).selected,
+nav#main-menu .main-item-wrapper a:not(.Button).selected:hover,
+nav#main-menu .main-menu-item a:not(.Button).selected,
+nav#main-menu .main-menu-item a:not(.Button).selected:hover,
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper > a:not(.Button),
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper > a.main-menu-item,
+nav#main-menu ul.menu_root.closed > li.open > a:not(.Button),
+nav#main-menu ul.menu_root.closed > li.open > a.main-menu-item,
+nav#main-menu li.open > .main-item-wrapper > a:not(.Button) {
+  background: transparent !important;
+  color: #1F2328 !important;
   font-weight: 600 !important;
+  border: none !important;
+  border-radius: 22px 0 0 22px !important;
+  padding-left: calc(var(--main-menu-x-spacing) - 1px) !important;
+  box-shadow: none !important;
 }
-nav#main-menu ul li a:not(.Button).selected [class*="-menu-item"] .icon2,
-nav#main-menu ul li a:not(.Button).selected [class*="-menu-item"] .menu-item--icon {
-  color: #0c66e4 !important;
+nav#main-menu ul li a:not(.Button).selected .menu-item--icon,
+nav#main-menu ul li a:not(.Button).selected [class*="-menu-item"] .menu-item--icon,
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper .menu-item--icon,
+nav#main-menu ul.menu_root.closed > li.open > a .menu-item--icon,
+nav#main-menu li.open > .main-item-wrapper > a .menu-item--icon {
+  background: #1F2328 !important;
+  border-color: #1F2328 !important;
+  color: #FFFFFF !important;
 }
 
-/* Section headers ("WORK PACKAGES", "BOARDS", etc.) */
-nav#main-menu .main-menu--segment-header {
-  color: #54657d !important;
-  font-size: 10.5px !important;
+/* Toggler sits flush inside the pill — strip its own background and
+   give it a right-rounded edge so it visually completes the pill on
+   the right side. */
+nav#main-menu .main-item-wrapper:has(> a:not(.Button).selected) > .toggler,
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper > .toggler,
+nav#main-menu li.open > .main-item-wrapper > .toggler {
+  background: transparent !important;
+  border-radius: 0 22px 22px 0 !important;
+}
+
+/* ─── 5. INLINE expansion — neuter source's drill-down CSS ──────
+   FIX: source's `.main-menu` class lives on the same element as
+   `nav#main-menu` (same node), so `.main-menu ul.menu_root.closed`
+   selectors target the SAME element via id+class. We use
+   `nav#main-menu ul.menu_root.closed` (no `.main-menu` descendant
+   term — that would require .main-menu to be inside the nav). */
+/* Keep all top-level items visible when one is expanded */
+nav#main-menu ul.menu_root.closed > li {
+  display: list-item !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+nav#main-menu ul.menu_root.closed {
+  overflow: visible !important;
+}
+/* Restore the expanded parent's row (source hides .main-item-wrapper) */
+nav#main-menu ul.menu_root.closed > li.open .main-item-wrapper {
+  display: flex !important;
+}
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper {
+  display: flex !important;
+}
+/* Restore icon + title visibility on the expanded parent */
+nav#main-menu ul.menu_root.closed > li.open [class*="-menu-item"] .icon2,
+nav#main-menu ul.menu_root.closed > li.open [class*="-menu-item"] .icon2 ~ .menu-item--title,
+nav#main-menu ul.menu_root.closed > li.open [class*="-menu-item"] .menu-item--icon,
+nav#main-menu ul.menu_root.closed > li.open [class*="-menu-item"] .menu-item--title,
+nav#main-menu ul.menu_root.closed > li.open .menu-item--title,
+nav#main-menu ul.menu_root.closed > li.open .menu-item--icon {
+  visibility: visible !important;
+}
+/* Hide the drill-down back-button breadcrumb header */
+nav#main-menu .main-menu--children-menu-header {
+  display: none !important;
+}
+/* Children expand naturally — override source's forced height/overflow */
+nav#main-menu ul.menu_root.closed > li.open .main-menu--children {
+  display: block !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+/* Also handle the .open state (when menu_root isn't .closed) */
+nav#main-menu ul.menu_root.open > li.open .main-menu--children,
+nav#main-menu ul.menu_root > li.open > .main-menu--children {
+  display: block !important;
+}
+
+/* ─── 6. SUB-MENU (children) — tree connector + active pill ──── */
+nav#main-menu .main-menu--children {
+  display: none;
+  position: relative !important;
+  padding: 4px 0 6px 22px !important;
+  margin: 4px 0 4px 18px !important;
+  border-top: none !important;
+}
+nav#main-menu .main-menu--children.unattached {
+  border-top: none !important;
+}
+/* Show children when their parent <li> is .open */
+nav#main-menu ul.menu_root.closed > li.open > .main-menu--children,
+nav#main-menu ul.menu_root > li.open > .main-menu--children {
+  display: block !important;
+}
+/* Vertical tree connector line */
+nav#main-menu .main-menu--children::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 6px !important;
+  bottom: 6px !important;
+  width: 1px !important;
+  background: #E5E7EB !important;
+}
+
+/* Sub-item baseline */
+nav#main-menu .main-menu--children li a:not(.Button) {
+  color: #6B7280 !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  border-left: 1px solid transparent !important;
+  padding: 0 12px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+/* Sub-item hover — light tint */
+nav#main-menu .main-menu--children li a:not(.Button):hover,
+nav#main-menu .main-menu--children li a:not(.Button):focus {
+  background: rgba(31, 35, 40, 0.04) !important;
+  color: #1F2328 !important;
+  border: 1px solid transparent !important;
+  border-left: 1px solid transparent !important;
+  padding-left: 12px !important;
+}
+
+/* Sub-item ACTIVE — soft gray pill background fill, no left bar */
+nav#main-menu .main-menu--children li a:not(.Button).selected,
+nav#main-menu .main-menu--children li a:not(.Button).selected:hover {
+  background: #F3F4F6 !important;
+  color: #1F2328 !important;
+  font-weight: 600 !important;
+  border: 1px solid transparent !important;
+  border-left: 1px solid transparent !important;
+  border-radius: 8px !important;
+  padding-left: 12px !important;
+}
+
+/* Drill-down back-button styling (hidden but defined in case it shows briefly) */
+nav#main-menu a.main-menu--parent-node:not(.Button) {
+  color: #1F2328 !important;
   font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+/* Toggler — draw our own UP/DOWN chevron via ::after, independent of
+   whatever icon the source renders. The native icon (and any swapped
+   variant) is hidden; our pseudo-element is the only visible arrow.
+   • Collapsed (default): ⌄ down chevron — "click to expand"
+   • Open (.open on parent <li>): ⌃ up chevron — "click to collapse" */
+nav#main-menu .toggler {
+  color: #9CA3AF !important;
+  border-radius: 6px !important;
+  transition: background 0.14s, color 0.14s !important;
+  width: 28px !important;
+  height: 28px !important;
+  align-self: center !important;
+  position: relative !important;
+}
+
+/* Hide whatever icon the source renders inside .toggler (font icon, svg, octicon) */
+nav#main-menu .toggler .icon2,
+nav#main-menu .toggler [class*="icon-arrow"],
+nav#main-menu .toggler [class*="icon-chevron"],
+nav#main-menu .toggler [class*="octicon-"],
+nav#main-menu .toggler .octicon,
+nav#main-menu .toggler svg {
+  display: none !important;
+}
+
+/* CSS-drawn DOWN chevron — two borders of a small square rotated 45° */
+nav#main-menu .toggler::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 7px !important;
+  height: 7px !important;
+  margin-top: -2px !important;
+  border-right: 1.5px solid currentColor !important;
+  border-bottom: 1.5px solid currentColor !important;
+  transform: translate(-50%, -50%) rotate(45deg) !important;
+  transition: transform 0.18s ease, margin-top 0.18s ease !important;
+  pointer-events: none !important;
+}
+
+/* Rotate to UP chevron when the parent <li> is .open (children expanded) */
+nav#main-menu li.open > .main-item-wrapper > .toggler::after,
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper > .toggler::after {
+  transform: translate(-50%, -50%) rotate(225deg) !important;
+  margin-top: 2px !important;
+}
+
+nav#main-menu .toggler:hover {
+  background: rgba(31, 35, 40, 0.06) !important;
+  color: #1F2328 !important;
+}
+
+/* Active parent's toggler — darker color so chevron reads on the white pill */
+nav#main-menu ul.menu_root.closed > li.open > .main-item-wrapper > .toggler,
+nav#main-menu li.open > .main-item-wrapper > .toggler {
+  color: #1F2328 !important;
+}
+
+/* ─── 7. Section headers — uppercase mini-labels ──────────────── */
+nav#main-menu .main-menu--segment-header {
+  color: #6B7280 !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
   letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
   padding: 14px 12px 6px !important;
+  border-top: none !important;
+  margin-top: 4px !important;
 }
 
-/* Submenu children */
-nav#main-menu .main-menu--children {
-  padding: 4px 0 8px !important;
-}
-nav#main-menu .main-menu--children.unattached {
-  border-top: 1px solid #d5e3f1 !important;
-  margin-top: 6px !important;
-  padding-top: 8px !important;
-}
-
-/* Submenu header (project breadcrumb when drilled in) */
-nav#main-menu .main-menu--children-menu-header {
-  background: #eef4fa !important;
-  border-bottom: 1px solid #d5e3f1 !important;
-  padding: 6px 0 !important;
-}
-nav#main-menu a.main-menu--parent-node:not(.Button) {
-  color: #1a2236 !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  letter-spacing: -0.01em !important;
-}
-nav#main-menu .main-menu--arrow-left-to-project {
-  color: #54657d !important;
-  border-radius: 8px !important;
-}
-nav#main-menu .main-menu--arrow-left-to-project:hover {
-  background: rgba(12, 102, 228, 0.10) !important;
-  color: #0c66e4 !important;
+/* ─── 7.5. op-submenu widget — hide search, match main-menu arrow ─
+   The .op-submenu component (used by Boards, Work-Packages queries,
+   Projects > Status group, etc.) renders:
+     • a sticky "Search by name" input  → HIDDEN per user request
+     • collapsible section titles (e.g. "Status", "Public") whose
+       indicator is an up/down chevron — we ROTATE it so it reads
+       right (→) when collapsed and down (↓) when expanded, matching
+       the main-menu toggler pattern. */
+nav#main-menu .op-submenu--search,
+.op-submenu--search {
+  display: none !important;
 }
 
-/* Toggler chevron for items with children */
-nav#main-menu .toggler {
-  color: #7e8aa2 !important;
+/* Force the entire submenu container chain to be full-width so the
+   ::after chevron on each title lands at the right edge of the sidebar
+   (the "corner"), instead of sitting next to the title text. */
+nav#main-menu .op-submenu,
+.op-submenu,
+nav#main-menu .op-submenu--body,
+.op-submenu--body,
+nav#main-menu .op-submenu--items,
+.op-submenu--items {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+nav#main-menu .op-submenu--body,
+.op-submenu--body {
+  padding-top: 4px !important;
+}
+nav#main-menu .op-submenu--body > .op-submenu--title:first-child,
+.op-submenu--body > .op-submenu--title:first-child {
+  margin-top: 4px !important;
+}
+
+/* Section-title indicator — hide native chevron, draw matching CSS
+   chevron via ::after so submenu titles look identical to main-menu
+   togglers. Uses :has() to detect collapsed vs expanded state from
+   the sibling .op-submenu--items list. */
+nav#main-menu .op-submenu--title svg,
+nav#main-menu .op-submenu--title .octicon,
+nav#main-menu .op-submenu--title [class*="icon-arrow"],
+nav#main-menu .op-submenu--title [class*="octicon-"],
+.op-submenu--title svg,
+.op-submenu--title .octicon,
+.op-submenu--title [class*="icon-arrow"],
+.op-submenu--title [class*="octicon-"] {
+  display: none !important;
+}
+
+nav#main-menu .op-submenu--title,
+.op-submenu--title {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  flex: 1 1 100% !important;
+  align-self: stretch !important;
+  box-sizing: border-box !important;
+  padding-right: 32px !important;
+  padding-left: 10px !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   border-radius: 8px !important;
   transition: background 0.14s ease, color 0.14s ease !important;
-}
-nav#main-menu .toggler:hover {
-  background: rgba(12, 102, 228, 0.10) !important;
-  color: #0c66e4 !important;
+  cursor: pointer !important;
 }
 
-/* Resize handle — invisible until hover */
+/* Hover — subtle tint so the title feels clickable */
+nav#main-menu .op-submenu--title:hover,
+.op-submenu--title:hover {
+  background: rgba(31, 35, 40, 0.04) !important;
+  color: #1F2328 !important;
+}
+
+/* EXPANDED — when the sibling .op-submenu--items list is open, give the
+   title a soft gray pill so the user sees which section is currently
+   expanded (matches the sub-item selected pill style). */
+nav#main-menu .op-submenu--title:has(+ .op-submenu--items:not(.op-submenu--items_collapsed)),
+.op-submenu--title:has(+ .op-submenu--items:not(.op-submenu--items_collapsed)) {
+  background: #F3F4F6 !important;
+  color: #1F2328 !important;
+  font-weight: 600 !important;
+}
+
+/* Title text fills available space so the ::after chevron is pushed to
+   the far right edge of the row, sitting in the corner like the
+   top-level main-menu togglers. */
+nav#main-menu .op-submenu--title > *:not(svg):not(.octicon):not([class*="icon-arrow"]):not([class*="octicon-"]),
+.op-submenu--title > *:not(svg):not(.octicon):not([class*="icon-arrow"]):not([class*="octicon-"]) {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+/* CSS-drawn chevron — bounding box is FIXED at the row's vertical center
+   in both states. Only the rotation changes (45° down ⌄ ↔ 225° up ⌃), so
+   the chevron never jumps vertically between collapsed/expanded. The
+   rotation pivots around the box's own center (transform-origin: center),
+   which keeps the visual midpoint of both arrow shapes on the same line. */
+nav#main-menu .op-submenu--title::after,
+.op-submenu--title::after {
+  content: '' !important;
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-right: 1.5px solid #9CA3AF !important;
+  border-bottom: 1.5px solid #9CA3AF !important;
+  transform: translateY(-65%) rotate(45deg) !important;
+  transform-origin: center center !important;
+  transition: transform 0.18s ease, border-color 0.14s ease !important;
+  pointer-events: none !important;
+}
+
+/* EXPANDED state — sibling .op-submenu--items is visible (not collapsed),
+   so rotate the chevron to point UP. SAME translateY as the collapsed
+   state — only the rotate() value differs — so the box stays put and
+   only the chevron direction flips. */
+nav#main-menu .op-submenu--title:has(+ .op-submenu--items:not(.op-submenu--items_collapsed))::after,
+.op-submenu--title:has(+ .op-submenu--items:not(.op-submenu--items_collapsed))::after {
+  transform: translateY(-35%) rotate(225deg) !important;
+}
+
+/* Hover — darker chevron */
+nav#main-menu .op-submenu--title:hover::after,
+.op-submenu--title:hover::after {
+  border-right-color: #1F2328 !important;
+  border-bottom-color: #1F2328 !important;
+}
+
+/* ─── 8. Favorites markers ────────────────────────────────────── */
+nav#main-menu .op-favorite,
+nav#main-menu .op-favorite .octicon,
+nav#main-menu [class*="favorite"] .octicon-star-fill {
+  color: #1F2328 !important;
+}
+
+/* ─── 9. Icon-only collapsed rail (56px) ──────────────────────── */
+.hidden-navigation .main-menu {
+  width: 56px !important;
+  min-width: 56px !important;
+  background: #FAFAFA !important;
+  border-right: 1px solid #E5E7EB !important;
+}
+.hidden-navigation .main-menu ul.menu_root > li:not(.partial) {
+  display: list-item !important;
+  height: auto !important;
+}
+.hidden-navigation .main-menu ul.menu_root > li .main-item-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+.hidden-navigation .main-menu .menu-item--title,
+.hidden-navigation .main-menu .main-item--badge,
+.hidden-navigation .main-menu .toggler,
+.hidden-navigation .main-menu .main-menu--segment-header,
+.hidden-navigation .main-menu .main-menu--children {
+  display: none !important;
+}
+.hidden-navigation .main-menu [class*="-menu-item"] .icon2,
+.hidden-navigation .main-menu [class*="-menu-item"] .menu-item--icon {
+  visibility: visible !important;
+  margin: 4px auto !important;
+}
+.hidden-navigation .main-menu ul li a:not(.Button) {
+  padding: 4px 0 !important;
+  justify-content: center !important;
+  width: 56px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.hidden-navigation .main-menu ul li a:not(.Button):hover .menu-item--icon {
+  background: #F3F4F6 !important;
+  border-color: #D1D5DB !important;
+  color: #1F2328 !important;
+}
+.hidden-navigation .main-menu ul li a:not(.Button).selected {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  box-shadow: none !important;
+}
+.hidden-navigation .main-menu ul li a:not(.Button).selected .menu-item--icon {
+  background: #1F2328 !important;
+  border-color: #1F2328 !important;
+  color: #FFFFFF !important;
+}
+.hidden-navigation .main-menu .op-project-select--trigger-button {
+  width: 40px !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  margin: 0 auto !important;
+}
+
+/* ─── 10. Resizer + scrollbar + badges + inner #sidebar ───────── */
 .main-menu--resizer {
   background: transparent !important;
 }
 .main-menu--resizer:hover {
-  border-right: 2px solid rgba(12, 102, 228, 0.35) !important;
+  border-right: 2px solid rgba(31, 35, 40, 0.18) !important;
 }
 .main-menu--resizer .main-menu--navigation-toggler {
-  color: #7e8aa2 !important;
+  color: #9CA3AF !important;
 }
 .main-menu--resizer .main-menu--navigation-toggler:not(.open) {
-  color: #0c66e4 !important;
+  color: #1F2328 !important;
 }
 
-/* Thin custom scrollbar inside the menu */
 nav#main-menu #menu-sidebar::-webkit-scrollbar       { width: 6px !important; }
 nav#main-menu #menu-sidebar::-webkit-scrollbar-track { background: transparent !important; }
 nav#main-menu #menu-sidebar::-webkit-scrollbar-thumb {
-  background: #b8c8de !important;
+  background: #D1D5DB !important;
   border-radius: 4px !important;
 }
-nav#main-menu #menu-sidebar::-webkit-scrollbar-thumb:hover { background: #8aa3c4 !important; }
+nav#main-menu #menu-sidebar::-webkit-scrollbar-thumb:hover { background: #9CA3AF !important; }
 
-/* Badges (BETA, EXPERIMENTAL, NEW) — modern blue pill */
 nav#main-menu .main-item--badge {
-  background: #d4e3f7 !important;
-  color: #0c4180 !important;
+  background: #F3F4F6 !important;
+  color: #374151 !important;
   font-size: 9.5px !important;
   font-style: normal !important;
+  font-weight: 600 !important;
   padding: 2px 7px !important;
   border-radius: 10px !important;
   letter-spacing: 0.04em !important;
   top: 0 !important;
 }
 
-/* Inner #sidebar widget area */
 nav#main-menu #sidebar a:not(.Button),
 nav#main-menu #sidebar a:not(.Button):link {
-  color: #1e2a3f !important;
+  color: #1F2328 !important;
   text-decoration: none !important;
 }
-nav#main-menu #sidebar a:hover { color: #0c66e4 !important; }
-nav#main-menu #sidebar label   { color: #54657d !important; }
-
-/* Collapsed sidebar keeps the same surface */
-.hidden-navigation .main-menu {
-  background: linear-gradient(180deg, #f0f6fc 0%, #e6eff8 100%) !important;
-  border-right: 1px solid #d5e3f1 !important;
-}
+nav#main-menu #sidebar a:hover { color: #4B5563 !important; }
+nav#main-menu #sidebar label   { color: #6B7280 !important; }
 
 
 /* ================================================================
