@@ -7403,7 +7403,7 @@ a.button.-highlight:hover {
    .Button-content (targeting both would render the label twice).
    Tight margin so the label sits close to the plus icon. */
 .op-app-header .op-app-header--primer-button:has(.octicon-plus)::after {
-  content: "Create \00A0\25BC" !important;
+  content: "Create" !important;
   display: inline-block !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
@@ -9488,6 +9488,16 @@ body.router--work-packages-full-create nav#main-menu {
    inside the show_button. The leading "+" icon stays. */
 [data-test-selector="quick-add-menu-button"] .octicon-triangle-down,
 button[data-test-selector="quick-add-menu-button"] svg.octicon-triangle-down {
+  display: none !important;
+}
+
+/* ── Top-bar "+ Create" button: hide its "Add…" hover tooltip ──────
+   quick_add_menu.rb wires the button to a Primer tool-tip via
+   `with_tooltip`. The tool-tip is rendered as a sibling <tool-tip>
+   element with for=<button-id>. We hide it outright. */
+[data-test-selector="quick-add-menu-button"] ~ tool-tip,
+tool-tip[for*="quick-add-menu"],
+tool-tip[for*="op-app-header--quick-add"] {
   display: none !important;
 }
 

@@ -1,0 +1,5 @@
+# Tamilzorous locale overrides — bind-mounted into /app/config/locales/.
+# Loaded after en.yml (alphabetical order), so values here take precedence.
+en:
+  global_search:
+    placeholder: "Search service"

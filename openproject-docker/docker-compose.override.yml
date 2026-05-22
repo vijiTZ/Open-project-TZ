@@ -23,6 +23,9 @@ services:
       # blocks (welcome / new_features / meetings / community) and the
       # Community forum footer link.
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
+      # tz: locale overrides (search placeholder, etc.) — file name sorts
+      # after en.yml so values here win.
+      - "./tz_overrides.en.yml:/app/config/locales/tz_overrides.en.yml"
       # tz: server-side override of the New User view to add the Back
       # button into the Create / Create-and-continue action row.
       - "./users_new.html.erb:/app/app/views/users/new.html.erb"
