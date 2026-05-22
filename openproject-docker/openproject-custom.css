@@ -166,128 +166,23 @@ a.op-logo--icon,
 }
 
 
-/* â”€â”€ 2. ACTIVE PROJECTS PAGE â†’ CARD GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   Scope: body.controller-projects.action-index                 */
-body.controller-projects.action-index .generic-table--container thead,
-body.controller-projects.action-index .generic-table--results-container thead,
-body.controller-projects.action-index table.generic-table colgroup {
-  display: none !important;
-}
-
-body.controller-projects.action-index .generic-table--results-container table.generic-table,
-body.controller-projects.action-index .generic-table--container table.generic-table {
-  display: block !important;
-  width: 100% !important;
-  background: transparent !important;
-  border: none !important;
-  border-collapse: unset !important;
-}
-
-/* 3-column card grid */
-body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
-body.controller-projects.action-index .generic-table--container table.generic-table tbody {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 18px !important;
-  padding: 16px 0 !important;
-  background: transparent !important;
-  width: 100% !important;
-}
-
-/* Each tr = a white card */
-body.controller-projects.action-index table.generic-table tbody tr {
-  display: flex !important;
-  flex-direction: column !important;
-  position: relative !important;
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 14px !important;
-  padding: 22px 20px !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
-  transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s !important;
-  gap: 8px !important;
-  min-height: 110px !important;
-  cursor: pointer !important;
-}
-body.controller-projects.action-index table.generic-table tbody tr:hover {
-  box-shadow: 0 6px 24px rgba(0,0,0,0.12) !important;
-  border-color: #b0c4de !important;
-  transform: translateY(-2px) !important;
-}
-
-body.controller-projects.action-index table.generic-table tbody tr td {
-  display: block !important;
-  border: none !important;
-  padding: 0 !important;
-  background: transparent !important;
-  vertical-align: unset !important;
-}
-
-/* Hide unwanted columns */
-body.controller-projects.action-index table.generic-table tbody tr td.hierarchy,
-body.controller-projects.action-index table.generic-table tbody tr td.public,
-body.controller-projects.action-index table.generic-table tbody tr td.created_at,
-body.controller-projects.action-index table.generic-table tbody tr td.latest_activity_at,
-body.controller-projects.action-index table.generic-table tbody tr td.required_disk_space {
-  display: none !important;
-}
-
-body.controller-projects.action-index table.generic-table tbody tr td.name .projects-table--name-text a,
-body.controller-projects.action-index table.generic-table tbody tr td.name a {
-  font-size: 16px !important;
-  font-weight: 700 !important;
-  color: #1a202c !important;
-  text-decoration: none !important;
-  display: block !important;
-  padding-right: 72px !important;
-  white-space: normal !important;
-  word-break: break-word !important;
-  line-height: 1.35 !important;
-}
-body.controller-projects.action-index table.generic-table tbody tr td.name .projects-table--name-text a:hover,
-body.controller-projects.action-index table.generic-table tbody tr td.name a:hover {
-  color: #2563eb !important;
-}
-
-body.controller-projects.action-index table.generic-table tbody tr td.name .projects-table--hierarchy-icon {
-  display: none !important;
-}
-
-body.controller-projects.action-index table.generic-table tbody tr td.project_status {
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  margin-top: 6px !important;
-  font-size: 13px !important;
-  color: #4b5563 !important;
-}
-
-body.controller-projects.action-index table.generic-table tbody tr td.favorited {
-  position: absolute !important;
-  top: 14px !important; right: 48px !important;
-  display: block !important;
-}
-body.controller-projects.action-index table.generic-table tbody tr td.buttons {
-  position: absolute !important;
-  top: 10px !important; right: 10px !important;
-  display: block !important;
-}
-
-body.controller-projects.action-index .generic-table--container_height-100 { height: auto !important; }
-body.controller-projects.action-index .generic-table--container_visible-overflow { overflow: visible !important; }
-body.controller-projects.action-index .project-list-page { padding: 0 8px !important; }
-
-@media (max-width: 1100px) {
-  body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
-  body.controller-projects.action-index .generic-table--container table.generic-table tbody {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-@media (max-width: 640px) {
-  body.controller-projects.action-index .generic-table--results-container table.generic-table tbody,
-  body.controller-projects.action-index .generic-table--container table.generic-table tbody {
-    grid-template-columns: 1fr !important;
-  }
+/* ── 2. PROJECTS INDEX TABLE HEADER — force white text ─────────────
+   The global .generic-table thead rule already sets white, but the
+   projects index renders column titles inside nested elements
+   (a > span > span.generic-table--sort-header-inner). Some of those
+   inner spans pick up OpenProject's default header color and end up
+   dark on the navy header. Pin white explicitly for every text node
+   inside the projects-index thead. */
+body.controller-projects.action-index table.generic-table thead th,
+body.controller-projects.action-index table.generic-table thead th *,
+body.controller-projects.action-index table.generic-table thead th a,
+body.controller-projects.action-index table.generic-table thead th a span,
+body.controller-projects.action-index table.generic-table thead th .generic-table--sort-header,
+body.controller-projects.action-index table.generic-table thead th .generic-table--sort-header a,
+body.controller-projects.action-index table.generic-table thead th .generic-table--sort-header-outer,
+body.controller-projects.action-index table.generic-table thead th .generic-table--header-outer {
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 
 
@@ -1636,10 +1531,8 @@ body.controller-users.action-new form > p:last-of-type button.-primary .icon-che
    Placeholder users, Permissions report, Enumerations, Work-package
    types/statuses/priorities, Custom fields, OAuth apps, etc.
 
-   The projects-index page also uses .generic-table but section 2
-   above converts its tbody into a card grid — those rules have
-   higher specificity (body.controller-projects.action-index ...) and
-   continue to win there. No conflict.
+   The projects-index page also uses .generic-table and now picks up
+   these same rules (the prior card-grid override has been removed).
 
    To opt any custom table into the same look, give it the class
    `tz-table` and these rules apply.                                 */
@@ -4037,6 +3930,162 @@ body.controller-members .ActionList-item--danger > a:hover,
 body.controller-members .ActionList-item--danger > a:focus,
 body.controller-members .ActionList-item--danger > button:hover,
 body.controller-members .ActionList-item--danger > button:focus {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+}
+
+
+/* ── 16b. PROJECTS INDEX → ROW ACTIONS DROPDOWN ───────────────────
+   Same Primer ActionMenu pattern as the members table (section 16).
+   The projects-index "…" menu opens with items "New subproject",
+   "Project settings", "Add to favorites", "Archive", "Copy", "Delete"
+   — without these rules the labels wrap onto multiple lines and the
+   leading icons drift off the text baseline. Mirrors section 16 but
+   scoped to body.controller-projects.action-index so it can't affect
+   any unrelated Primer menu in the app. */
+
+/* Popover panel — width + nowrap */
+body.controller-projects.action-index .ActionListWrap,
+body.controller-projects.action-index .ActionList,
+body.controller-projects.action-index [role="menu"]:has(.ActionList-item),
+body.controller-projects.action-index [role="menu"]:has([role="menuitem"]) {
+  min-width: 200px !important;
+  padding: 6px !important;
+  margin: 0 !important;
+  list-style: none !important;
+  white-space: nowrap !important;
+}
+
+/* <li> wrapper — strip default list styling */
+body.controller-projects.action-index .ActionList-item {
+  display: block !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* The clickable link/button — the single flex row. Fixed row height
+   (34px) so every item is the same size regardless of icon SVG quirks. */
+body.controller-projects.action-index .ActionList-content,
+body.controller-projects.action-index .ActionList-item > a,
+body.controller-projects.action-index .ActionList-item > button,
+body.controller-projects.action-index [role="menuitem"]:not(.ActionList-item) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: #1f2937 !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  line-height: 1 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  transition: background-color 0.12s, color 0.12s !important;
+}
+
+/* Hover / focus on the row */
+body.controller-projects.action-index .ActionList-content:hover,
+body.controller-projects.action-index .ActionList-content:focus,
+body.controller-projects.action-index .ActionList-content:focus-visible,
+body.controller-projects.action-index .ActionList-item > a:hover,
+body.controller-projects.action-index .ActionList-item > a:focus,
+body.controller-projects.action-index .ActionList-item > button:hover,
+body.controller-projects.action-index .ActionList-item > button:focus,
+body.controller-projects.action-index [role="menuitem"]:not(.ActionList-item):hover,
+body.controller-projects.action-index [role="menuitem"]:not(.ActionList-item):focus {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  outline: none !important;
+}
+
+/* Leading-icon container — fixed 20×20 box so every icon, regardless
+   of its intrinsic SVG dimensions, occupies the SAME column. Every
+   row's first text character then lands at the same X position. */
+body.controller-projects.action-index .ActionList-item-visual,
+body.controller-projects.action-index .ActionList-item-visual--leading,
+body.controller-projects.action-index .ActionList-item-visual--trailing,
+body.controller-projects.action-index .ActionList-item-action,
+body.controller-projects.action-index .ActionList-content > svg:first-child,
+body.controller-projects.action-index .ActionList-content > .octicon:first-child {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #6b7280 !important;
+  line-height: 0 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+/* The SVG itself — pinned to 16×16 inside the 20px box so each icon
+   has the same visual weight and centers within the column. */
+body.controller-projects.action-index .ActionList-item-visual svg,
+body.controller-projects.action-index .ActionList-item-visual--leading svg,
+body.controller-projects.action-index .ActionList-item-visual--trailing svg,
+body.controller-projects.action-index .ActionList-content > svg,
+body.controller-projects.action-index .ActionList-content .octicon,
+body.controller-projects.action-index .ActionList-item-visual op-icon,
+body.controller-projects.action-index .ActionList-item-visual--leading op-icon {
+  display: block !important;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  max-width: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 16px !important;
+  fill: currentColor !important;
+}
+
+/* Label — typography only */
+body.controller-projects.action-index .ActionList-item-label,
+body.controller-projects.action-index .ActionList-item-description {
+  display: inline !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13.5px !important;
+  line-height: 1.4 !important;
+  color: inherit !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+/* Destructive item ("Delete") — red tint */
+body.controller-projects.action-index .ActionList-item--danger > .ActionList-content,
+body.controller-projects.action-index .ActionList-item--danger > a,
+body.controller-projects.action-index .ActionList-item--danger > button {
+  color: #b91c1c !important;
+}
+body.controller-projects.action-index .ActionList-item--danger .ActionList-item-visual,
+body.controller-projects.action-index .ActionList-item--danger .ActionList-item-visual--leading {
+  color: #b91c1c !important;
+}
+body.controller-projects.action-index .ActionList-item--danger > .ActionList-content:hover,
+body.controller-projects.action-index .ActionList-item--danger > .ActionList-content:focus,
+body.controller-projects.action-index .ActionList-item--danger > a:hover,
+body.controller-projects.action-index .ActionList-item--danger > a:focus,
+body.controller-projects.action-index .ActionList-item--danger > button:hover,
+body.controller-projects.action-index .ActionList-item--danger > button:focus {
   background-color: #fef2f2 !important;
   color: #991b1b !important;
 }
