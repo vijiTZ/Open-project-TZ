@@ -10677,6 +10677,92 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
   }
 }
 
+
+/* ================================================================
+   MASONRY (CSS COLUMNS) — two-column tight packing, no empty cells
+   ----------------------------------------------------------------
+   Grid layout equalizes row heights, so a tall card on one side
+   leaves empty space below the shorter card opposite it. CSS
+   Grid masonry isn't broadly supported yet, so we use a CSS
+   multi-column layout. Each card flows in DOM order and stacks
+   immediately below the previous card in the same column — no
+   waiting on the other column's tallest card. Result:
+
+     ┌──────────────────────────────┐
+     │  Project banner (full-width) │
+     ├───────────────┬──────────────┤
+     │  Basic info   │  Description │
+     ├───────────────┤              │
+     │  People       │              │
+     ├───────────────┼──────────────┤
+     │  Details      │  Estimates   │
+     │               ├──────────────┤
+     │               │  Attachments │
+     └───────────────┴──────────────┘
+
+   The browser distributes cards across columns to balance total
+   column height (`column-fill: balance`), so the left/right
+   placement may differ slightly from the diagram depending on
+   actual card heights.
+   ================================================================ */
+@media (min-width: 1024px) {
+  /* (1) Switch from grid to multi-column. `column-fill: balance`
+         tries to equalize column heights; `break-inside: avoid`
+         keeps each card whole.                                    */
+  body.router--work-packages-full-create #content .work-package--single-view {
+    display: block !important;
+    column-count: 2 !important;
+    column-gap: 20px !important;
+    column-fill: balance !important;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+  }
+
+  /* (2) Every card → block-level, never split across columns,
+         bottom margin provides vertical spacing between cards.   */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:not(.-project-context),
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    display: block !important;
+    width: 100% !important;
+    break-inside: avoid !important;
+    -webkit-column-break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin: 0 0 20px 0 !important;
+    /* Clear grid leftovers */
+    grid-column: unset !important;
+    grid-row: unset !important;
+  }
+
+  /* (3) Project-context banner spans BOTH columns (full-width
+         above the columnar flow).                                */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    column-span: all !important;
+    -webkit-column-span: all !important;
+    width: 100% !important;
+    margin: 0 0 20px 0 !important;
+  }
+
+  /* (4) Card visual chrome — white surface, soft border, rounded */
+  body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group:not(.-project-context),
+  body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    padding: 18px 20px !important;
+  }
+
+  /* (5) Re-hide Costs / Other / Budget under the new layout. */
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name="Costs" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name="Other" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name="Budget" i],
+  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Cost" i] {
+    display: none !important;
+  }
+}
+
 /* ================================================================
    DARK NAVY PRIMARY BUTTONS — match the design mockup
    --------------------------------------------------------------
@@ -12331,4 +12417,83 @@ html body .op-app-header--end img[alt*="profile" i] {
   padding: 0 !important;
   margin: 0 !important;
 }
+/* ================================================================
+   GitHub PR "Open" badge — make it clickable (links to the PR)
+   ================================================================ */
+.op-pull-request--state op-github-pull-request-state .op-pull-request-state,
+op-github-pull-request-state .op-pull-request-state {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+.op-pull-request--state op-github-pull-request-state .op-pull-request-state:hover,
+op-github-pull-request-state .op-pull-request-state:hover {
+  opacity: 0.85;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
 
+
+/* ================================================================
+   WP CREATE — FINAL MASONRY OVERRIDE (CSS COLUMNS on wp-single-view)
+   ----------------------------------------------------------------
+   Earlier blocks make wp-single-view a 2-column GRID, which forces
+   each row to the height of its tallest card and leaves empty space
+   below short cards (Basic info, People, Attachments).
+
+   This final block at end-of-file wins the cascade and replaces the
+   grid with a CSS multi-column layout so cards pack tightly within
+   each column independently.
+
+   Key points:
+     • `wp-single-view` becomes `display: block` + `column-count: 2`
+     • `.work-package--single-view` stays `display: contents` so its
+       children become direct participants in wp-single-view's column
+       flow (alongside the sibling `.work-packages--storages`).
+     • Every card is `break-inside: avoid` so it never splits mid-card.
+     • Grid placement rules from earlier blocks are unset/neutralised.
+     • Project-context banner spans both columns at the top.
+   ================================================================ */
+@media (min-width: 1024px) {
+  html body.router--work-packages-full-create #content wp-single-view {
+    display: block !important;
+    column-count: 2 !important;
+    column-gap: 20px !important;
+    column-fill: balance !important;
+    grid-template-columns: unset !important;
+    grid-template-rows: unset !important;
+    grid-auto-rows: unset !important;
+    grid-auto-flow: unset !important;
+  }
+
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
+    display: contents !important;
+  }
+
+  /* Every card: opt out of grid placement, become a column-flow block,
+     never break across columns. Covers cards inside the inner
+     .work-package--single-view (which is display: contents) AND the
+     sibling .work-packages--storages.                                */
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group:not(.-project-context),
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    display: block !important;
+    width: 100% !important;
+    break-inside: avoid !important;
+    -webkit-column-break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    margin: 0 0 20px 0 !important;
+    align-self: unset !important;
+  }
+
+  /* Project-context banner spans both columns at the top */
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context {
+    column-span: all !important;
+    -webkit-column-span: all !important;
+    display: block !important;
+    width: 100% !important;
+    grid-column: unset !important;
+    grid-row: unset !important;
+    margin: 0 0 20px 0 !important;
+  }
+}

@@ -11,14 +11,24 @@
 
 services:
   web:
+    environment:
+      # tz: allow tunnel hostnames for GitHub webhooks
+      OPENPROJECT_ADDITIONAL__HOST__NAMES: ".loca.lt .ngrok-free.app .ngrok.io"
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
       - "./tz_table.js:/app/public/tz-table.js"
+      - "./tz_github_pr_click.js:/app/public/tz-github-pr-click.js"
       - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      # tz: instant email for assigned/commented/created/shared (not just mentions)
+      - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
+      # tz: SMTP defaults (editable from admin UI)
+      - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      # tz: allow webhook requests from external tunnels (ngrok/localtunnel)
+      - "./tz_webhook_host_bypass.rb:/app/config/initializers/tz_webhook_host_bypass.rb"
       # tz: replace upstream homescreen initializer to hide selected
       # blocks (welcome / new_features / meetings / community) and the
       # Community forum footer link.
@@ -38,10 +48,13 @@ services:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
       - "./tz_table.js:/app/public/tz-table.js"
+      - "./tz_github_pr_click.js:/app/public/tz-github-pr-click.js"
       - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
+      - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
 
   cron:
@@ -49,13 +62,27 @@ services:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
       - "./tz_table.js:/app/public/tz-table.js"
+      - "./tz_github_pr_click.js:/app/public/tz-github-pr-click.js"
       - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
+      - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
 
   seeder:
     volumes:
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
       - "./css_injector.rb:/app/config/initializers/css_injector.rb"
+
+  # tz: local email testing — catches all outgoing emails
+  # View emails at http://localhost:8025
+  mailhog:
+    image: mailhog/mailhog
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - backend
