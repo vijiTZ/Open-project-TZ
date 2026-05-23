@@ -57,7 +57,13 @@
       "Bash(docker exec openproject-docker-web-1 bash -c 'cat /app/app/components/projects/settings/general/show_component.html.erb | grep \"\"op-settings-grid\"\"')",
       "Bash(docker exec openproject-docker-web-1 bash -c 'curl -s -b \"\"_open_project_session=test\"\" http://localhost:8080/projects/demo-project/settings/general 2>/dev/null | grep -o \"\"op-settings-grid[^\\\\\"\"]*\"\" | head -5')",
       "Bash(docker exec openproject-docker-web-1 bash -c 'curl -s http://localhost:8080/projects/demo-project/settings/general 2>/dev/null | head -20')",
-      "Bash(docker exec openproject-docker-web-1 bash -c 'curl -sL -o /dev/null -w \"\"%{http_code}\"\" http://localhost:8080/projects/demo-project/settings/general')"
+      "Bash(docker exec openproject-docker-web-1 bash -c 'curl -sL -o /dev/null -w \"\"%{http_code}\"\" http://localhost:8080/projects/demo-project/settings/general')",
+      "Bash(xargs grep -l \"class.*Hook\")",
+      "Bash(winget install --id Ngrok.Ngrok -e --accept-source-agreements --accept-package-agreements)",
+      "Bash(npm install -g ngrok)",
+      "Bash(curl -s -u admin:admin \"http://localhost:8080/api/v3/users?filters=%5B%7B%22login%22:%7B%22operator%22:%22%3D%22,%22values%22:%5B%22github-webhook%22%5D%7D%7D%5D\")",
+      "Bash(python -m json.tool)",
+      "Bash(curl -s -u admin:admin \"http://localhost:8080/api/v3/users\")"
     ]
   }
 }

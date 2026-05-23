@@ -12326,4 +12326,16 @@ html body .op-app-header--end img[alt*="profile" i] {
   padding: 0 !important;
   margin: 0 !important;
 }
-
+/* ================================================================
+   GitHub PR "Open" badge — make it clickable (links to the PR)
+   ================================================================ */
+.op-pull-request--state op-github-pull-request-state .op-pull-request-state,
+op-github-pull-request-state .op-pull-request-state {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+.op-pull-request--state op-github-pull-request-state .op-pull-request-state:hover,
+op-github-pull-request-state .op-pull-request-state:hover {
+  opacity: 0.85;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
