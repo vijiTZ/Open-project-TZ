@@ -406,3 +406,124 @@
     start();
   }
 })();
+
+
+/* ================================================================
+   PLACEHOLDER INJECTOR — Work / Remaining work / % Complete
+   ----------------------------------------------------------------
+   These fields are inline-edit controls. In the create panels
+   (full-create + split-create) they immediately render as
+   <input> elements where Angular sets the value to "-" for empty
+   state. We:
+     1. Strip the "-" value using the native HTMLInputElement setter
+        (bypasses Angular's value descriptor)
+     2. Dispatch input/change events so the form knows the field is
+        empty (otherwise Angular will reset "-")
+     3. Set a native `placeholder` attribute as the visible hint
+     4. Run on DOM mutations + a 500ms interval for the first 30s
+        so newly-rendered inputs are caught even if mutation events
+        don't fire (Angular sometimes batches with no childList add)
+   ================================================================ */
+(function () {
+  'use strict';
+
+  try { console.log('[op-custom] placeholder-injector v2 loaded — ' + new Date().toISOString()); } catch (e) {}
+
+  var PLACEHOLDERS = {
+    'estimatedTime':       'Enter work (e.g. 8h, 1d)',
+    'storyPoints':         'Enter work (e.g. 8h, 1d)',
+    'remainingTime':       'Enter remaining work (e.g. 4h)',
+    'percentageDone':      'Enter % complete (0 - 100)',
+    'derivedEstimatedTime':'Auto-calculated work',
+    'derivedRemainingTime':'Auto-calculated remaining'
+  };
+
+  // Native value setter (bypasses Angular's value property override)
+  var nativeInputValueSetter = null;
+  try {
+    nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLInputElement.prototype, 'value'
+    ).set;
+  } catch (e) {}
+
+  function clearValue(el) {
+    if (!el) return;
+    try {
+      if (nativeInputValueSetter) nativeInputValueSetter.call(el, '');
+      else el.value = '';
+      el.dispatchEvent(new Event('input',  { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    } catch (e) { try { el.value = ''; } catch (e2) {} }
+  }
+
+  function applyTo(root) {
+    if (!root || !root.querySelectorAll) return 0;
+    var found = 0;
+    Object.keys(PLACEHOLDERS).forEach(function (fieldName) {
+      var hint = PLACEHOLDERS[fieldName];
+      var selector = 'input[id*="' + fieldName + '" i], textarea[id*="' + fieldName + '" i], .' + fieldName + ' input, .' + fieldName + ' textarea';
+
+      try {
+        var els = root.querySelectorAll(selector);
+        if (els.length) {
+          try { console.log('[op-custom] placeholder-injector: found ' + els.length + ' element(s) for "' + fieldName + '"'); } catch (e) {}
+        }
+        els.forEach(function (el) {
+          // set placeholder if missing
+          if (!el.getAttribute('placeholder') || el.getAttribute('placeholder') === '-') {
+            el.setAttribute('placeholder', hint);
+            found++;
+            try { console.log('[op-custom] set placeholder on', el); } catch (e) {}
+          }
+          // clear "-" value (Angular often puts this for empty)
+          if (el.value === '-' || el.value === ' - ') {
+            clearValue(el);
+          }
+        });
+      } catch (e) {
+        try { console.warn('[op-custom] selector error for', fieldName, e); } catch (e2) {}
+      }
+    });
+    return found;
+  }
+
+  function startPlaceholderInjector() {
+    applyTo(document);
+
+    // Mutation observer for dynamic renders
+    try {
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          m.addedNodes.forEach(function (n) {
+            if (n.nodeType === 1) applyTo(n);
+          });
+          // also re-scan when attributes change (Angular reactive updates)
+          if (m.type === 'attributes' && m.target && m.target.nodeType === 1) {
+            applyTo(m.target.parentNode || m.target);
+          }
+        });
+      });
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['value', 'id', 'placeholder']
+      });
+    } catch (e) {}
+
+    // Belt-and-braces: poll every 500ms for the first 30s so we catch
+    // anything the observer misses (Angular sometimes patches values
+    // without firing childList mutations).
+    var ticks = 0;
+    var iv = setInterval(function () {
+      applyTo(document);
+      if (++ticks >= 60) clearInterval(iv);
+    }, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startPlaceholderInjector);
+  } else {
+    startPlaceholderInjector();
+  }
+})();

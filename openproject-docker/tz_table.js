@@ -522,3 +522,147 @@
 
   global.TzTable = { mount, version: "0.2.0" };
 })(window);
+
+
+/* ================================================================
+   TZ PLACEHOLDER INJECTOR
+   ----------------------------------------------------------------
+   Adds native `placeholder` attributes to Work / Remaining work /
+   % Complete inputs in WP create panels so the empty "-" is replaced
+   by readable hint text.
+   Hosted here because tz_table.js is one of the JS files actually
+   loaded by css_injector.rb on every page (openproject-custom.js
+   is bind-mounted but NO <script> tag points to it).
+   ================================================================ */
+(function () {
+  "use strict";
+  try { console.log("[tz] placeholder-injector loaded — " + new Date().toISOString()); } catch (e) {}
+
+  var PLACEHOLDERS = {
+    subject:              "What needs to be done?",
+    estimatedTime:        "e.g. 8h, 1d",
+    storyPoints:          "e.g. 8h, 1d",
+    remainingTime:        "e.g. 4h",
+    percentageDone:       "0 - 100",
+    derivedEstimatedTime: "auto",
+    derivedRemainingTime: "auto"
+  };
+
+  var nativeSetter = null;
+  try {
+    nativeSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+  } catch (e) {}
+
+  function clearDash(el) {
+    if (!el || (el.value !== "-" && el.value !== " - ")) return;
+    try {
+      if (nativeSetter) nativeSetter.call(el, ""); else el.value = "";
+      el.dispatchEvent(new Event("input",  { bubbles: true }));
+      el.dispatchEvent(new Event("change", { bubbles: true }));
+    } catch (e) { try { el.value = ""; } catch (e2) {} }
+  }
+
+  function applyTo(root) {
+    if (!root || !root.querySelectorAll) return;
+    Object.keys(PLACEHOLDERS).forEach(function (name) {
+      var hint = PLACEHOLDERS[name];
+      var selector =
+        'input[id*="' + name + '" i],' +
+        'textarea[id*="' + name + '" i],' +
+        '.' + name + ' input,' +
+        '.' + name + ' textarea';
+      var els;
+      try { els = root.querySelectorAll(selector); } catch (e) { return; }
+      els.forEach(function (el) {
+        var existing = el.getAttribute("placeholder");
+        if (!existing || existing === "-") {
+          el.setAttribute("placeholder", hint);
+        }
+        clearDash(el);
+      });
+    });
+  }
+
+  // DATE PLACEHOLDER REWRITE
+  // Replace any element / input whose text or placeholder reads
+  // "no start date - no finish date" (or variants) with the user's
+  // preferred wording. Scans broadly rather than relying on a
+  // specific field-name selector because the combined-date field
+  // renders the same text in different wrappers across views.
+  var TARGET_TEXT = "NO Start Date -No Finish Date";
+  var DATE_PATTERN = /^\s*no\s*start\s*date\s*-\s*no\s*(finish|due|end)\s*date\s*$/i;
+
+  function rewriteDatePlaceholder(root) {
+    if (!root || !root.querySelectorAll) return;
+
+    // 1) Scan ALL leaf elements for the date placeholder text.
+    //    This catches whatever wrapper OpenProject is using
+    //    (combined-date, datepicker trigger, displayed span,
+    //    button text, etc.) without depending on a specific class.
+    try {
+      // TreeWalker finds every text-bearing element fast
+      var walker = document.createTreeWalker(
+        root.nodeType === 1 ? root : document.body,
+        NodeFilter.SHOW_ELEMENT,
+        {
+          acceptNode: function (n) {
+            // Only consider leaf elements with text content (no element children)
+            if (n.children && n.children.length > 0) return NodeFilter.FILTER_SKIP;
+            var t = (n.textContent || "").trim();
+            if (t.length < 10 || t.length > 80) return NodeFilter.FILTER_SKIP;
+            return DATE_PATTERN.test(t) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+          }
+        }
+      );
+      var node;
+      while ((node = walker.nextNode())) {
+        try {
+          // Already rewritten? skip
+          if (node.textContent.trim() === TARGET_TEXT) continue;
+          node.textContent = TARGET_TEXT;
+        } catch (e) {}
+      }
+    } catch (e) {}
+
+    // 2) Input/textarea placeholders matching the same pattern
+    try {
+      var inputs = root.querySelectorAll('input[placeholder], textarea[placeholder]');
+      inputs.forEach(function (el) {
+        var ph = el.getAttribute("placeholder") || "";
+        if (DATE_PATTERN.test(ph.trim())) {
+          el.setAttribute("placeholder", TARGET_TEXT);
+        }
+      });
+    } catch (e) {}
+  }
+
+  function start() {
+    applyTo(document);
+    rewriteDatePlaceholder(document);
+    try {
+      var mo = new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          m.addedNodes.forEach(function (n) {
+            if (n.nodeType === 1) {
+              applyTo(n);
+              rewriteDatePlaceholder(n);
+            }
+          });
+        });
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    } catch (e) {}
+    var ticks = 0;
+    var iv = setInterval(function () {
+      applyTo(document);
+      rewriteDatePlaceholder(document);
+      if (++ticks >= 60) clearInterval(iv);
+    }, 500);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();

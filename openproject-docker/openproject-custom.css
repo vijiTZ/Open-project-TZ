@@ -11559,6 +11559,391 @@ body.controller-homescreen .homescreen--links--item {
   margin: 0 !important;
 }
 
+
+/* ================================================================
+   WP SPLIT-CREATE PANEL — PROJECT INPUT FIELD CLEAN LOOK
+   ----------------------------------------------------------------
+   KEEP the blue info banner ("Please choose a project…") around
+   the field as-is. ONLY change the input itself: full-width,
+   white, 1px gray border, 8px radius, chevron on the right —
+   matching the user-supplied reference.
+   ================================================================ */
+
+/* Project search input — clean white pill, single border, proper
+   text padding, chevron visible on the right. */
+
+/* OUTER wrappers — TRANSPARENT, no border (kills the double-border) */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .attributes-key-value--value-container,
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select {
+  width: 100% !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* INNER container — the ONLY element with border + radius + bg */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select-container {
+  width: 100% !important;
+  min-height: 36px !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+/* Inner value container — typed text sits here with proper padding
+   so it doesn't kiss the borders or overlap the chevron */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select-container .ng-value-container {
+  padding: 0 32px 0 12px !important;       /* 32px right = chevron room */
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 36px !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+}
+
+/* Placeholder text inside the project field — vertically centered.
+   ng-select uses .ng-placeholder for the "Type to search" hint. */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-placeholder {
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  font-size: 14px !important;
+  color: #6e7781 !important;
+}
+
+/* Typed text + the inner input also vertically centered */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-input,
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-input input,
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-value {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 36px !important;
+  line-height: 36px !important;
+}
+
+/* The actual search input inside the value container — let it
+   size naturally inside the value container (no width:100% which
+   was clipping typed text against the chevron column). */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select-container .ng-input,
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select-container .ng-input input {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  font-size: 14px !important;
+  color: #1f2328 !important;
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+/* HIDE the native ng-arrow-wrapper completely — we use our own
+   ::after chevron below, no duplicate. */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-arrow-wrapper {
+  display: none !important;
+  width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Focus state — blue ring like other inputs */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select.ng-select-focused .ng-select-container {
+  border-color: #0969da !important;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15) !important;
+}
+
+/* ALWAYS-VISIBLE chevron via ::after on the inner container.
+   No :has() exclusion — we already hide the native arrow above,
+   so this is the only chevron. */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select-container::after {
+  content: "" !important;
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 12px !important;
+  height: 12px !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3e%3cpath d='M3 4.5 L6 7.5 L9 4.5' stroke='%236e7781' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 12px 12px !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  display: block !important;
+}
+
+/* When dropdown opens, rotate our chevron */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group.-project-context .ng-select.ng-select-opened .ng-select-container::after {
+  transform: translateY(-50%) rotate(180deg) !important;
+}
+
+/* Hide the "OTHER" section heading + group on the WP split-create
+   panel. Matched by data-group-name (case-insensitive) so it works
+   across locales / capitalisation. */
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group[data-group-name="Other" i],
+html body.router--work-packages-partitioned-split-view-new
+.attributes-group[data-group-name="other" i] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+
+/* ================================================================
+   WP SPLIT-CREATE PANEL — DESCRIPTION ⋮ OVERFLOW POPUP POLISH
+   ----------------------------------------------------------------
+   The CKEditor toolbar's ⋮ button opens a floating panel with
+   extra items (check-list, image, blockquote, table, history,
+   undo, redo, help). Default layout looks broken (uneven spacing,
+   awkward border). Polish the panel to match the cleaner look
+   used by other CKEditor instances in the project.
+   ================================================================ */
+
+/* The floating panel that pops up when ⋮ is clicked */
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-toolbar.ck-toolbar_floating,
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-dropdown__panel .ck.ck-toolbar {
+  background: #ffffff !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.10) !important;
+  padding: 4px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+/* Each button inside the popup — consistent size and spacing */
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-toolbar.ck-toolbar_floating .ck-button,
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-toolbar.ck-toolbar_floating .ck-button:hover,
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button:hover {
+  background: #f3f4f6 !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-toolbar.ck-toolbar_floating .ck-button.ck-on,
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button.ck-on {
+  background: #eef4fc !important;
+  color: #0969da !important;
+}
+
+/* Icon size consistency inside the popup */
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-toolbar.ck-toolbar_floating .ck-button .ck-icon,
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button .ck-icon {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Separator between groups inside the popup */
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-toolbar.ck-toolbar_floating .ck-toolbar__separator,
+html body.router--work-packages-partitioned-split-view-new
+.ck.ck-dropdown__panel .ck.ck-toolbar .ck-toolbar__separator {
+  width: 1px !important;
+  height: 18px !important;
+  background: #e4e8f0 !important;
+  margin: 0 4px !important;
+}
+
+
+/* ================================================================
+   WP SPLIT-CREATE PANEL — PROJECT FIELD WIDTH + PLACEHOLDERS
+   ----------------------------------------------------------------
+   Scope: body.router--work-packages-partitioned-split-view-new
+          (the side panel opened from the +Create button on the
+           work packages list view).
+   Two issues to fix:
+     (1) The Project field renders as a tiny dropdown chevron only —
+         barely usable. Force it to span the full card width with
+         a proper search-input look.
+     (2) The Estimates fields (Work, Remaining work, % Complete)
+         render only "-" with no placeholder hint. Inject readable
+         placeholder text via ::after on the empty display fields
+         so users know what to enter.
+   ================================================================ */
+
+/* (1) Project field — full width inside the project-context card */
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .attributes-key-value--value-container,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .ng-select,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .ng-select-container,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .inline-edit--display-field,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .inline-edit--container,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .inline-edit--field {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  display: block !important;
+}
+
+/* The visual pill for the Project search — clean border, full width */
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .ng-select-container,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .inline-edit--display-field {
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  min-height: 36px !important;
+  padding: 6px 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* Show a placeholder hint when the Project field is empty */
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .inline-edit--display-field:empty::before,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.-project-context .inline-edit--display-field:has(.inline-edit--null-value)::before {
+  content: "Type to search a project…";
+  color: #6e7781;
+  font-size: 13px;
+}
+
+/* (2) Placeholder text for empty Work / Remaining work / % Complete
+       display fields. CORRECTED SELECTOR: OpenProject adds the
+       class `.-placeholder` to the SAME span that has
+       data-field-name when the field is empty (see
+       display-field-renderer.ts line 132-134). The "-" is the span's
+       textContent, no inner wrapper. So we:
+         1. Hide the "-" by setting font-size: 0 on the placeholder span
+         2. Inject our custom hint via ::before with restored font-size */
+
+/* Hide the bare "-" on empty fields (matching `.-placeholder` set by OP) */
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name="estimatedTime"],
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name="remainingTime"],
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name="storyPoints"],
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name*="percentageDone" i],
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name*="derivedEstimatedTime" i],
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name*="derivedRemainingTime" i],
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name="estimatedTime"],
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name="remainingTime"],
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name="storyPoints"],
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name*="percentageDone" i],
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name*="derivedEstimatedTime" i],
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name*="derivedRemainingTime" i] {
+  font-size: 0 !important;
+  color: transparent !important;
+  position: relative !important;
+}
+
+/* Work field placeholder */
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name="estimatedTime"]::before,
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name="storyPoints"]::before,
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name="estimatedTime"]::before,
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name="storyPoints"]::before {
+  content: "Enter work (e.g. 8h, 1d)" !important;
+  font-size: 13px !important;
+  color: #6e7781 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+
+/* Remaining work field placeholder */
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name="remainingTime"]::before,
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name="remainingTime"]::before {
+  content: "Enter remaining work (e.g. 4h)" !important;
+  font-size: 13px !important;
+  color: #6e7781 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+
+/* % Complete field placeholder */
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name*="percentageDone" i]::before,
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name*="percentageDone" i]::before {
+  content: "Enter % complete (0 – 100)" !important;
+  font-size: 13px !important;
+  color: #6e7781 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+
+/* Derived fields — auto-calculated, show explanatory placeholder */
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name*="derivedEstimatedTime" i]::before,
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name*="derivedEstimatedTime" i]::before {
+  content: "Auto-calculated work" !important;
+  font-size: 13px !important;
+  color: #6e7781 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+html body.router--work-packages-partitioned-split-view-new .inline-edit--display-field.-placeholder[data-field-name*="derivedRemainingTime" i]::before,
+html body.router--work-packages-full-create .inline-edit--display-field.-placeholder[data-field-name*="derivedRemainingTime" i]::before {
+  content: "Auto-calculated remaining" !important;
+  font-size: 13px !important;
+  color: #6e7781 !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+}
+
+/* When the field becomes an editable input (after click), force
+   the placeholder color to be readable. */
+html body.router--work-packages-partitioned-split-view-new [data-field-name="estimatedTime"] input::placeholder,
+html body.router--work-packages-partitioned-split-view-new [data-field-name="storyPoints"] input::placeholder,
+html body.router--work-packages-partitioned-split-view-new [data-field-name="remainingTime"] input::placeholder,
+html body.router--work-packages-partitioned-split-view-new [data-field-name*="percentageDone" i] input::placeholder,
+html body.router--work-packages-full-create [data-field-name="estimatedTime"] input::placeholder,
+html body.router--work-packages-full-create [data-field-name="storyPoints"] input::placeholder,
+html body.router--work-packages-full-create [data-field-name="remainingTime"] input::placeholder,
+html body.router--work-packages-full-create [data-field-name*="percentageDone" i] input::placeholder {
+  color: #6e7781 !important;
+  opacity: 1 !important;
+}
+
 /* News card body — title + meta line + body, with consistent spacing */
 body.controller-homescreen .widget-box .news h3,
 body.controller-homescreen .widget-box .news-title {
