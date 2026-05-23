@@ -10455,9 +10455,8 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
          stacks single-column safely. */
   body.router--work-packages-full-create #content .work-package--single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 20px !important;
-    row-gap: 0 !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
@@ -10628,11 +10627,10 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
 @media (min-width: 1024px) {
   body.router--work-packages-full-create #content .work-package--single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
     grid-template-rows: auto !important;
     grid-auto-rows: auto !important;
-    column-gap: 20px !important;
-    row-gap: 20px !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
@@ -10700,21 +10698,14 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
      │               │  Attachments │
      └───────────────┴──────────────┘
 
-   The browser distributes cards across columns to balance total
-   column height (`column-fill: balance`), so the left/right
-   placement may differ slightly from the diagram depending on
-   actual card heights.
+   Neutralized: this older experiment no longer uses CSS columns.
    ================================================================ */
 @media (min-width: 1024px) {
-  /* (1) Switch from grid to multi-column. `column-fill: balance`
-         tries to equalize column heights; `break-inside: avoid`
-         keeps each card whole.                                    */
+  /* (1) Neutralized legacy layout experiment. */
   body.router--work-packages-full-create #content .work-package--single-view {
-    display: block !important;
-    column-count: 2 !important;
-    column-gap: 20px !important;
-    column-fill: balance !important;
-    grid-template-columns: unset !important;
+    display: grid !important;
+    gap: 16px !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
     grid-template-rows: unset !important;
   }
 
@@ -10737,8 +10728,6 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
   /* (3) Project-context banner spans BOTH columns (full-width
          above the columnar flow).                                */
   body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
-    column-span: all !important;
-    -webkit-column-span: all !important;
     width: 100% !important;
     margin: 0 0 20px 0 !important;
   }
@@ -10850,10 +10839,9 @@ body.router--work-packages-full-create #content button.-primary svg {
   /* (A) Outer container as 2-column grid */
   body.router--work-packages-full-create #content .work-package--single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
     grid-auto-rows: auto !important;
-    column-gap: 20px !important;
-    row-gap: 20px !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
@@ -11294,15 +11282,16 @@ html body.router--work-packages-full-create #content .work-package--single-view 
   /* (1) The custom Angular element becomes the actual grid */
   html body.router--work-packages-full-create #content wp-single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 20px !important;
-    row-gap: 20px !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
   /* (2) Inner div is transparent so its children join the parent grid */
   html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
     display: contents !important;
+    align-items: start !important;
+    align-content: start !important;
   }
 
   /* (3) Card placement — now all on the SAME grid */
@@ -11432,7 +11421,7 @@ html body.router--work-packages-full-create #content .work-package--single-view 
   html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
     align-self: start !important;
     height: auto !important;
-    min-height: 0 !important;
+    min-height: unset !important;
     max-height: none !important;
   }
 }
@@ -12433,67 +12422,637 @@ op-github-pull-request-state .op-pull-request-state:hover {
 
 
 /* ================================================================
-   WP CREATE — FINAL MASONRY OVERRIDE (CSS COLUMNS on wp-single-view)
-   ----------------------------------------------------------------
-   Earlier blocks make wp-single-view a 2-column GRID, which forces
-   each row to the height of its tallest card and leaves empty space
-   below short cards (Basic info, People, Attachments).
-
-   This final block at end-of-file wins the cascade and replaces the
-   grid with a CSS multi-column layout so cards pack tightly within
-   each column independently.
-
-   Key points:
-     • `wp-single-view` becomes `display: block` + `column-count: 2`
-     • `.work-package--single-view` stays `display: contents` so its
-       children become direct participants in wp-single-view's column
-       flow (alongside the sibling `.work-packages--storages`).
-     • Every card is `break-inside: avoid` so it never splits mid-card.
-     • Grid placement rules from earlier blocks are unset/neutralised.
-     • Project-context banner spans both columns at the top.
+   WP CREATE - RECOVERY GRID OVERRIDE
+   Scope: body.router--work-packages-full-create only.
    ================================================================ */
-@media (min-width: 1024px) {
+html body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container,
+html body.router--work-packages-full-create #content .work-packages--toolbar-container,
+html body.router--work-packages-full-create #content .PageHeader,
+html body.router--work-packages-full-create #content .wp-new-top-row {
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+  min-height: unset !important;
+  height: auto !important;
+  padding-bottom: 0 !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container .toolbar,
+html body.router--work-packages-full-create #content .toolbar-container .title-container,
+html body.router--work-packages-full-create #content .PageHeader .PageHeader-titleArea {
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container + *,
+html body.router--work-packages-full-create #content .work-packages--toolbar-container + *,
+html body.router--work-packages-full-create #content .PageHeader + *,
+html body.router--work-packages-full-create #content .wp-new-top-row + * {
+  margin-top: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+  grid-template-rows: none !important;
+  grid-template-areas: none !important;
+  grid-auto-rows: min-content !important;
+  grid-auto-flow: row !important;
+  gap: 16px !important;
+  align-items: start !important;
+  align-content: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  column-count: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
+  display: contents !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  align-self: start !important;
+  align-content: start !important;
+  justify-content: flex-start !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  column-count: auto !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-map,
+html body.router--work-packages-full-create #content wp-single-view .attributes-key-value,
+html body.router--work-packages-full-create #content wp-single-view .wp-attribute-group--attribute,
+html body.router--work-packages-full-create #content wp-single-view op-editable-attribute-field,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--container,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--display-container,
+html body.router--work-packages-full-create #content wp-single-view .single-attribute,
+html body.router--work-packages-full-create #content wp-single-view .wp-edit-field,
+html body.router--work-packages-full-create #content wp-single-view ndc-dynamic,
+html body.router--work-packages-full-create #content wp-single-view wp-attribute-group,
+html body.router--work-packages-full-create #content wp-single-view op-wp-form-group,
+html body.router--work-packages-full-create #content wp-single-view op-form-group,
+html body.router--work-packages-full-create #content wp-single-view .op-tab-content,
+html body.router--work-packages-full-create #content wp-single-view op-attachments,
+html body.router--work-packages-full-create #content wp-single-view .op-attachments,
+html body.router--work-packages-full-create #content wp-single-view .op-file-section {
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  align-self: start !important;
+  align-content: start !important;
+  justify-content: flex-start !important;
+  flex-grow: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper {
+  grid-column: 1 / 2 !important;
+  grid-row: 1 / 2 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.description-group {
+  grid-column: 1 / 2 !important;
+  grid-row: 2 / 3 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+  grid-column: 1 / 2 !important;
+  grid-row: 3 / 4 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context {
+  grid-column: 2 / 3 !important;
+  grid-row: 1 / 2 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="People" i] {
+  grid-column: 2 / 3 !important;
+  grid-row: 2 / 3 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Properties" i] {
+  grid-column: 2 / 3 !important;
+  grid-row: 3 / 4 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  grid-column: 1 / -1 !important;
+  grid-row: 4 / 5 !important;
+  position: relative !important;
+  padding: 16px 18px !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header,
+html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container,
+html body.router--work-packages-full-create #content .attributes-group::before,
+html body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
+html body.router--work-packages-full-create #content .attributes-group.description-group::before {
+  margin-bottom: 12px !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group {
+  padding: 16px 18px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group:not(.description-group) .attributes-map {
+  grid-template-columns: 1fr !important;
+  grid-auto-rows: min-content !important;
+  row-gap: 10px !important;
+  align-items: start !important;
+  align-content: start !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.-project-context .wp-project-context--warning {
+  margin: 0 0 10px 0 !important;
+  padding: 10px 12px !important;
+  line-height: 1.4 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck-editor,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-editor,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-toolbar,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-editor__main,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-editor__main {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: unset !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-content,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck-editor__editable,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck-editor__editable_inline,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-content,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor__editable {
+  width: 100% !important;
+  min-height: 120px !important;
+  height: auto !important;
+  max-height: none !important;
+  padding: 12px 14px !important;
+  line-height: 1.5 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > .op-tab-content--header,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-tab-content--header {
+  position: static !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: unset !important;
+  margin: -16px -18px 12px -18px !important;
+  padding: 12px 18px !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages op-attachments,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages op-attachment-list,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachment-list,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages op-attachments-upload,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments--upload-section {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: unset !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  text-align: left !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > *,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > * > *:not(.op-tab-content--header) {
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > div {
+  display: block !important;
+  width: 100% !important;
+  min-height: unset !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--drop-box,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--drop-box *,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments--drop-box,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments--drop-box *,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--empty-list-hint {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--actions,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages [class*="op-file-section--actions"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  min-height: unset !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 8px !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages::after,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-upload--max-size,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages [class*="max-size"],
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages [class*="max_size"] {
+  position: absolute !important;
+  right: 18px !important;
+  bottom: 16px !important;
+  margin: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  color: #64748b !important;
+  white-space: nowrap !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages input[type="file"],
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages #attachment_files {
+  display: block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  min-height: unset !important;
+  height: auto !important;
+  margin: 0 !important;
+  font-size: 12.5px !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages input[type="file"]::file-selector-button,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages input[type="file"]::-webkit-file-upload-button {
+  height: 30px !important;
+  padding: 0 12px !important;
+  margin-right: 10px !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name="Costs" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name="Other" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name="Budget" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Cost" i] {
+  display: none !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container_bottom,
+html body.router--work-packages-full-create #content .work-packages--panel-inner-actions,
+html body.router--work-packages-full-create #content .work-packages--action-buttons,
+html body.router--work-packages-full-create #content [class*="action-buttons"],
+html body.router--work-packages-full-create #content [class*="submit-buttons"],
+html body.router--work-packages-full-create #content .work-packages--edit-actions,
+html body.router--work-packages-full-create #content .work-packages--buttons {
+  display: grid !important;
+  grid-auto-flow: column !important;
+  justify-content: end !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  margin-top: 16px !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  float: none !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--edit-actions,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--buttons {
+  grid-column: 2 / 3 !important;
+  grid-row: 5 / 6 !important;
+  margin-top: 0 !important;
+}
+
+@media (max-width: 1023px) {
   html body.router--work-packages-full-create #content wp-single-view {
-    display: block !important;
-    column-count: 2 !important;
-    column-gap: 20px !important;
-    column-fill: balance !important;
-    grid-template-columns: unset !important;
-    grid-template-rows: unset !important;
-    grid-auto-rows: unset !important;
-    grid-auto-flow: unset !important;
+    grid-template-columns: 1fr !important;
   }
 
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
-    display: contents !important;
-  }
-
-  /* Every card: opt out of grid placement, become a column-flow block,
-     never break across columns. Covers cards inside the inner
-     .work-package--single-view (which is display: contents) AND the
-     sibling .work-packages--storages.                                */
   html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group:not(.-project-context),
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--edit-actions,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--buttons {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+}
+
+/* ================================================================
+   WP CREATE - RENDERED WRAPPER SPACING FIX
+   Scope: body.router--work-packages-full-create only.
+   The cards live inside .work-package--single-view, while attachments
+   are a sibling. Keep the route grid host, but let each visual column
+   stack independently so unequal card heights cannot create blank rows.
+   ================================================================ */
+html body.router--work-packages-full-create #content edit-form,
+html body.router--work-packages-full-create #content .work-package--new-state,
+html body.router--work-packages-full-create #content .work-packages--new,
+html body.router--work-packages-full-create #content .wp-new-create-form,
+html body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  display: block !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  align-content: start !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content .work-package--new-state.toolbar-container,
+html body.router--work-packages-full-create #content .work-packages--new.toolbar-container,
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: unset !important;
+  margin: 0 0 16px 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+  gap: 16px !important;
+  align-items: start !important;
+  align-content: start !important;
+  grid-auto-rows: min-content !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view[data-selector="wp-single-view"],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
+  display: flow-root !important;
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  align-self: start !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view::after {
+  content: "" !important;
+  display: block !important;
+  clear: both !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+  align-self: start !important;
+  place-self: start stretch !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.description-group,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+  float: left !important;
+  clear: left !important;
+  width: calc(63.4615% - 10.1538px) !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="People" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Properties" i] {
+  float: right !important;
+  clear: right !important;
+  width: calc(36.5385% - 5.8462px) !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-info-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > ndc-dynamic:empty {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-map,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group > div:not(.attributes-group--header),
+html body.router--work-packages-full-create #content wp-single-view ndc-dynamic,
+html body.router--work-packages-full-create #content wp-single-view wp-attribute-group,
+html body.router--work-packages-full-create #content wp-single-view op-wp-form-group,
+html body.router--work-packages-full-create #content wp-single-view op-form-group,
+html body.router--work-packages-full-create #content wp-single-view op-editable-attribute-field,
+html body.router--work-packages-full-create #content wp-single-view .single-attribute,
+html body.router--work-packages-full-create #content wp-single-view .wp-edit-field,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--container,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--display-container {
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  align-self: start !important;
+  align-content: start !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group:not(.description-group) .attributes-map {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-auto-rows: min-content !important;
+  row-gap: 10px !important;
+  align-items: start !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck-editor,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-editor,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-toolbar,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-editor__main,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-editor__main {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: unset !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck.ck-content,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck-editor__editable,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group .ck-editor__editable_inline,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-content,
+html body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor__editable {
+  width: 100% !important;
+  min-height: 120px !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  clear: both !important;
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 0 0 0 0 !important;
+  padding: 16px 18px !important;
+  align-self: start !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > div,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages ndc-dynamic,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages op-attachments,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages op-attachments-upload,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments--upload-section,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachment-list {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--drop-box,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--drop-box *,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments--drop-box,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-attachments--drop-box *,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-file-section--empty-list-hint {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-edit-actions-bar,
+html body.router--work-packages-full-create #content wp-edit-actions-bar > .work-packages--edit-actions,
+html body.router--work-packages-full-create #content .work-packages--edit-actions {
+  position: static !important;
+  inset: auto !important;
+  bottom: auto !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 16px 0 0 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  clear: both !important;
+}
+
+@media (max-width: 1023px) {
+  html body.router--work-packages-full-create #content wp-single-view,
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view[data-selector="wp-single-view"] {
     display: block !important;
-    width: 100% !important;
-    break-inside: avoid !important;
-    -webkit-column-break-inside: avoid !important;
-    page-break-inside: avoid !important;
-    grid-column: unset !important;
-    grid-row: unset !important;
-    margin: 0 0 20px 0 !important;
-    align-self: unset !important;
   }
 
-  /* Project-context banner spans both columns at the top */
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context {
-    column-span: all !important;
-    -webkit-column-span: all !important;
-    display: block !important;
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    float: none !important;
+    clear: both !important;
     width: 100% !important;
-    grid-column: unset !important;
-    grid-row: unset !important;
-    margin: 0 0 20px 0 !important;
+    margin-bottom: 16px !important;
   }
 }
