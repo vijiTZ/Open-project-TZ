@@ -11966,3 +11966,28 @@ body.controller-homescreen .widget-boxes .widget-box {
               0 1px 3px rgba(27, 31, 36, 0.06)) !important;
 }
 
+
+/* ================================================================
+   HIDE ONLY THE BREADCRUMB-AREA "EXPAND" TOGGLE
+   ----------------------------------------------------------------
+   Removes the small "sidebar-expand" icon that sits in the
+   breadcrumb area when the main menu is collapsed.
+   KEEPS the "collapse" icon inside the main menu itself so the
+   user can still collapse the sidebar from within the sidebar.
+   The button is rendered by
+   app/components/open_project/common/main_menu_toggle_component.rb
+   with IDs `menu-toggle--expand-button` (small, breadcrumb area)
+   and `menu-toggle--collapse-button` (larger, inside the menu).
+   ================================================================ */
+html body #menu-toggle--expand-button,
+html body button[aria-label="Expand project menu" i] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
