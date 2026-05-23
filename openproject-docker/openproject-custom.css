@@ -10795,4 +10795,789 @@ body.router--work-packages-full-create #content button.-primary svg {
 }
 
 
+/* ================================================================
+   FIX A — CARD HEADER STRIP MUST FILL THE WHOLE CARD WIDTH
+   ----------------------------------------------------------------
+   Earlier rule (line 8659) forces `width: 100%` on the header,
+   which clamps it to the grid cell's content width. Combined with
+   `margin: 0 -24px` the right edge ends 24px short → the gray fill
+   in People / Description / Estimates / Details cards doesn't reach
+   the card border. "Basic information" uses a ::before pseudo
+   on a non-grid card so it isn't affected.
+
+   Fix: let the negative margin do the work — drop width:100% and
+   set width:auto so the box can extend past the grid cell.
+   ================================================================ */
+
+html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header,
+html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container,
+html body.router--work-packages-full-create #content .attributes-group::before,
+html body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
+html body.router--work-packages-full-create #content .attributes-group.description-group::before {
+  width: auto !important;
+  box-sizing: border-box !important;
+  /* horizontal margin matches each card's 24px side padding so the
+     gray strip reaches both card borders edge-to-edge */
+  margin-left: -24px !important;
+  margin-right: -24px !important;
+  margin-top: -22px !important;
+  margin-bottom: 18px !important;
+  padding: 14px 22px !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  display: block !important;
+  grid-column: 1 / -1 !important;
+}
+
+/* Attachments card header gets the same treatment */
+html body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
+  width: auto !important;
+  box-sizing: border-box !important;
+  margin: -22px -24px 18px -24px !important;
+  padding: 14px 22px !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  display: block !important;
+}
+
+
+/* REMOVE OUTER EXTRA BORDER + SIZE THE WRAPPER SO THE CHEVRON CAN
+   ANCHOR TO IT. inline-block + explicit width/height gives the
+   ::after a real box to position against. */
+
+html body.router--work-packages-full-create
+.wp-new-top-row--element {
+
+  position: relative !important;
+  display: inline-block !important;
+  width: 130px !important;
+  height: 36px !important;
+  vertical-align: middle !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* KEEP ONLY INNER CLEAN BUTTON — applied to BOTH the edit-mode
+   ng-select-container AND the display-mode inline-edit field so
+   the pill looks identical before and after click. Also normalises
+   text-transform so "TASK" renders as "Task". */
+
+html body.router--work-packages-full-create
+.wp-new-top-row--element .ng-select-container,
+html body.router--work-packages-full-create
+.wp-new-top-row--element .inline-edit--display-field,
+html body.router--work-packages-full-create
+.wp-new-top-row--element .inline-edit--container,
+html body.router--work-packages-full-create
+.wp-new-top-row--element .inline-edit--field {
+
+  width: 100% !important;
+  height: 36px !important;
+
+  border: 1px solid #cfd6dd !important;
+  border-radius: 8px !important;
+  background: #f8f9fb !important;
+
+  padding: 0 32px 0 14px !important;
+
+  display: flex !important;
+  align-items: center !important;
+
+  box-shadow: none !important;
+
+  /* normalise case so "TASK" renders as "Task" */
+  text-transform: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #1f2328 !important;
+}
+
+/* REMOVE DEFAULT ARROW — also catch every other caret/arrow
+   icon ng-select / inline-edit can render, so only our single
+   SVG chevron remains. */
+
+html body.router--work-packages-full-create .wp-new-top-row .ng-arrow,
+html body.router--work-packages-full-create .wp-new-top-row .ng-arrow-wrapper,
+html body.router--work-packages-full-create .wp-new-top-row .ng-clear,
+html body.router--work-packages-full-create .wp-new-top-row .ng-clear-wrapper,
+html body.router--work-packages-full-create .wp-new-top-row [class*="caret"],
+html body.router--work-packages-full-create .wp-new-top-row [class*="icon-arrow-down"],
+html body.router--work-packages-full-create .wp-new-top-row [class*="icon-arrow1-down"],
+html body.router--work-packages-full-create .wp-new-top-row [class*="icon-show-more"],
+html body.router--work-packages-full-create .wp-new-top-row .inline-edit--display-field svg,
+html body.router--work-packages-full-create .wp-new-top-row .inline-edit--display-field i {
+
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  visibility: hidden !important;
+}
+
+
+/* PUSH ONLY THE "TASK" PILL TO THE FAR RIGHT — surgical move,
+   nothing else shifts. The Task selector is taken out of normal
+   flow via position:absolute, so the "New" pill and every other
+   toolbar element keep their original positions. */
+
+/* Anchor: the toolbar/title-container — needs position:relative
+   so the absolute Task pill positions against it, not the page. */
+html body.router--work-packages-full-create .toolbar,
+html body.router--work-packages-full-create .toolbar .title-container {
+  position: relative !important;
+}
+
+/* Task pill — sits inline with the fullscreen icon and ⋯ menu
+   on the right edge of the toolbar. Small gap before fullscreen. */
+html body.router--work-packages-full-create .wp-new-top-row .work-packages--type-selector {
+  position: absolute !important;
+  right: 120px !important;    /* clears the fullscreen + ⋯ icons */
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  z-index: 5 !important;
+}
+
+/* Anchor against the OUTER toolbar — make sure the toolbar (not
+   the inner title-container) is the positioning context so the
+   Task pill measures "right" against the toolbar's right edge,
+   right next to the fullscreen + ⋯ icons. */
+html body.router--work-packages-full-create .toolbar .title-container {
+  position: static !important;
+}
+html body.router--work-packages-full-create .toolbar {
+  position: relative !important;
+}
+
+/* CUSTOM CHEVRON */
+
+html body.router--work-packages-full-create
+.wp-new-top-row--element::after {
+
+  content: "" !important;
+
+  position: absolute !important;
+
+  right: 12px !important;
+  top: 50% !important;
+
+  width: 12px !important;
+  height: 12px !important;
+
+  transform: translateY(-50%) !important;
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%236b7280' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+
+  pointer-events: none !important;
+}
+
+
+/* ================================================================
+   WP CREATE — MOVE PROJECT FIELD TO THE TOP OF THE FORM
+   ----------------------------------------------------------------
+   The .attributes-group.-project-context (the "Please choose a
+   project…" banner + Project search dropdown) currently lands on
+   `grid-row: auto`, which puts it at the BOTTOM of the grid.
+   Pin it to row 1, full-width, and shift every other card down
+   by one row so the new order at ≥1024px is:
+     Row 1: Project field (full width)
+     Row 2: Basic information | Description
+     Row 3: People            | Estimates and progress
+     Row 4: Details           | Attachments
+   Below 1024px the cards already stack single-column; order:0 on
+   project-context puts it first there too.
+   ================================================================ */
+
+/* (mobile / single-column) — project-context first via flex order
+   in case the grid layout isn't active */
+html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+  order: -10 !important;
+}
+
+@media (min-width: 1024px) {
+  /* Row 1 — Project field full-width at the top */
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 / 2 !important;
+    order: -10 !important;
+    margin-top: 0 !important;
+  }
+
+  /* Row 2 — Basic information (col 1) | Description (col 2) */
+  html body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+  }
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    grid-column: 2 / 3 !important;
+    grid-row: 2 / 3 !important;
+  }
+
+  /* Row 3 — People (col 1) | Estimates (col 2) */
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 / 4 !important;
+  }
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 4 !important;
+  }
+
+  /* Row 4 — Details (col 1) | Attachments (col 2) */
+  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 4 / 5 !important;
+  }
+  html body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: 2 / 3 !important;
+    grid-row: 4 / 5 !important;
+  }
+}
+
+
+
+/* ================================================================
+   WP CREATE — PIN ATTACHMENTS NEXT TO DETAILS (row 4, col 2)
+   ----------------------------------------------------------------
+   Root cause of earlier rules not working: Attachments
+   (.work-packages--storages) is NOT a child of
+   .work-package--single-view — it's a SIBLING inside the
+   <wp-single-view> Angular host element. So grid-row / grid-column
+   on .work-packages--storages had no effect (its parent wasn't a
+   grid).
+   Fix:
+     1. Make <wp-single-view> itself the grid container.
+     2. Make .work-package--single-view `display: contents` so all
+        its attribute-group children become direct children of the
+        wp-single-view grid alongside .work-packages--storages.
+     3. Pin every card to its (row, col), now including Attachments
+        next to Details.
+   ================================================================ */
+
+@media (min-width: 1024px) {
+  /* (1) The custom Angular element becomes the actual grid */
+  html body.router--work-packages-full-create #content wp-single-view {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 20px !important;
+    row-gap: 20px !important;
+    align-items: start !important;
+  }
+
+  /* (2) Inner div is transparent so its children join the parent grid */
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
+    display: contents !important;
+  }
+
+  /* (3) Card placement — now all on the SAME grid */
+
+  /* Row 1: Project (full-width) */
+  html body.router--work-packages-full-create #content wp-single-view .attributes-group.-project-context {
+    grid-column: 1 / -1 !important;
+    grid-row: 1 / 2 !important;
+  }
+
+  /* Row 2: Basic information (col 1) | Description (col 2) */
+  html body.router--work-packages-full-create #content wp-single-view .wp-new--subject-wrapper {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+  }
+  html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group {
+    grid-column: 2 / 3 !important;
+    grid-row: 2 / 3 !important;
+  }
+
+  /* Row 3: People (col 1) | Estimates (col 2) */
+  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="People" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 / 4 !important;
+  }
+  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Estimate" i],
+  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Progress" i] {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 4 !important;
+  }
+
+  /* Row 4: Details (col 1) | Attachments (col 2) ← THE FIX */
+  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Detail" i] {
+    grid-column: 1 / 2 !important;
+    grid-row: 4 / 5 !important;
+  }
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    grid-column: 2 / 3 !important;
+    grid-row: 4 / 5 !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    align-self: start !important;
+    /* Same card chrome as the other cards so the header strip
+       has a card to pull its edges to. */
+    background: #ffffff !important;
+    border: 1px solid #e4e8f0 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    padding: 22px 24px !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  /* Attachments card needs room at the top for the absolutely-
+     positioned header strip below. */
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    padding-top: 64px !important;   /* 14 + ~22 + 14 + breathing = ~50, +14 safety */
+  }
+
+  /* Attachments header strip — pinned to the card's top edge with
+     absolute positioning so it ignores the @if wrapper <div> that
+     was creating the white gap. Full-width via left:0 right:0. */
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > .op-tab-content--header,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-tab-content--header {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 14px 22px !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    background-color: #f6f8fa !important;
+    border-bottom: 1px solid #e4e8f0 !important;
+    color: #1a1a2e !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    z-index: 1 !important;
+  }
+
+  /* The text inside the strip — plain, sentence-case */
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-tab-content--header-text {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+
+/* ================================================================
+   WP CREATE — NATURAL CARD HEIGHTS (NO ROW-STRETCH)
+   ----------------------------------------------------------------
+   Scope: body.router--work-packages-full-create + <wp-single-view>
+          at ≥1024px. Keeps the 2-column grid and pinned pairings
+          (Basic+Description, People+Estimates, Details+Attachments)
+          but removes the row-stretch so each card uses its
+          natural content height.
+   Why: smaller cards (People, Attachments) were being stretched
+   to match the tallest card in their row, leaving empty whitespace
+   below their last field. With these overrides the row height is
+   still max(left, right) but each card itself is min-content
+   tall, top-aligned — no more padding empty space.
+   Card chrome (border, radius, header strip, padding) untouched.
+   ================================================================ */
+@media (min-width: 1024px) {
+  /* Outer grid container — auto rows, top alignment, no stretching */
+  html body.router--work-packages-full-create #content wp-single-view {
+    grid-template-rows: none !important;
+    grid-auto-rows: min-content !important;
+    align-items: start !important;
+    align-content: start !important;
+  }
+
+  /* Every card: opt out of cross-axis stretch, collapse to content.
+     Covers BOTH children of the inner .work-package--single-view
+     (which is display: contents) AND .work-packages--storages
+     which sits as a direct child of <wp-single-view>. */
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > *,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    align-self: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+  }
+}
+
+
+/* ================================================================
+   WP CREATE — STYLE THE PROJECT CARD LIKE "BASIC INFORMATION"
+   ----------------------------------------------------------------
+   Goal: the .attributes-group.-project-context card gets the same
+   chrome as the Basic information card — white background, 1px
+   border, 10px radius, subtle shadow, and a gray header strip
+   reading "Project" pulled to the card edges, mirroring how
+   .wp-new--subject-wrapper renders.
+   ================================================================ */
+
+/* Card shell — match Basic information */
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context {
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  padding: 22px 24px !important;
+  margin: 0 0 20px 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+/* Header strip "Project" — pulled to the card edges, identical
+   to the Basic information header. The card has no DOM h3 of
+   its own, so we inject the label via ::before. */
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context::before {
+  content: "Project" !important;
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  margin: -22px -24px 18px -24px !important;
+  padding: 14px 22px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+  box-sizing: border-box !important;
+  grid-column: 1 / -1 !important;
+}
+
+/* Soften the warning banner inside the card so it doesn't fight
+   the card chrome — keep it informational but visually lighter. */
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context .wp-project-context--warning {
+  background: #f1f6fb !important;
+  border: 1px solid #d9e6f5 !important;
+  border-radius: 6px !important;
+  padding: 10px 12px !important;
+  margin: 0 0 14px 0 !important;
+  font-size: 13px !important;
+  color: #2b5278 !important;
+  line-height: 1.45 !important;
+}
+
+/* Project field label + select layout — match the rest of the form */
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context .attributes-key-value {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context .attributes-key-value--key {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #1a1a2e !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content
+.work-package--single-view > .attributes-group.-project-context .ng-select .ng-select-container {
+  width: 100% !important;
+  border: 1px solid #d0d7de !important;
+  border-radius: 8px !important;
+  min-height: 36px !important;
+}
+
+
+/* ================================================================
+   WP CREATE — DESCRIPTION EDITOR FULL CLEANUP
+   ----------------------------------------------------------------
+   Scope: body.router--work-packages-full-create #content
+          .attributes-group.description-group
+   Goals:
+     (1) Toolbar = ONE clean row (no wrapping, items overflow to
+         CKEditor's built-in ⋮ menu just like the New-project page).
+     (2) Remove duplicate ⌄ chevrons next to dropdowns.
+     (3) Hide the extras the WP description has but the New-project
+         description doesn't (Choose File, image, undo, redo, help)
+         so the toolbar fits on one row.
+     (4) Editable area shows ONLY where you type — no toolbar items
+         leaking into the content area.
+   ================================================================ */
+
+/* (1) Toolbar = one row. Items that don't fit go into CKEditor's
+       built-in overflow (⋮) at the right end. */
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar__items {
+  flex-wrap: nowrap !important;
+  overflow-x: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* (2) Kill the duplicate dropdown chevron on every split-button
+       in the toolbar. Both the .ck-splitbutton__arrow sub-button
+       and the legacy .ck-dropdown__arrow svg are hidden — only the
+       label's own caret stays. */
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-splitbutton__arrow,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar button.ck-splitbutton__arrow,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-splitbutton > button + button,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button.ck-dropdown__button + .ck-button.ck-dropdown__arrow,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button.ck-splitbutton__action + .ck-button.ck-splitbutton__arrow {
+  display: none !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* (3) Hide extras that don't exist on the New-project page so the
+       toolbar fits in a single row: Choose File, image upload,
+       undo, redo, find/replace, help, source. */
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar input[type="file"],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar label[for*="file" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar form.op-attachment-file-list--form,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-file-dialog-button,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="image" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="upload" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="undo" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="redo" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="find" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="replace" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="help" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="source" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="undo" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="redo" i],
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="image" i] {
+  display: none !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  visibility: hidden !important;
+}
+
+/* (4) Editable area must be the only place content shows — no
+       toolbar items leaking below the text. The editable area
+       starts where the toolbar ends. */
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-editor__main {
+  display: block !important;
+  position: relative !important;
+}
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck.ck-content,
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck-editor__editable_inline {
+  min-height: 140px !important;
+  padding: 12px 14px !important;
+  background: #ffffff !important;
+  border: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  color: #1f2328 !important;
+}
+html body.router--work-packages-full-create #content
+.attributes-group.description-group .ck-editor__editable.ck-focused {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ============================================================
+   HOMESCREEN CARDS — MATCH MY PAGE WIDGETS
+   Removes the "flat" look (OpenProject removes shadow on home
+   cards by default in _homescreen.sass:31). Restores the same
+   white card + border + shadow + radius used by My Page widgets
+   so both pages share the same visual language. Also aligns
+   inner content (buttons stick to bottom -> cards in a row line
+   up correctly).
+   ============================================================ */
+
+body.controller-homescreen .widget-boxes.-flex {
+  align-items: stretch !important;
+  gap: var(--stack-gap-normal, 16px) !important;
+}
+
+/* Card shell — identical to My Page .widget-box */
+body.controller-homescreen .widget-boxes .widget-box {
+  background: var(--body-background, #ffffff) !important;
+  border: 1px solid var(--borderColor-default, #d0d7de) !important;
+  border-radius: var(--borderRadius-medium, 8px) !important;
+  box-shadow: var(--shadow-resting-small,
+              0 1px 0 rgba(27, 31, 36, 0.04),
+              0 1px 3px rgba(27, 31, 36, 0.06)) !important;
+  padding: 0 !important;                   /* header/body own their padding */
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 220px;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+body.controller-homescreen .widget-boxes .widget-box:hover {
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08),
+              0 2px 6px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Header strip — same bold title row as My Page widgets */
+body.controller-homescreen .widget-box .op-widget-box--header,
+body.controller-homescreen .widget-box > h3:first-child,
+body.controller-homescreen .widget-box > header {
+  padding: 14px 20px !important;
+  margin: 0 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: var(--fgColor-default, #1f2328) !important;
+  border-bottom: 1px solid transparent;
+  background: transparent !important;
+}
+
+/* Body — flex-column so trailing button row can be pushed to bottom */
+body.controller-homescreen .widget-box .op-widget-box--body,
+body.controller-homescreen .widget-box > div:not(.op-widget-box--header) {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  padding: 0 20px 20px 20px !important;
+  overflow: visible !important;
+}
+
+/* Italic helper text ("Newest visible projects in this instance.") */
+body.controller-homescreen .widget-box--additional-info {
+  margin: 0 0 12px 0 !important;
+  color: var(--fgColor-muted, #656d76);
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* Arrow-link lists (Account settings, Administration, Projects) */
+body.controller-homescreen .widget-box--arrow-links {
+  list-style: none !important;
+  margin: 0 0 12px 0 !important;
+  padding: 0 !important;
+}
+
+body.controller-homescreen .widget-box--arrow-links li {
+  padding: 6px 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+body.controller-homescreen .widget-box--arrow-links li a {
+  color: var(--accent-color, #0969da);
+  text-decoration: none;
+}
+
+body.controller-homescreen .widget-box--arrow-links li a:hover {
+  text-decoration: underline;
+}
+
+body.controller-homescreen .widget-box--arrow-links li small {
+  color: var(--fgColor-muted, #656d76);
+  margin-left: 4px;
+}
+
+/* Button row at the bottom of the card — pushed to bottom so
+   cards in the same row line up regardless of content length */
+body.controller-homescreen .widget-box--blocks--buttons {
+  margin-top: auto !important;            /* <- key alignment trick */
+  padding-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Hide the "INSTALLATION / UP TO DATE" security badge in the
+   Administration card on the home page. */
+body.controller-homescreen .security-badge--container,
+body.controller-homescreen .security-badge--container * {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Hide the "Glossary" link (a-z book icon) in the homescreen
+   footer links row. Matched by href so it survives translations.
+   Each footer link is an <a class="homescreen--links--item"
+   href="https://www.openproject.org/docs/glossary/" ...>. */
+body.controller-homescreen .homescreen--links--item[href*="glossary" i],
+body.controller-homescreen a.homescreen--links--item[aria-label*="glossary" i] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Group the remaining footer links tightly together in the middle.
+   Without this, the base layout (padding 20px 15%) leaves the two
+   remaining items pushed to the sides after Glossary is hidden. */
+body.controller-homescreen .homescreen--links {
+  justify-content: center !important;
+  gap: 60px !important;
+  padding: 20px 0 !important;
+}
+
+/* Each link sized to its content — no flex-grow / margin pushing
+   them apart. */
+body.controller-homescreen .homescreen--links--item {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+
+/* News card body — title + meta line + body, with consistent spacing */
+body.controller-homescreen .widget-box .news h3,
+body.controller-homescreen .widget-box .news-title {
+  font-size: 14px;
+  margin: 0 0 4px 0;
+}
+
+body.controller-homescreen .widget-box .news .author,
+body.controller-homescreen .widget-box .news .created-on {
+  font-size: 12px;
+  color: var(--fgColor-muted, #656d76);
+}
+
+/* Removes the box-shadow:none rule from upstream _homescreen.sass.
+   Already overridden above with !important, but keep this explicit
+   for clarity. */
+body.controller-homescreen .widget-boxes .widget-box {
+  box-shadow: var(--shadow-resting-small,
+              0 1px 0 rgba(27, 31, 36, 0.04),
+              0 1px 3px rgba(27, 31, 36, 0.06)) !important;
+}
 
