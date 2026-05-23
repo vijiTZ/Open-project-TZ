@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/product-sans');
+
 /* ================================================================
    OPENPROJECT CUSTOM DESIGN SYSTEM
    ----------------------------------------------------------------
@@ -2290,6 +2292,130 @@ table.work-package-table tbody tr td.status [title*="reopen" i],
 table.work-package-table tbody tr td[class*="__hl_inline_status"] [title*="reopen" i] {
   background: #fdba74 !important;
 }
+
+
+/* ════════════════════════════════════════════════════════════════════
+   STATUS-DROPDOWN PILLS — replicate the table's status pill colors
+   inside the status selector dropdown on the WP create/edit form.
+   ════════════════════════════════════════════════════════════════════
+   The screen renders an ng-select / SPOT dropdown with options "New",
+   "In progress", "Closed", "On hold", "Rejected". We re-use the same
+   pastel palette as the table so the dropdown matches.
+
+   We match each option by `title=`, `aria-label=`, or by a span text
+   wrapper class. The pill style itself is applied to a single inner
+   `.op-status-pill` wrapper we create via the option's flex layout.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Reset: plain options, no colored pill background. We render a
+   colored dot via ::before instead — matching the native style shown
+   on the detail page (screenshot 1).                              */
+.ng-dropdown-panel .ng-option,
+[role="listbox"] [role="option"] {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  background: transparent !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  color: #1f2937 !important;
+}
+
+/* Hover state — subtle grey */
+.ng-dropdown-panel .ng-option:hover,
+.ng-dropdown-panel .ng-option.ng-option-marked,
+[role="listbox"] [role="option"]:hover {
+  background: #f3f4f6 !important;
+}
+
+/* ──────── STATUS DROPDOWN ONLY — scoped by panel size ───────────────── */
+/* Status dropdown has exactly 5 options (New / In progress / Closed /
+   On hold / Rejected). Type dropdown has 7. We scope dots to panels
+   that have 5 options or fewer (a 6th option excludes the panel) so
+   the type dropdown can never inherit a status dot.
+
+   If a project adds a 6th status, bump the `:nth-of-type(6)` exclusion
+   to `:nth-of-type(7)` and add a 6th positional rule.                */
+
+/* Base dot shape — only created inside a 5-option panel */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option::before {
+  content: '';
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+/* Reset text to plain — the unscoped type rules below would otherwise
+   recolor status text (e.g. "New" in green). Status keeps a dot + plain
+   text label.                                                       */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option {
+  color: #1f2937 !important;
+  font-weight: 500 !important;
+}
+
+/* Positional dot colors for the 5-option status panel */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option:nth-of-type(1)::before { background: #14b8a6 !important; } /* New */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option:nth-of-type(2)::before { background: #a855f7 !important; } /* In progress */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option:nth-of-type(3)::before { background: #d1d5db !important; } /* Closed */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option:nth-of-type(4)::before { background: #f59e0b !important; } /* On hold */
+.ng-dropdown-panel:has(.ng-option:nth-of-type(5)):not(:has(.ng-option:nth-of-type(6))) .ng-option:nth-of-type(5)::before { background: #ef4444 !important; } /* Rejected */
+
+
+/* ──────── TYPE DROPDOWN — positional, unscoped (lower specificity) ──── */
+/* Colors per Admin → Work packages → Types config (default 7 types in
+   this order: Milestone / Task / Summary task / Feature / Epic /
+   User story / Bug). Rendered as colored dot + colored bold text.
+
+   We deliberately do NOT scope these rules by panel size: virtual
+   scrolling or hidden ng-select wrappers can throw off `:nth-of-type`
+   counts inside `:has()`. Instead we rely on CSS specificity — the
+   status block above uses `:has(...):not(:has(...))` which has higher
+   specificity, so for a 5-option panel (status) the status rules win
+   over these type rules.
+
+   Position 6 and 7 only exist on the type panel (status has just 5),
+   so they're safe regardless of cascading.                          */
+
+/* Base dot shape — created on every option; status block will
+   override the color for 5-option panels.                          */
+.ng-dropdown-panel .ng-option::before {
+  content: '';
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+/* Per-position dot + text color for the type panel */
+.ng-dropdown-panel .ng-option:nth-of-type(1)::before { background: #22c55e !important; } /* Milestone */
+.ng-dropdown-panel .ng-option:nth-of-type(1)         { color: #22c55e !important; font-weight: 600 !important; }
+
+.ng-dropdown-panel .ng-option:nth-of-type(2)::before { background: #1d4ed8 !important; } /* Task */
+.ng-dropdown-panel .ng-option:nth-of-type(2)         { color: #1d4ed8 !important; font-weight: 600 !important; }
+
+.ng-dropdown-panel .ng-option:nth-of-type(3)::before { background: #f97316 !important; } /* Summary task */
+.ng-dropdown-panel .ng-option:nth-of-type(3)         { color: #f97316 !important; font-weight: 600 !important; }
+
+.ng-dropdown-panel .ng-option:nth-of-type(4)::before { background: #4f46e5 !important; } /* Feature */
+.ng-dropdown-panel .ng-option:nth-of-type(4)         { color: #4f46e5 !important; font-weight: 600 !important; }
+
+.ng-dropdown-panel .ng-option:nth-of-type(5)::before { background: #9333ea !important; } /* Epic */
+.ng-dropdown-panel .ng-option:nth-of-type(5)         { color: #9333ea !important; font-weight: 600 !important; }
+
+.ng-dropdown-panel .ng-option:nth-of-type(6)::before { background: #06b6d4 !important; } /* User story */
+.ng-dropdown-panel .ng-option:nth-of-type(6)         { color: #06b6d4 !important; font-weight: 600 !important; }
+
+.ng-dropdown-panel .ng-option:nth-of-type(7)::before { background: #dc2626 !important; } /* Bug */
+.ng-dropdown-panel .ng-option:nth-of-type(7)         { color: #dc2626 !important; font-weight: 600 !important; }
+
 
 /* Assignee cell with avatar — wrap is flex; avatar circle centers
    its initials. .op-avatar can be either an <img> or a text node;
@@ -6900,8 +7026,8 @@ opce-in-app-notification-bell button::before,
   width: 22px;
   height: 22px;
   background-color: #4a5568;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z'/%3E%3C/svg%3E") no-repeat center / contain;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' d='M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z'/%3E%3C/svg%3E") no-repeat center / contain;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0'/%3E%3C/svg%3E") no-repeat center / contain;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0'/%3E%3C/svg%3E") no-repeat center / contain;
   transition: background-color 0.14s ease;
 }
 
@@ -8745,18 +8871,32 @@ body.router--work-packages-full-create #content .attributes-group:not(.descripti
 }
 
 /* (d2) Hide the Costs, Budget, and Other groups + the Budget field
-       unconditionally on the WP create form.
-       Group identity comes from <div data-group-name="..."> set in
-       wp-single-view.component.html (L100). The attribute value is
-       the localised group title; the [...="Foo" i] case-insensitive
-       match keeps it working across locales. */
-body.router--work-packages-full-create #content .attributes-group[data-group-name="Costs" i],
-body.router--work-packages-full-create #content .attributes-group[data-group-name="Other" i],
-body.router--work-packages-full-create #content .attributes-group[data-group-name="Budget" i],
-body.router--work-packages-full-create #content .attributes-group[data-group-name*="Cost" i],
-body.router--work-packages-full-create #content .attributes-key-value[data-field-name="budget"],
-body.router--work-packages-full-create #content .wp-edit-field[data-field-name="budget"],
-body.router--work-packages-full-create #content [data-field-name="budget"] {
+       on ALL work-package screens (create form, milestone create,
+       detail view, split view, edit). Group identity comes from
+       <div data-group-name="..."> set in wp-single-view.component.html
+       (L100); the [...="Foo" i] case-insensitive match keeps it
+       working across locales.                                       */
+body.router--work-packages-full-create .attributes-group[data-group-name="Costs" i],
+body.router--work-packages-full-create .attributes-group[data-group-name="Other" i],
+body.router--work-packages-full-create .attributes-group[data-group-name="Budget" i],
+body.router--work-packages-full-create .attributes-group[data-group-name*="Cost" i],
+body.router--work-packages-full-create .attributes-key-value[data-field-name="budget"],
+body.router--work-packages-full-create .wp-edit-field[data-field-name="budget"],
+body.router--work-packages-full-create [data-field-name="budget"],
+body[class*="router--work-packages"] .attributes-group[data-group-name="Costs" i],
+body[class*="router--work-packages"] .attributes-group[data-group-name="Other" i],
+body[class*="router--work-packages"] .attributes-group[data-group-name="Budget" i],
+body[class*="router--work-packages"] .attributes-group[data-group-name*="Cost" i],
+body[class*="router--work-packages"] .attributes-key-value[data-field-name="budget"],
+body[class*="router--work-packages"] .wp-edit-field[data-field-name="budget"],
+body[class*="router--work-packages"] [data-field-name="budget"],
+body.controller-work_packages .attributes-group[data-group-name="Costs" i],
+body.controller-work_packages .attributes-group[data-group-name="Other" i],
+body.controller-work_packages .attributes-group[data-group-name="Budget" i],
+body.controller-work_packages .attributes-group[data-group-name*="Cost" i],
+body.controller-work_packages .attributes-key-value[data-field-name="budget"],
+body.controller-work_packages .wp-edit-field[data-field-name="budget"],
+body.controller-work_packages [data-field-name="budget"] {
   display: none !important;
 }
 
@@ -10578,9 +10718,9 @@ body.router--work-packages-full-create #content #work-packages--edit-actions-sav
 body.router--work-packages-full-create #content button.-primary,
 body.router--work-packages-full-create #content button.-highlight,
 body.router--work-packages-full-create #content [class*="action-buttons"] button.-primary {
-  background: #1a1a2e !important;
+  background: #3866e1 !important;
   background-image: none !important;
-  border: 1px solid #1a1a2e !important;
+  border: 1px solid #3866e1 !important;
   color: #ffffff !important;
   border-radius: 8px !important;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.20) !important;
@@ -11559,6 +11699,153 @@ body.controller-homescreen .homescreen--links--item {
   margin: 0 !important;
 }
 
+/* News card body — title + meta line + body, with consistent spacing */
+body.controller-homescreen .widget-box .news h3,
+body.controller-homescreen .widget-box .news-title {
+  font-size: 14px;
+  margin: 0 0 4px 0;
+}
+
+body.controller-homescreen .widget-box .news .author,
+body.controller-homescreen .widget-box .news .created-on {
+  font-size: 12px;
+  color: var(--fgColor-muted, #656d76);
+}
+
+/* Removes the box-shadow:none rule from upstream _homescreen.sass.
+   Already overridden above with !important, but keep this explicit
+   for clarity. */
+body.controller-homescreen .widget-boxes .widget-box {
+  box-shadow: var(--shadow-resting-small,
+              0 1px 0 rgba(27, 31, 36, 0.04),
+              0 1px 3px rgba(27, 31, 36, 0.06)) !important;
+}
+
+
+/* ================================================================
+   TOP-BAR "+ Create" BUTTON — DOCK NEXT TO SEARCH BAR
+   ----------------------------------------------------------------
+   OpenProject renders the header as three flex regions:
+     .op-app-header--start    logo + sidebar toggle
+     .op-app-header--center   global search (centered, fixed-ish width)
+     .op-app-header--end      [+ Create] [bell] [help] [avatar]
+
+   By default the Create button sits at the far right inside --end,
+   with a large empty gap between the centered search bar and the
+   right cluster. We want it docked immediately to the right of the
+   search bar (where the yellow arrow points in the design ref).
+
+   Strategy — pure CSS, no HTML/JS:
+     1. Make .op-app-header a positioning context.
+     2. Pull the Create button out of the flow with position:absolute
+        and anchor it at  left: calc(50% + offset)  so it lands
+        flush against the right edge of the centered search input.
+     3. Vertically center it on the navbar.
+
+   The offset (240px) is half the search input's rendered width
+   (~460px / 2 = 230px) plus a ~10px gap. Adjust if your search
+   input width changes.
+   ================================================================ */
+.op-app-header,
+#header.op-app-header {
+  position: relative !important;
+}
+
+html body .op-app-header .op-app-header--end .op-app-header--primer-button:has(.octicon-plus),
+html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus) {
+  position: absolute !important;
+  left: calc(50% + 190px) !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  z-index: 5 !important;
+}
+
+/* On narrower viewports the search bar shrinks — pull the Create
+   button in proportionally so it stays docked against its edge. */
+@media (max-width: 1280px) {
+  html body .op-app-header .op-app-header--end .op-app-header--primer-button:has(.octicon-plus),
+  html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus) {
+    left: calc(50% + 200px) !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  html body .op-app-header .op-app-header--end .op-app-header--primer-button:has(.octicon-plus),
+  html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus) {
+    left: calc(50% + 170px) !important;
+  }
+}
+
+/* Mobile: revert to the native right-aligned placement (the search
+   bar collapses to an icon on small screens, so docking it against
+   the search no longer makes sense). */
+@media (max-width: 768px) {
+  html body .op-app-header .op-app-header--end .op-app-header--primer-button:has(.octicon-plus),
+  html body .op-app-header--end .op-app-header--primer-button:has(.octicon-plus) {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+  }
+}
+
+body.controller-projects.action-index table.generic-table thead th, body.controller-projects.action-index table.generic-table thead th *, body.controller-projects.action-index table.generic-table thead th a, body.controller-projects.action-index table.generic-table thead th a span, body.controller-projects.action-index table.generic-table thead th .generic-table--sort-header, body.controller-projects.action-index table.generic-table thead th .generic-table--sort-header a, body.controller-projects.action-index table.generic-table thead th .generic-table--sort-header-outer, body.controller-projects.action-index table.generic-table thead th .generic-table--header-outer {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+body.controller-projects.action-index table.generic-table thead th .dropdown-menu,
+body.controller-projects.action-index table.generic-table thead th .dropdown-menu *,
+body.controller-projects.action-index table.generic-table thead th [role="menu"],
+body.controller-projects.action-index table.generic-table thead th [role="menu"] *,
+body.controller-projects.action-index table.generic-table thead th [role="menuitem"],
+body.controller-projects.action-index table.generic-table thead th [role="menuitem"] *,
+body.controller-projects.action-index table.generic-table thead th .op-context-menu,
+body.controller-projects.action-index table.generic-table thead th .op-context-menu *,
+body.controller-projects.action-index table.generic-table thead th .menu-item,
+body.controller-projects.action-index table.generic-table thead th .menu-item * {
+    color: #333333 !important;
+    fill: #333333 !important;
+}
+
+
+/* ════════════════════════════════════════════════════════════════════
+   PRODUCT SANS — Reusable typography component
+   ════════════════════════════════════════════════════════════════════
+   The @import that pulls Product Sans from a CDN sits at the very top
+   of this file (CSS requires @import to come before any other rule).
+
+   How to use:
+   1) Add the utility class `font-product-sans` to any element — the
+      whole subtree will render in Product Sans.
+        <div class="font-product-sans"> … </div>
+
+   2) Or, scope it to a controller/router class without touching markup
+      by adding a selector under the "APPLIED TO" block below. The
+      work-packages module (the screen in the request) is included as
+      an example. Add more selectors there as needed.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* —— Reusable utility class —————————————————————————————————————— */
+.font-product-sans,
+.font-product-sans * {
+  font-family: 'Product Sans', 'Google Sans', system-ui, -apple-system,
+               'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* —— APPLIED TO: modules that should use Product Sans ——————————— */
+/* Work-packages module (table + detail + split + create views).      */
+body.controller-work_packages,
+body.controller-work_packages *,
+body[class*="router--work-packages"],
+body[class*="router--work-packages"] *,
+body.action-index.controller-work_packages,
+body.action-show.controller-work_packages,
+body.action-show_split.controller-work_packages {
+  font-family: 'Product Sans', 'Google Sans', system-ui, -apple-system,
+               'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+}
 
 /* ================================================================
    WP SPLIT-CREATE PANEL — PROJECT INPUT FIELD CLEAN LOOK
@@ -11989,5 +12276,54 @@ html body button[aria-label="Expand project menu" i] {
   padding: 0 !important;
   overflow: hidden !important;
   pointer-events: none !important;
+}
+
+
+/* ================================================================
+   TOP-BAR USER AVATAR — force perfect circle
+   ----------------------------------------------------------------
+   The user-menu trigger in the header (top-right, next to the help
+   icon) sometimes renders the gravatar with unequal width/height,
+   making it look oval. Force a square box + 50% border-radius +
+   object-fit so the image is always cropped to a perfect circle.
+   ================================================================ */
+html body .op-app-header--end .op-app-header--primer-button:has(img),
+html body .op-app-header--end button:has(> img),
+html body .op-app-header--end a:has(> img.avatar),
+html body .op-app-header--end .Header-link:has(img) {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 32px !important;
+}
+
+html body .op-app-header--end img.avatar,
+html body .op-app-header--end .op-app-header--primer-button img,
+html body .op-app-header--end button > img,
+html body .op-app-header--end .Header-link > img,
+html body .op-app-header--end .gravatar,
+html body .op-app-header--end img[src*="gravatar"],
+html body .op-app-header--end img[alt*="avatar" i],
+html body .op-app-header--end img[alt*="profile" i] {
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  aspect-ratio: 1 / 1 !important;
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
