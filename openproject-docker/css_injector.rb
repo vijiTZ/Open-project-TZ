@@ -24,6 +24,8 @@ require "digest"
 module CustomCssInjector
   CSS_URL    = "/custom-redesign.css".freeze
   CSS_FILE   = "/app/public/custom-redesign.css".freeze
+  CUSTOM_JS_URL  = "/custom-redesign.js".freeze
+  CUSTOM_JS_FILE = "/app/public/custom-redesign.js".freeze
   JS_URL     = "/tz-bulk-select.js".freeze
   JS_FILE    = "/app/public/tz-bulk-select.js".freeze
   TZ_JS_URL  = "/tz-table.js".freeze
@@ -64,14 +66,16 @@ module CustomCssInjector
 
       if body.include?("</head>")
         css_ver   = CustomCssInjector.asset_version(CSS_FILE)
+        custom_js_ver = CustomCssInjector.asset_version(CUSTOM_JS_FILE)
         js_ver    = CustomCssInjector.asset_version(JS_FILE)
         tz_js_ver = CustomCssInjector.asset_version(TZ_JS_FILE)
         link      = %(<link rel="stylesheet" href="#{CSS_URL}?v=#{css_ver}">)
+        custom_script = %(<script src="#{CUSTOM_JS_URL}?v=#{custom_js_ver}" defer></script>)
         script    = %(<script src="#{JS_URL}?v=#{js_ver}" defer></script>)
         tz_script = %(<script src="#{TZ_JS_URL}?v=#{tz_js_ver}" defer></script>)
         gh_js_ver = CustomCssInjector.asset_version(GH_JS_FILE)
         gh_script = %(<script src="#{GH_JS_URL}?v=#{gh_js_ver}" defer></script>)
-        body = body.sub("</head>", "#{link}\n#{script}\n#{tz_script}\n#{gh_script}\n</head>")
+        body = body.sub("</head>", "#{link}\n#{custom_script}\n#{script}\n#{tz_script}\n#{gh_script}\n</head>")
         headers.delete_if { |k, _| %w[content-length etag].include?(k.to_s.downcase) }
       end
 

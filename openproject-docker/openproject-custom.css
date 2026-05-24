@@ -19,6 +19,11 @@
   --op-bg:          #0A0B0D;
   --op-surface-1:   #111318;
   --op-surface-2:   #1A1D24;
+
+
+
+
+
   --op-surface-3:   #22262E;
   --op-surface-4:   #2A2F38;
   --op-border-soft: #242830;
@@ -605,7 +610,7 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   font-family: inherit !important;
-  
+
 }
 
 /* Column kebab/menu — calmer hover */
@@ -3497,23 +3502,6 @@ body[class*="controller-permissions"] .button.-highlight:hover {
   border-color: #155032 !important;
 }
 
-/* Rich text editor (CKEditor used for consent text) — round the
-   editor container so it visually fits inside the white card. */
-body[class*="admin/settings"] .ck.ck-editor,
-body[class*="admin/settings"] .ck-editor__editable {
-  border-radius: 8px !important;
-}
-body[class*="admin/settings"] .ck.ck-toolbar {
-  border-top-left-radius: 8px !important;
-  border-top-right-radius: 8px !important;
-  background: #f9fafb !important;
-}
-body[class*="admin/settings"] .ck-editor__editable {
-  min-height: 180px !important;
-  border-bottom-left-radius: 8px !important;
-  border-bottom-right-radius: 8px !important;
-}
-
 /* Two consecutive sections sit cleanly with breathing room */
 body.controller-users:not(.action-new):not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
 body.controller-groups:not(.action-index) fieldset.form--fieldset + fieldset.form--fieldset,
@@ -3918,7 +3906,7 @@ a.tz-back-btn:hover {
   top: 0 !important;
   right: 0 !important;
   margin-left: 0 !important;
-} 
+}
 
 /* Make the PageHeader the positioning context wherever the back
    button gets injected. Scoped to all the admin sub-pages the JS
@@ -5183,32 +5171,6 @@ nav#main-menu #sidebar label   { color: #6B7280 !important; }
   overflow: hidden !important;
   white-space: nowrap !important;
 }
-
-/* Hide ONLY the blue ATTACHMENTS section (heading + drop box), keep file input */
-.op-attachments--drop-box,
-.op-file-section--drop-box {
-  display: none !important;
-}
-
-/* Hide "Attach files" link and icons.
-   IMPORTANT: do NOT add [class*="hide-when-print"] here — that class
-   is OpenProject's utility for hiding elements ONLY during print
-   output. Many normal-view buttons (the WP page toolbar's Create /
-   Filter / Baseline / etc.) carry it, and an always-hide rule wipes
-   out the whole toolbar. Removed.                                  */
-.op-attachments--upload-button,
-.op-add-attachment-icon,
-[class*="op-file-section--actions"] {
-  display: none !important;
-}
-
-/* Keep the file input field visible */
-#attachment_files,
-input[type="file"][id*="attachment"] {
-  display: block !important;
-  visibility: visible !important;
-}
-
 
 /* ── LOGIN PAGE → HIDE TOP NAV ENTIRELY ──────────────────────────
    On the login page only, hide the whole top header. The Tamilzorous
@@ -7804,9 +7766,7 @@ body.router--work-packages-full-create #content .op-toolbar--breadcrumb {
 body.router--work-packages-full-create #content .attributes-group,
 body.router--work-packages-full-create #content .op-attributes-group,
 body.router--work-packages-full-create #content .wp-new--subject-wrapper,
-body.router--work-packages-full-create #content .work-packages--info-row,
-body.router--work-packages-full-create #content .op-attachments,
-body.router--work-packages-full-create #content .op-file-section {
+body.router--work-packages-full-create #content .work-packages--info-row {
   background: #ffffff !important;
   border: 1px solid #e6e9ef !important;
   border-radius: 16px !important;
@@ -8042,70 +8002,7 @@ body.router--work-packages-full-create #content .notification-box.-info [class*=
   margin-top: 2px !important;
 }
 
-/* ── DESCRIPTION editor — extra breathing room inside its card ──── */
-body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor,
-body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-editor__main,
-body.router--work-packages-full-create #content .op-uc-container {
-  border-radius: 12px !important;
-  border: 1px solid #dfe3eb !important;
-  background: #ffffff !important;
-  overflow: hidden !important;
-}
-body.router--work-packages-full-create #content .ck.ck-toolbar {
-  background: #fafbfc !important;
-  border: none !important;
-  border-bottom: 1px solid #eef1f5 !important;
-  padding: 8px 10px !important;
-  border-radius: 12px 12px 0 0 !important;
-}
-body.router--work-packages-full-create #content .ck.ck-content,
-body.router--work-packages-full-create #content .ck-editor__editable {
-  min-height: 180px !important;
-  padding: 16px 18px !important;
-  background: #ffffff !important;
-  border: none !important;
-  font-size: 14px !important;
-  line-height: 1.6 !important;
-  color: #0f172a !important;
-}
-body.router--work-packages-full-create #content .ck.ck-content:focus,
-body.router--work-packages-full-create #content .ck-editor__editable:focus,
-body.router--work-packages-full-create #content .ck-editor__editable_inline:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  border: none !important;
-}
-body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor:focus-within {
-  border-color: #0c66e4 !important;
-  box-shadow: 0 0 0 4px rgba(12, 102, 228, 0.12) !important;
-}
-
-/* ── ATTACHMENTS card — dashed drop area ───────────────────────── */
-body.router--work-packages-full-create #content .op-attachments,
-body.router--work-packages-full-create #content .op-file-section {
-  position: relative !important;
-}
-body.router--work-packages-full-create #content input[type="file"][id*="attachment"],
-body.router--work-packages-full-create #content #attachment_files {
-  display: block !important;
-  width: 100% !important;
-  height: auto !important;
-  min-height: 96px !important;
-  padding: 22px !important;
-  background: #fafbfd !important;
-  border: 2px dashed #cbd5e1 !important;
-  border-radius: 14px !important;
-  color: #475569 !important;
-  cursor: pointer !important;
-  transition: border-color 0.15s ease, background-color 0.15s ease !important;
-}
-body.router--work-packages-full-create #content input[type="file"][id*="attachment"]:hover,
-body.router--work-packages-full-create #content #attachment_files:hover {
-  border-color: #0c66e4 !important;
-  background: #eff6ff !important;
-}
-
-/* ── STICKY FOOTER — Save (blue solid pill) / Cancel (ghost) ───── */
+/* -- STICKY FOOTER — Save (blue solid pill) / Cancel (ghost) ───── */
 body.router--work-packages-full-create #content .toolbar-container_bottom,
 body.router--work-packages-full-create #content .work-packages--panel-inner-actions,
 body.router--work-packages-full-create #content .work-packages--action-buttons,
@@ -8341,8 +8238,7 @@ body.router--work-packages-full-create #content .work-packages--details--descrip
   padding: 0 !important;
 }
 
-/* 6) Attachments wrapper — the real selector is .work-packages--storages,
-      NOT .op-attachments. Treat it as a card. */
+/* 6) Attachments wrapper: keep the outer storages card chrome only. */
 body.router--work-packages-full-create #content .work-packages--storages {
   background: #ffffff !important;
   border: 1px solid #e6e9ef !important;
@@ -8372,75 +8268,16 @@ body.router--work-packages-full-create #content .op-tab-content--header .op-tab-
 
 /* Attachments row — Choose files button + filename + "Max file size"
    arranged on a single row with proper alignment. */
-body.router--work-packages-full-create #content .work-packages--storages > * {
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
-}
+/* Attachment/upload internals intentionally left native. */
 
 /* Choose files button inside the Attachments card — match the form's
    pill style (light border, blue label) instead of the raw native look. */
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"] {
-  width: fit-content !important;
-  height: 36px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  color: #475569 !important;
-  font-size: 13px !important;
-  cursor: pointer !important;
-}
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button {
-  height: 34px !important;
-  padding: 0 16px !important;
-  border: 1px solid #c5cbd6 !important;
-  border-radius: 8px !important;
-  background: #ffffff !important;
-  color: #0c66e4 !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  margin-right: 10px !important;
-  transition: background-color 0.12s, border-color 0.12s !important;
-}
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button:hover {
-  background: #eef4ff !important;
-  border-color: #0c66e4 !important;
-}
+/* File input/button styling is provided by OpenProject. */
 
 /* "Max file size: 50MB" — push to the far right of the row, mute the
    color so it reads as a hint, not a heading. */
-body.router--work-packages-full-create #content .work-packages--storages .op-file-upload--max-size,
-body.router--work-packages-full-create #content .work-packages--storages [class*="max-size"],
-body.router--work-packages-full-create #content .work-packages--storages [class*="max_size"] {
-  margin-left: auto !important;
-  font-size: 12px !important;
-  color: #64748b !important;
-  white-space: nowrap !important;
-}
+/* Max-size/helper text stays native so upload layout remains intact. */
 
-/* Dashed upload zone — for the native attachment list/upload component */
-body.router--work-packages-full-create #content op-attachments,
-body.router--work-packages-full-create #content .op-file-section,
-body.router--work-packages-full-create #content .op-attachment-list {
-  display: block !important;
-  border: 2px dashed #cbd5e1 !important;
-  border-radius: 14px !important;
-  background: #fafbfd !important;
-  padding: 24px !important;
-  margin: 0 !important;
-  text-align: center !important;
-  color: #475569 !important;
-  transition: border-color 0.15s ease, background-color 0.15s ease !important;
-}
-body.router--work-packages-full-create #content op-attachments:hover,
-body.router--work-packages-full-create #content .op-file-section:hover {
-  border-color: #0c66e4 !important;
-  background: #eff6ff !important;
-}
-
-/* 7) Re-show the breadcrumb but as small grey text above the title */
 body.router--work-packages-full-create #content .toolbar-container .op-breadcrumb,
 body.router--work-packages-full-create #content .work-packages--toolbar-container .op-breadcrumb {
   display: block !important;
@@ -8900,179 +8737,12 @@ body.controller-work_packages [data-field-name="budget"] {
   display: none !important;
 }
 
-/* (e) Attachments — single dashed dropzone on the OUTERMOST element only.
-       The previous rule put dashed borders on every nested level
-       (op-attachments → op-attachment-list → op-file-section), producing
-       nested dashed rectangles. Now: the outer .work-packages--storages
-       container provides the card chrome, and only ONE inner element
-       carries the dashed dropzone look. All other nested wrappers are
-       reset to be borderless layout-only nodes. */
+/* (e) Attachments: keep spacing on the outer storages card only. */
 body.router--work-packages-full-create #content .work-packages--storages {
   padding: 22px 24px !important;
 }
 body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
   margin: 0 0 16px 0 !important;
-}
-
-/* Strip ALL borders/backgrounds off nested attachment wrappers FIRST */
-body.router--work-packages-full-create #content op-attachments,
-body.router--work-packages-full-create #content .op-attachments,
-body.router--work-packages-full-create #content op-attachment-list,
-body.router--work-packages-full-create #content .op-attachment-list,
-body.router--work-packages-full-create #content .op-attachments--upload-section,
-body.router--work-packages-full-create #content .op-file-section,
-body.router--work-packages-full-create #content .op-attachments--drop-box,
-body.router--work-packages-full-create #content .op-file-section--drop-box {
-  display: block !important;
-  width: 100% !important;
-  border: none !important;
-  background: transparent !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  box-shadow: none !important;
-  text-align: left !important;
-}
-
-/* Now apply the dashed dropzone to JUST the upload component */
-body.router--work-packages-full-create #content op-attachments-upload,
-body.router--work-packages-full-create #content .op-attachments--upload-section {
-  display: flex !important;
-  align-items: center !important;
-  gap: 16px !important;
-  width: 100% !important;
-  border: 2px dashed #cbd5e1 !important;
-  border-radius: 14px !important;
-  background: #fafbfd !important;
-  padding: 22px 24px !important;
-  color: #475569 !important;
-  transition: border-color 0.15s ease, background-color 0.15s ease !important;
-  flex-wrap: wrap !important;
-  white-space: normal !important;
-}
-body.router--work-packages-full-create #content op-attachments-upload:hover,
-body.router--work-packages-full-create #content .op-attachments--upload-section:hover {
-  border-color: #0c66e4 !important;
-  background: #eff6ff !important;
-}
-
-/* ── Attachments: MOCKUP MATCH ─────────────────────────────────────
-   The mockup shows a simple row inside the ATTACHMENTS card:
-       [Choose Files] No file chosen          Max file size: 50MB
-   NOT a dashed dropzone with paperclip + "Drop files here..." text.
-   Hide the OP drop-box overlay entirely and lay out the native file
-   input + a CSS-injected "Max file size: 50MB" caption. */
-
-/* Hide the heavy dropzone overlay entirely — every element involved
-   in OpenProject's drop-box rendering. The paperclip icon and the
-   "Drop files here or click to attach files" text live in nested
-   spans inside .op-file-section--drop-box; hide ALL of them. */
-body.router--work-packages-full-create #content .op-file-section--drop-box,
-body.router--work-packages-full-create #content .op-file-section--drop-box *,
-body.router--work-packages-full-create #content .op-file-section--drop-box-icon,
-body.router--work-packages-full-create #content .op-file-section--drop-box-text,
-body.router--work-packages-full-create #content .op-file-section--drop-box_float,
-body.router--work-packages-full-create #content .op-file-section--empty-list-hint,
-body.router--work-packages-full-create #content .op-attachments--drop-box,
-body.router--work-packages-full-create #content .op-attachments--drop-box *,
-body.router--work-packages-full-create #content op-attachments-upload,
-body.router--work-packages-full-create #content op-attachments-upload * {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-}
-
-/* The attachments section card becomes a simple row */
-body.router--work-packages-full-create #content .work-packages--storages {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 14px !important;
-}
-/* Section header: keep injected (or stock) "ATTACHMENTS" label */
-body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
-  margin: 0 !important;
-}
-
-/* The inner row that holds the file input + size caption */
-body.router--work-packages-full-create #content .work-packages--storages::after {
-  content: "Max file size: 50MB" !important;
-  position: absolute !important;
-  right: 24px !important;
-  bottom: 26px !important;
-  font-size: 12.5px !important;
-  color: #64748b !important;
-  pointer-events: none !important;
-}
-body.router--work-packages-full-create #content .work-packages--storages {
-  position: relative !important;
-}
-
-/* Reset the native file input to a clean inline button + label */
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"],
-body.router--work-packages-full-create #content #attachment_files {
-  display: inline-block !important;
-  width: auto !important;
-  max-width: 60% !important;
-  height: auto !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  font-size: 13.5px !important;
-  color: #475569 !important;
-  cursor: pointer !important;
-  box-shadow: none !important;
-}
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button,
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::-webkit-file-upload-button {
-  height: 32px !important;
-  padding: 0 14px !important;
-  margin-right: 12px !important;
-  background: #ffffff !important;
-  border: 1px solid #b6c2d9 !important;
-  border-radius: 6px !important;
-  color: #0c66e4 !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  transition: background-color 0.15s ease, border-color 0.15s ease !important;
-}
-body.router--work-packages-full-create #content .work-packages--storages input[type="file"]::file-selector-button:hover {
-  background: #eff6ff !important;
-  border-color: #0c66e4 !important;
-}
-body.router--work-packages-full-create #content input[type="file"] {
-  display: inline-block !important;
-  width: auto !important;
-  height: auto !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  font-size: 13px !important;
-  color: #475569 !important;
-}
-body.router--work-packages-full-create #content input[type="file"]::file-selector-button,
-body.router--work-packages-full-create #content input[type="file"]::-webkit-file-upload-button {
-  height: 36px !important;
-  padding: 0 14px !important;
-  margin-right: 12px !important;
-  background: #ffffff !important;
-  border: 1px solid #dfe3eb !important;
-  border-radius: 8px !important;
-  color: #0c66e4 !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  transition: background-color 0.15s ease, border-color 0.15s ease !important;
-}
-body.router--work-packages-full-create #content input[type="file"]::file-selector-button:hover {
-  background: #eff6ff !important;
-  border-color: #0c66e4 !important;
 }
 
 /* (f) Type-selector tabs row — sit ABOVE the title cleanly */
@@ -9115,129 +8785,6 @@ body.router--work-packages-full-create #content .editable-toolbar-title input {
   padding: 0 !important;
   height: auto !important;
   box-shadow: none !important;
-}
-
-/* Description editor — toolbar alignment.
-   Every direct child of .ck-toolbar (and the inner __items wrapper) is
-   pinned to a 32px row with a uniform 6px gap, regardless of whether
-   it's a CKEditor button, a Primer-wrapped pill button, a dropdown,
-   a separator, or the file-upload widget. */
-body.router--work-packages-full-create #content .ck.ck-toolbar,
-body.router--work-packages-full-create #content .ck.ck-toolbar__items {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: center !important;
-  column-gap: 6px !important;
-  row-gap: 6px !important;
-}
-body.router--work-packages-full-create #content .ck.ck-toolbar__items {
-  flex: 1 1 100% !important;
-  min-width: 0 !important;
-}
-
-/* Every direct child sits on the same 32px centerline */
-body.router--work-packages-full-create #content .ck.ck-toolbar > *,
-body.router--work-packages-full-create #content .ck.ck-toolbar__items > *,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-form__row,
-body.router--work-packages-full-create #content .ck.ck-toolbar input[type="file"],
-body.router--work-packages-full-create #content .ck.ck-toolbar label[for*="file"] {
-  height: 32px !important;
-  min-height: 32px !important;
-  margin: 0 !important;
-  vertical-align: middle !important;
-  align-self: center !important;
-  box-sizing: border-box !important;
-}
-
-/* Heading / paragraph dropdown — let the label expand to its natural
-   width so "Heading 1" / "Paragraph" renders in full instead of "P..." */
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-heading-dropdown,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-heading-dropdown .ck-button,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown:has(.ck-heading-dropdown),
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown__button:has(.ck-button__label) {
-  min-width: 96px !important;
-  width: auto !important;
-  max-width: none !important;
-}
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button__label {
-  max-width: none !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  white-space: nowrap !important;
-  line-height: 1 !important;
-}
-
-/* Native file-input area inside the toolbar.
-   Hide the browser's "No file chosen" filename text (cosmetic clutter
-   in a rich-text toolbar) by making the input's text invisible, then
-   re-enable visibility on the ::file-selector-button only. The input
-   width is capped at "fit-content" so the empty filename area doesn't
-   reserve dead space after the button. */
-body.router--work-packages-full-create #content .ck.ck-toolbar input[type="file"] {
-  width: fit-content !important;
-  max-width: 130px !important;
-  height: 30px !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
-  color: transparent !important;
-  text-shadow: none !important;
-  cursor: pointer !important;
-  overflow: hidden !important;
-}
-body.router--work-packages-full-create #content .ck.ck-toolbar input[type="file"]::file-selector-button {
-  height: 28px !important;
-  padding: 0 12px !important;
-  border: 1px solid #d6dce5 !important;
-  border-radius: 6px !important;
-  background: #ffffff !important;
-  color: #0c66e4 !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  cursor: pointer !important;
-  margin-right: 0 !important;
-}
-
-/* Every CKEditor toolbar icon: same 16×16 visual weight so the bullet
-   list / link / undo / etc. don't look smaller than the pill-styled
-   B / I / S buttons. */
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button .ck-icon,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-button > svg,
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-dropdown__button .ck-icon {
-  width: 16px !important;
-  height: 16px !important;
-  flex: 0 0 16px !important;
-  fill: currentColor !important;
-}
-
-/* Vertical separator between toolbar groups — visible thin divider */
-body.router--work-packages-full-create #content .ck.ck-toolbar .ck-toolbar__separator {
-  width: 1px !important;
-  height: 18px !important;
-  background: #d6dce5 !important;
-  flex: 0 0 1px !important;
-}
-
-/* Editor body — empty-state height kept compact so the Description
-   card doesn't have a large blank area when no description is typed. */
-body.router--work-packages-full-create #content .ck.ck-editor__main > .ck-editor__editable,
-body.router--work-packages-full-create #content .ck-content {
-  min-height: 96px !important;
-  font-size: 14px !important;
-  line-height: 1.55 !important;
-}
-
-/* CKEditor placeholder — render the "Click to add description…" text
-   normally. Reset any inherited font-size: 0 or color: transparent
-   that could leave a stray empty-box artifact at the cursor position. */
-body.router--work-packages-full-create #content .ck.ck-content .ck-placeholder::before,
-body.router--work-packages-full-create #content .ck-editor__editable .ck-placeholder::before {
-  color: #94a3b8 !important;
-  font-size: 14px !important;
-  font-style: normal !important;
-  opacity: 1 !important;
 }
 
 /* Required-asterisk color */
@@ -10450,9 +9997,8 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
          stacks single-column safely. */
   body.router--work-packages-full-create #content .work-package--single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 20px !important;
-    row-gap: 0 !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
@@ -10522,16 +10068,7 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
   /* (D) Row spacing so the paired rows breathe vertically */
   body.router--work-packages-full-create #content .work-package--single-view {
     row-gap: 20px !important;
-  }
-
-  /* (E) Description editor — let the CKEditor toolbar wrap onto a
-         second row inside the narrower card instead of overflowing. */
-  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group .ck.ck-toolbar {
-    flex-wrap: wrap !important;
-    row-gap: 6px !important;
-  }
-
-  /* (F) Equalise paired-row heights visually by removing the per-
+  }/* (F) Equalise paired-row heights visually by removing the per-
          card bottom margin (row-gap on the grid now drives spacing). */
   body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
   body.router--work-packages-full-create #content .work-package--single-view > .attributes-group,
@@ -10623,11 +10160,10 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
 @media (min-width: 1024px) {
   body.router--work-packages-full-create #content .work-package--single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
     grid-template-rows: auto !important;
     grid-auto-rows: auto !important;
-    column-gap: 20px !important;
-    row-gap: 20px !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
@@ -10695,21 +10231,14 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
      │               │  Attachments │
      └───────────────┴──────────────┘
 
-   The browser distributes cards across columns to balance total
-   column height (`column-fill: balance`), so the left/right
-   placement may differ slightly from the diagram depending on
-   actual card heights.
+   Neutralized: this older experiment no longer uses CSS columns.
    ================================================================ */
 @media (min-width: 1024px) {
-  /* (1) Switch from grid to multi-column. `column-fill: balance`
-         tries to equalize column heights; `break-inside: avoid`
-         keeps each card whole.                                    */
+  /* (1) Neutralized legacy layout experiment. */
   body.router--work-packages-full-create #content .work-package--single-view {
-    display: block !important;
-    column-count: 2 !important;
-    column-gap: 20px !important;
-    column-fill: balance !important;
-    grid-template-columns: unset !important;
+    display: grid !important;
+    gap: 16px !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
     grid-template-rows: unset !important;
   }
 
@@ -10732,8 +10261,6 @@ body.router--work-packages-full-create #content .ng-select .ng-select-container 
   /* (3) Project-context banner spans BOTH columns (full-width
          above the columnar flow).                                */
   body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
-    column-span: all !important;
-    -webkit-column-span: all !important;
     width: 100% !important;
     margin: 0 0 20px 0 !important;
   }
@@ -10845,10 +10372,9 @@ body.router--work-packages-full-create #content button.-primary svg {
   /* (A) Outer container as 2-column grid */
   body.router--work-packages-full-create #content .work-package--single-view {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
     grid-auto-rows: auto !important;
-    column-gap: 20px !important;
-    row-gap: 20px !important;
+    gap: 16px !important;
     align-items: start !important;
   }
 
@@ -10922,15 +10448,7 @@ body.router--work-packages-full-create #content button.-primary svg {
   body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
   body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
     display: block !important;
-  }
-
-  /* (F) CKEditor toolbar wraps inside the half-width Description card */
-  body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group .ck.ck-toolbar {
-    flex-wrap: wrap !important;
-    row-gap: 6px !important;
-  }
-
-  /* (G) Below 1024px keep stacked single-column (no media-query rule
+  }/* (G) Below 1024px keep stacked single-column (no media-query rule
          below this width — the cards fall back to natural block flow) */
 }
 
@@ -11039,16 +10557,17 @@ html body.router--work-packages-full-create #content .attributes-group > .attrib
 html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container,
 html body.router--work-packages-full-create #content .attributes-group::before,
 html body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
-html body.router--work-packages-full-create #content .attributes-group.description-group::before {
+html body.router--work-packages-full-create #content .attributes-group.description-group::before,
+html body.router--work-packages-full-create #content .attributes-group.-project-context::before {
   width: auto !important;
   box-sizing: border-box !important;
-  /* horizontal margin matches each card's 24px side padding so the
+  /* horizontal margin matches each card's 18px side padding so the
      gray strip reaches both card borders edge-to-edge */
-  margin-left: -24px !important;
-  margin-right: -24px !important;
-  margin-top: -22px !important;
-  margin-bottom: 18px !important;
-  padding: 14px 22px !important;
+  margin-left: -18px !important;
+  margin-right: -18px !important;
+  margin-top: -16px !important;
+  margin-bottom: 0 !important;
+  padding: 14px 18px !important;
   background-color: #f6f8fa !important;
   border-bottom: 1px solid #e4e8f0 !important;
   display: block !important;
@@ -11202,440 +10721,7 @@ html body.router--work-packages-full-create
 }
 
 
-/* ================================================================
-   WP CREATE — MOVE PROJECT FIELD TO THE TOP OF THE FORM
-   ----------------------------------------------------------------
-   The .attributes-group.-project-context (the "Please choose a
-   project…" banner + Project search dropdown) currently lands on
-   `grid-row: auto`, which puts it at the BOTTOM of the grid.
-   Pin it to row 1, full-width, and shift every other card down
-   by one row so the new order at ≥1024px is:
-     Row 1: Project field (full width)
-     Row 2: Basic information | Description
-     Row 3: People            | Estimates and progress
-     Row 4: Details           | Attachments
-   Below 1024px the cards already stack single-column; order:0 on
-   project-context puts it first there too.
-   ================================================================ */
-
-/* (mobile / single-column) — project-context first via flex order
-   in case the grid layout isn't active */
-html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
-  order: -10 !important;
-}
-
-@media (min-width: 1024px) {
-  /* Row 1 — Project field full-width at the top */
-  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
-    grid-column: 1 / -1 !important;
-    grid-row: 1 / 2 !important;
-    order: -10 !important;
-    margin-top: 0 !important;
-  }
-
-  /* Row 2 — Basic information (col 1) | Description (col 2) */
-  html body.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper {
-    grid-column: 1 / 2 !important;
-    grid-row: 2 / 3 !important;
-  }
-  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
-    grid-column: 2 / 3 !important;
-    grid-row: 2 / 3 !important;
-  }
-
-  /* Row 3 — People (col 1) | Estimates (col 2) */
-  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i] {
-    grid-column: 1 / 2 !important;
-    grid-row: 3 / 4 !important;
-  }
-  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
-  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
-    grid-column: 2 / 3 !important;
-    grid-row: 3 / 4 !important;
-  }
-
-  /* Row 4 — Details (col 1) | Attachments (col 2) */
-  html body.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i] {
-    grid-column: 1 / 2 !important;
-    grid-row: 4 / 5 !important;
-  }
-  html body.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
-    grid-column: 2 / 3 !important;
-    grid-row: 4 / 5 !important;
-  }
-}
-
-
-
-/* ================================================================
-   WP CREATE — PIN ATTACHMENTS NEXT TO DETAILS (row 4, col 2)
-   ----------------------------------------------------------------
-   Root cause of earlier rules not working: Attachments
-   (.work-packages--storages) is NOT a child of
-   .work-package--single-view — it's a SIBLING inside the
-   <wp-single-view> Angular host element. So grid-row / grid-column
-   on .work-packages--storages had no effect (its parent wasn't a
-   grid).
-   Fix:
-     1. Make <wp-single-view> itself the grid container.
-     2. Make .work-package--single-view `display: contents` so all
-        its attribute-group children become direct children of the
-        wp-single-view grid alongside .work-packages--storages.
-     3. Pin every card to its (row, col), now including Attachments
-        next to Details.
-   ================================================================ */
-
-@media (min-width: 1024px) {
-  /* (1) The custom Angular element becomes the actual grid */
-  html body.router--work-packages-full-create #content wp-single-view {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    column-gap: 20px !important;
-    row-gap: 20px !important;
-    align-items: start !important;
-  }
-
-  /* (2) Inner div is transparent so its children join the parent grid */
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
-    display: contents !important;
-  }
-
-  /* (3) Card placement — now all on the SAME grid */
-
-  /* Row 1: Project (full-width) */
-  html body.router--work-packages-full-create #content wp-single-view .attributes-group.-project-context {
-    grid-column: 1 / -1 !important;
-    grid-row: 1 / 2 !important;
-  }
-
-  /* Row 2: Basic information (col 1) | Description (col 2) */
-  html body.router--work-packages-full-create #content wp-single-view .wp-new--subject-wrapper {
-    grid-column: 1 / 2 !important;
-    grid-row: 2 / 3 !important;
-  }
-  html body.router--work-packages-full-create #content wp-single-view .attributes-group.description-group {
-    grid-column: 2 / 3 !important;
-    grid-row: 2 / 3 !important;
-  }
-
-  /* Row 3: People (col 1) | Estimates (col 2) */
-  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="People" i] {
-    grid-column: 1 / 2 !important;
-    grid-row: 3 / 4 !important;
-  }
-  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Estimate" i],
-  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Progress" i] {
-    grid-column: 2 / 3 !important;
-    grid-row: 3 / 4 !important;
-  }
-
-  /* Row 4: Details (col 1) | Attachments (col 2) ← THE FIX */
-  html body.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Detail" i] {
-    grid-column: 1 / 2 !important;
-    grid-row: 4 / 5 !important;
-  }
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
-    grid-column: 2 / 3 !important;
-    grid-row: 4 / 5 !important;
-    width: auto !important;
-    max-width: none !important;
-    margin: 0 !important;
-    align-self: start !important;
-    /* Same card chrome as the other cards so the header strip
-       has a card to pull its edges to. */
-    background: #ffffff !important;
-    border: 1px solid #e4e8f0 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-    padding: 22px 24px !important;
-    overflow: hidden !important;
-    position: relative !important;
-  }
-
-  /* Attachments card needs room at the top for the absolutely-
-     positioned header strip below. */
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
-    padding-top: 64px !important;   /* 14 + ~22 + 14 + breathing = ~50, +14 safety */
-  }
-
-  /* Attachments header strip — pinned to the card's top edge with
-     absolute positioning so it ignores the @if wrapper <div> that
-     was creating the white gap. Full-width via left:0 right:0. */
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > .op-tab-content--header,
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-tab-content--header {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 14px 22px !important;
-    box-sizing: border-box !important;
-    display: block !important;
-    background-color: #f6f8fa !important;
-    border-bottom: 1px solid #e4e8f0 !important;
-    color: #1a1a2e !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    z-index: 1 !important;
-  }
-
-  /* The text inside the strip — plain, sentence-case */
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-tab-content--header-text {
-    background: transparent !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    border: none !important;
-    color: inherit !important;
-    font-size: inherit !important;
-    font-weight: inherit !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-  }
-}
-
-
-/* ================================================================
-   WP CREATE — NATURAL CARD HEIGHTS (NO ROW-STRETCH)
-   ----------------------------------------------------------------
-   Scope: body.router--work-packages-full-create + <wp-single-view>
-          at ≥1024px. Keeps the 2-column grid and pinned pairings
-          (Basic+Description, People+Estimates, Details+Attachments)
-          but removes the row-stretch so each card uses its
-          natural content height.
-   Why: smaller cards (People, Attachments) were being stretched
-   to match the tallest card in their row, leaving empty whitespace
-   below their last field. With these overrides the row height is
-   still max(left, right) but each card itself is min-content
-   tall, top-aligned — no more padding empty space.
-   Card chrome (border, radius, header strip, padding) untouched.
-   ================================================================ */
-@media (min-width: 1024px) {
-  /* Outer grid container — auto rows, top alignment, no stretching */
-  html body.router--work-packages-full-create #content wp-single-view {
-    grid-template-rows: none !important;
-    grid-auto-rows: min-content !important;
-    align-items: start !important;
-    align-content: start !important;
-  }
-
-  /* Every card: opt out of cross-axis stretch, collapse to content.
-     Covers BOTH children of the inner .work-package--single-view
-     (which is display: contents) AND .work-packages--storages
-     which sits as a direct child of <wp-single-view>. */
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > *,
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
-    align-self: start !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-  }
-}
-
-
-/* ================================================================
-   WP CREATE — STYLE THE PROJECT CARD LIKE "BASIC INFORMATION"
-   ----------------------------------------------------------------
-   Goal: the .attributes-group.-project-context card gets the same
-   chrome as the Basic information card — white background, 1px
-   border, 10px radius, subtle shadow, and a gray header strip
-   reading "Project" pulled to the card edges, mirroring how
-   .wp-new--subject-wrapper renders.
-   ================================================================ */
-
-/* Card shell — match Basic information */
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context {
-  background: #ffffff !important;
-  border: 1px solid #e4e8f0 !important;
-  border-radius: 10px !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
-  padding: 22px 24px !important;
-  margin: 0 0 20px 0 !important;
-  overflow: hidden !important;
-  position: relative !important;
-}
-
-/* Header strip "Project" — pulled to the card edges, identical
-   to the Basic information header. The card has no DOM h3 of
-   its own, so we inject the label via ::before. */
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context::before {
-  content: "Project" !important;
-  display: block !important;
-  background-color: #f6f8fa !important;
-  border-bottom: 1px solid #e4e8f0 !important;
-  margin: -22px -24px 18px -24px !important;
-  padding: 14px 22px !important;
-  font-size: 15px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-  color: #1a1a2e !important;
-  box-sizing: border-box !important;
-  grid-column: 1 / -1 !important;
-}
-
-/* Soften the warning banner inside the card so it doesn't fight
-   the card chrome — keep it informational but visually lighter. */
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context .wp-project-context--warning {
-  background: #f1f6fb !important;
-  border: 1px solid #d9e6f5 !important;
-  border-radius: 6px !important;
-  padding: 10px 12px !important;
-  margin: 0 0 14px 0 !important;
-  font-size: 13px !important;
-  color: #2b5278 !important;
-  line-height: 1.45 !important;
-}
-
-/* Project field label + select layout — match the rest of the form */
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context .attributes-key-value {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 6px !important;
-}
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context .attributes-key-value--key {
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  color: #1a1a2e !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context .attributes-key-value--value-container,
-html body.router--work-packages-full-create #content
-.work-package--single-view > .attributes-group.-project-context .ng-select .ng-select-container {
-  width: 100% !important;
-  border: 1px solid #d0d7de !important;
-  border-radius: 8px !important;
-  min-height: 36px !important;
-}
-
-
-/* ================================================================
-   WP CREATE — DESCRIPTION EDITOR FULL CLEANUP
-   ----------------------------------------------------------------
-   Scope: body.router--work-packages-full-create #content
-          .attributes-group.description-group
-   Goals:
-     (1) Toolbar = ONE clean row (no wrapping, items overflow to
-         CKEditor's built-in ⋮ menu just like the New-project page).
-     (2) Remove duplicate ⌄ chevrons next to dropdowns.
-     (3) Hide the extras the WP description has but the New-project
-         description doesn't (Choose File, image, undo, redo, help)
-         so the toolbar fits on one row.
-     (4) Editable area shows ONLY where you type — no toolbar items
-         leaking into the content area.
-   ================================================================ */
-
-/* (1) Toolbar = one row. Items that don't fit go into CKEditor's
-       built-in overflow (⋮) at the right end. */
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar__items {
-  flex-wrap: nowrap !important;
-  overflow-x: hidden !important;
-  white-space: nowrap !important;
-}
-
-/* (2) Kill the duplicate dropdown chevron on every split-button
-       in the toolbar. Both the .ck-splitbutton__arrow sub-button
-       and the legacy .ck-dropdown__arrow svg are hidden — only the
-       label's own caret stays. */
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-splitbutton__arrow,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar button.ck-splitbutton__arrow,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-splitbutton > button + button,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button.ck-dropdown__button + .ck-button.ck-dropdown__arrow,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button.ck-splitbutton__action + .ck-button.ck-splitbutton__arrow {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-/* (3) Hide extras that don't exist on the New-project page so the
-       toolbar fits in a single row: Choose File, image upload,
-       undo, redo, find/replace, help, source. */
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar input[type="file"],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar label[for*="file" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar form.op-attachment-file-list--form,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-file-dialog-button,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="image" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="upload" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="undo" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="redo" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="find" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="replace" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="help" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="source" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="undo" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="redo" i],
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="image" i] {
-  display: none !important;
-  width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  visibility: hidden !important;
-}
-
-/* (4) Editable area must be the only place content shows — no
-       toolbar items leaking below the text. The editable area
-       starts where the toolbar ends. */
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-editor__main {
-  display: block !important;
-  position: relative !important;
-}
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-content,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck-editor__editable_inline {
-  min-height: 140px !important;
-  padding: 12px 14px !important;
-  background: #ffffff !important;
-  border: 0 !important;
-  font-size: 14px !important;
-  line-height: 1.55 !important;
-  color: #1f2328 !important;
-}
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck-editor__editable.ck-focused {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-
-/* ============================================================
-   HOMESCREEN CARDS — MATCH MY PAGE WIDGETS
+/* ============================================================`r`n   HOMESCREEN CARDS — MATCH MY PAGE WIDGETS
    Removes the "flat" look (OpenProject removes shadow on home
    cards by default in _homescreen.sass:31). Restores the same
    white card + border + shadow + radius used by My Page widgets
@@ -11934,251 +11020,6 @@ body.action-show_split.controller-work_packages {
 }
 
 /* ================================================================
-   WP SPLIT-CREATE PANEL — PROJECT INPUT FIELD CLEAN LOOK
-   ----------------------------------------------------------------
-   KEEP the blue info banner ("Please choose a project…") around
-   the field as-is. ONLY change the input itself: full-width,
-   white, 1px gray border, 8px radius, chevron on the right —
-   matching the user-supplied reference.
-   ================================================================ */
-
-/* Project search input — clean white pill, single border, proper
-   text padding, chevron visible on the right. */
-
-/* OUTER wrappers — TRANSPARENT, no border (kills the double-border) */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .attributes-key-value--value-container,
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select {
-  width: 100% !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* INNER container — the ONLY element with border + radius + bg */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select-container {
-  width: 100% !important;
-  min-height: 36px !important;
-  border: 1px solid #d0d7de !important;
-  border-radius: 8px !important;
-  background: #ffffff !important;
-  box-shadow: none !important;
-  position: relative !important;
-  display: flex !important;
-  align-items: center !important;
-  padding: 0 !important;
-}
-
-/* Inner value container — typed text sits here with proper padding
-   so it doesn't kiss the borders or overlap the chevron */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select-container .ng-value-container {
-  padding: 0 32px 0 12px !important;       /* 32px right = chevron room */
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 36px !important;
-  display: flex !important;
-  align-items: center !important;
-  flex: 1 1 auto !important;
-}
-
-/* Placeholder text inside the project field — vertically centered.
-   ng-select uses .ng-placeholder for the "Type to search" hint. */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-placeholder {
-  position: static !important;
-  top: auto !important;
-  bottom: auto !important;
-  transform: none !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  line-height: 36px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  height: 36px !important;
-  font-size: 14px !important;
-  color: #6e7781 !important;
-}
-
-/* Typed text + the inner input also vertically centered */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-input,
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-input input,
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-value {
-  display: inline-flex !important;
-  align-items: center !important;
-  height: 36px !important;
-  line-height: 36px !important;
-}
-
-/* The actual search input inside the value container — let it
-   size naturally inside the value container (no width:100% which
-   was clipping typed text against the chevron column). */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select-container .ng-input,
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select-container .ng-input input {
-  padding: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  font-size: 14px !important;
-  color: #1f2328 !important;
-  width: auto !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  flex: 1 1 auto !important;
-}
-
-/* HIDE the native ng-arrow-wrapper completely — we use our own
-   ::after chevron below, no duplicate. */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-arrow-wrapper {
-  display: none !important;
-  width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Focus state — blue ring like other inputs */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select.ng-select-focused .ng-select-container {
-  border-color: #0969da !important;
-  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15) !important;
-}
-
-/* ALWAYS-VISIBLE chevron via ::after on the inner container.
-   No :has() exclusion — we already hide the native arrow above,
-   so this is the only chevron. */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select-container::after {
-  content: "" !important;
-  position: absolute !important;
-  right: 12px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 12px !important;
-  height: 12px !important;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3e%3cpath d='M3 4.5 L6 7.5 L9 4.5' stroke='%236e7781' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3e%3c/svg%3e") !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-  background-size: 12px 12px !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
-  display: block !important;
-}
-
-/* When dropdown opens, rotate our chevron */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group.-project-context .ng-select.ng-select-opened .ng-select-container::after {
-  transform: translateY(-50%) rotate(180deg) !important;
-}
-
-/* Hide the "OTHER" section heading + group on the WP split-create
-   panel. Matched by data-group-name (case-insensitive) so it works
-   across locales / capitalisation. */
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group[data-group-name="Other" i],
-html body.router--work-packages-partitioned-split-view-new
-.attributes-group[data-group-name="other" i] {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-
-
-/* ================================================================
-   WP SPLIT-CREATE PANEL — DESCRIPTION ⋮ OVERFLOW POPUP POLISH
-   ----------------------------------------------------------------
-   The CKEditor toolbar's ⋮ button opens a floating panel with
-   extra items (check-list, image, blockquote, table, history,
-   undo, redo, help). Default layout looks broken (uneven spacing,
-   awkward border). Polish the panel to match the cleaner look
-   used by other CKEditor instances in the project.
-   ================================================================ */
-
-/* The floating panel that pops up when ⋮ is clicked */
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-toolbar.ck-toolbar_floating,
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-dropdown__panel .ck.ck-toolbar {
-  background: #ffffff !important;
-  border: 1px solid #d0d7de !important;
-  border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.10) !important;
-  padding: 4px !important;
-  display: flex !important;
-  flex-wrap: wrap !important;
-  align-items: center !important;
-  gap: 2px !important;
-}
-
-/* Each button inside the popup — consistent size and spacing */
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-toolbar.ck-toolbar_floating .ck-button,
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  border-radius: 4px !important;
-  background: transparent !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  box-sizing: border-box !important;
-}
-
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-toolbar.ck-toolbar_floating .ck-button:hover,
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button:hover {
-  background: #f3f4f6 !important;
-}
-
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-toolbar.ck-toolbar_floating .ck-button.ck-on,
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button.ck-on {
-  background: #eef4fc !important;
-  color: #0969da !important;
-}
-
-/* Icon size consistency inside the popup */
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-toolbar.ck-toolbar_floating .ck-button .ck-icon,
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-dropdown__panel .ck.ck-toolbar .ck-button .ck-icon {
-  width: 16px !important;
-  height: 16px !important;
-}
-
-/* Separator between groups inside the popup */
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-toolbar.ck-toolbar_floating .ck-toolbar__separator,
-html body.router--work-packages-partitioned-split-view-new
-.ck.ck-dropdown__panel .ck.ck-toolbar .ck-toolbar__separator {
-  width: 1px !important;
-  height: 18px !important;
-  background: #e4e8f0 !important;
-  margin: 0 4px !important;
-}
-
-
-/* ================================================================
    WP SPLIT-CREATE PANEL — PROJECT FIELD WIDTH + PLACEHOLDERS
    ----------------------------------------------------------------
    Scope: body.router--work-packages-partitioned-split-view-new
@@ -12428,67 +11269,1168 @@ op-github-pull-request-state .op-pull-request-state:hover {
 
 
 /* ================================================================
-   WP CREATE — FINAL MASONRY OVERRIDE (CSS COLUMNS on wp-single-view)
-   ----------------------------------------------------------------
-   Earlier blocks make wp-single-view a 2-column GRID, which forces
-   each row to the height of its tallest card and leaves empty space
-   below short cards (Basic info, People, Attachments).
-
-   This final block at end-of-file wins the cascade and replaces the
-   grid with a CSS multi-column layout so cards pack tightly within
-   each column independently.
-
-   Key points:
-     • `wp-single-view` becomes `display: block` + `column-count: 2`
-     • `.work-package--single-view` stays `display: contents` so its
-       children become direct participants in wp-single-view's column
-       flow (alongside the sibling `.work-packages--storages`).
-     • Every card is `break-inside: avoid` so it never splits mid-card.
-     • Grid placement rules from earlier blocks are unset/neutralised.
-     • Project-context banner spans both columns at the top.
+   WP CREATE - RECOVERY GRID OVERRIDE
+   Scope: body.router--work-packages-full-create only.
    ================================================================ */
-@media (min-width: 1024px) {
+html body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container,
+html body.router--work-packages-full-create #content .work-packages--toolbar-container,
+html body.router--work-packages-full-create #content .PageHeader,
+html body.router--work-packages-full-create #content .wp-new-top-row {
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+  min-height: unset !important;
+  height: auto !important;
+  padding-bottom: 0 !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container .toolbar,
+html body.router--work-packages-full-create #content .toolbar-container .title-container,
+html body.router--work-packages-full-create #content .PageHeader .PageHeader-titleArea {
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container + *,
+html body.router--work-packages-full-create #content .work-packages--toolbar-container + *,
+html body.router--work-packages-full-create #content .PageHeader + *,
+html body.router--work-packages-full-create #content .wp-new-top-row + * {
+  margin-top: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+  grid-template-rows: none !important;
+  grid-template-areas: none !important;
+  grid-auto-rows: min-content !important;
+  grid-auto-flow: row !important;
+  gap: 16px !important;
+  align-items: start !important;
+  align-content: start !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  column-count: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
+  display: contents !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  align-self: start !important;
+  align-content: start !important;
+  justify-content: flex-start !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  flex: 0 0 auto !important;
+  flex-grow: 0 !important;
+  column-count: auto !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-map,
+html body.router--work-packages-full-create #content wp-single-view .attributes-key-value,
+html body.router--work-packages-full-create #content wp-single-view .wp-attribute-group--attribute,
+html body.router--work-packages-full-create #content wp-single-view op-editable-attribute-field,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--container,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--display-container,
+html body.router--work-packages-full-create #content wp-single-view .single-attribute,
+html body.router--work-packages-full-create #content wp-single-view .wp-edit-field,
+html body.router--work-packages-full-create #content wp-single-view ndc-dynamic,
+html body.router--work-packages-full-create #content wp-single-view wp-attribute-group,
+html body.router--work-packages-full-create #content wp-single-view op-wp-form-group,
+html body.router--work-packages-full-create #content wp-single-view op-form-group,
+html body.router--work-packages-full-create #content wp-single-view .op-tab-content {
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  align-self: start !important;
+  align-content: start !important;
+  justify-content: flex-start !important;
+  flex-grow: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper {
+  grid-column: 1 / 2 !important;
+  grid-row: 1 / 2 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.description-group {
+  grid-column: 1 / 2 !important;
+  grid-row: 2 / 3 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+  grid-column: 1 / 2 !important;
+  grid-row: 3 / 4 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context {
+  grid-column: 2 / 3 !important;
+  grid-row: 1 / 2 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="People" i] {
+  grid-column: 2 / 3 !important;
+  grid-row: 2 / 3 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Properties" i] {
+  grid-column: 2 / 3 !important;
+  grid-row: 3 / 4 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  grid-column: 1 / -1 !important;
+  grid-row: 4 / 5 !important;
+  position: relative !important;
+  padding: 16px 18px !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header,
+html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container,
+html body.router--work-packages-full-create #content .attributes-group::before,
+html body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
+html body.router--work-packages-full-create #content .attributes-group.description-group::before {
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group {
+  padding: 16px 18px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group:not(.description-group) .attributes-map {
+  grid-template-columns: 1fr !important;
+  grid-auto-rows: min-content !important;
+  row-gap: 10px !important;
+  align-items: start !important;
+  align-content: start !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group.-project-context .wp-project-context--warning {
+  margin: 0 0 10px 0 !important;
+  padding: 10px 12px !important;
+  line-height: 1.4 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > .op-tab-content--header,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages .op-tab-content--header {
+  position: static !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: unset !important;
+  margin: -16px -18px 12px -18px !important;
+  padding: 12px 18px !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name="Costs" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name="Other" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name="Budget" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Cost" i] {
+  display: none !important;
+}
+
+html body.router--work-packages-full-create #content .toolbar-container_bottom,
+html body.router--work-packages-full-create #content .work-packages--panel-inner-actions,
+html body.router--work-packages-full-create #content .work-packages--action-buttons,
+html body.router--work-packages-full-create #content [class*="action-buttons"],
+html body.router--work-packages-full-create #content [class*="submit-buttons"],
+html body.router--work-packages-full-create #content .work-packages--edit-actions,
+html body.router--work-packages-full-create #content .work-packages--buttons {
+  display: grid !important;
+  grid-auto-flow: column !important;
+  justify-content: end !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  margin-top: 16px !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  float: none !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--edit-actions,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--buttons {
+  grid-column: 2 / 3 !important;
+  grid-row: 5 / 6 !important;
+  margin-top: 0 !important;
+}
+
+@media (max-width: 1023px) {
   html body.router--work-packages-full-create #content wp-single-view {
-    display: block !important;
-    column-count: 2 !important;
-    column-gap: 20px !important;
-    column-fill: balance !important;
-    grid-template-columns: unset !important;
-    grid-template-rows: unset !important;
-    grid-auto-rows: unset !important;
-    grid-auto-flow: unset !important;
+    grid-template-columns: 1fr !important;
   }
 
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
-    display: contents !important;
-  }
-
-  /* Every card: opt out of grid placement, become a column-flow block,
-     never break across columns. Covers cards inside the inner
-     .work-package--single-view (which is display: contents) AND the
-     sibling .work-packages--storages.                                */
   html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group:not(.-project-context),
-  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--edit-actions,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--buttons {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+  }
+}
+
+/* ================================================================
+   WP CREATE - RENDERED WRAPPER SPACING FIX
+   Scope: body.router--work-packages-full-create only.
+   The cards live inside .work-package--single-view, while attachments
+   are a sibling. Keep the route grid host, but let each visual column
+   stack independently so unequal card heights cannot create blank rows.
+   ================================================================ */
+html body.router--work-packages-full-create #content edit-form,
+html body.router--work-packages-full-create #content .work-package--new-state,
+html body.router--work-packages-full-create #content .work-packages--new,
+html body.router--work-packages-full-create #content .wp-new-create-form,
+html body.router--work-packages-full-create #content .work-packages-partitioned-page--component {
+  display: block !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  align-content: start !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content .work-package--new-state.toolbar-container,
+html body.router--work-packages-full-create #content .work-packages--new.toolbar-container,
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: unset !important;
+  margin: 0 0 16px 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.95fr) !important;
+  gap: 16px !important;
+  align-items: start !important;
+  align-content: start !important;
+  grid-auto-rows: min-content !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view[data-selector="wp-single-view"],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view {
+  display: flow-root !important;
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  align-self: start !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view::after {
+  content: "" !important;
+  display: block !important;
+  clear: both !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 16px !important;
+  align-self: start !important;
+  place-self: start stretch !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.description-group,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+  float: left !important;
+  clear: left !important;
+  width: calc(63.4615% - 10.1538px) !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="People" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Properties" i] {
+  float: right !important;
+  clear: right !important;
+  width: calc(36.5385% - 5.8462px) !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-info-wrapper,
+html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > ndc-dynamic:empty {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-map,
+html body.router--work-packages-full-create #content wp-single-view .attributes-group > div:not(.attributes-group--header),
+html body.router--work-packages-full-create #content wp-single-view ndc-dynamic,
+html body.router--work-packages-full-create #content wp-single-view wp-attribute-group,
+html body.router--work-packages-full-create #content wp-single-view op-wp-form-group,
+html body.router--work-packages-full-create #content wp-single-view op-form-group,
+html body.router--work-packages-full-create #content wp-single-view op-editable-attribute-field,
+html body.router--work-packages-full-create #content wp-single-view .single-attribute,
+html body.router--work-packages-full-create #content wp-single-view .wp-edit-field,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--container,
+html body.router--work-packages-full-create #content wp-single-view .inline-edit--display-container {
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  align-self: start !important;
+  align-content: start !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view .attributes-group:not(.description-group) .attributes-map {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-auto-rows: min-content !important;
+  row-gap: 10px !important;
+  align-items: start !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  clear: both !important;
+  grid-column: 1 / -1 !important;
+  grid-row: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 0 0 0 0 !important;
+  padding: 16px 18px !important;
+  align-self: start !important;
+  flex: none !important;
+  flex-grow: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > div,
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages ndc-dynamic {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content wp-edit-actions-bar,
+html body.router--work-packages-full-create #content wp-edit-actions-bar > .work-packages--edit-actions,
+html body.router--work-packages-full-create #content .work-packages--edit-actions {
+  position: static !important;
+  inset: auto !important;
+  bottom: auto !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: unset !important;
+  max-height: none !important;
+  margin: 16px 0 16px 0 !important;
+  padding: 0 !important;
+  float: none !important;
+  clear: both !important;
+}
+
+@media (max-width: 1023px) {
+  html body.router--work-packages-full-create #content wp-single-view,
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view[data-selector="wp-single-view"] {
     display: block !important;
-    width: 100% !important;
-    break-inside: avoid !important;
-    -webkit-column-break-inside: avoid !important;
-    page-break-inside: avoid !important;
-    grid-column: unset !important;
-    grid-row: unset !important;
-    margin: 0 0 20px 0 !important;
-    align-self: unset !important;
   }
 
-  /* Project-context banner spans both columns at the top */
-  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context {
-    column-span: all !important;
-    -webkit-column-span: all !important;
-    display: block !important;
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+  html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    float: none !important;
+    clear: both !important;
     width: 100% !important;
-    grid-column: unset !important;
-    grid-row: unset !important;
-    margin: 0 0 20px 0 !important;
+    margin-bottom: 16px !important;
   }
+}
+
+html body.router--work-packages-full-create #content .wp-new-top-row,
+html body.router--work-packages-full-create #content .work-package--new-state.toolbar-container,
+html body.router--work-packages-full-create #content .work-packages--new.toolbar-container,
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  padding-bottom: 16px !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar + wp-single-view {
+  margin-top: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 0 16px 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar > .title-container {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row .work-packages--status-selector,
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row .work-packages--type-selector {
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row .work-packages--type-selector {
+  position: relative !important;
+  margin-left: auto !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .toolbar-items {
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .toolbar-item {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* ================================================================
+   WP CREATE - DESCRIPTION CKEDITOR
+   ----------------------------------------------------------------
+   Match the native/New Project CKEditor layout. Scope only to the
+   Work Package create page's Description editor and keep CKEditor
+   functionality, menus, fullscreen controls, and dropdown panels intact.
+   ================================================================ */
+html body.router--work-packages-full-create #content .attributes-group.description-group,
+html body.router--work-packages-full-create #content .attributes-group.description-group .single-attribute,
+html body.router--work-packages-full-create #content .work-packages--details--description {
+  min-width: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .op-ckeditor,
+html body.router--work-packages-full-create #content .attributes-group.description-group .op-ckeditor--wrapper,
+html body.router--work-packages-full-create #content .attributes-group.description-group .op-ckeditor-source-element,
+html body.router--work-packages-full-create #content .attributes-group.description-group .document-editor,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .document-editor__toolbar,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor__top,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-sticky-panel,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-sticky-panel__content {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  flex-flow: row wrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 40px !important;
+  height: auto !important;
+  padding: 4px 6px !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-bottom: none !important;
+  border-radius: 6px 6px 0 0 !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__items {
+  display: flex !important;
+  align-items: center !important;
+  flex-flow: row wrap !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  gap: 4px !important;
+  overflow: hidden !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__items > :not(.ck-toolbar__line-break),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck.ck-toolbar__grouped-dropdown {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-toolbar__line-break {
+  display: none !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-button,
+html body.router--work-packages-full-create #content .attributes-group.description-group a.ck.ck-button,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown .ck-button.ck-dropdown__button,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-file-dialog-button,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-splitbutton {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 32px !important;
+  width: 32px !important;
+  min-height: 32px !important;
+  height: 32px !important;
+  padding: 4px !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  vertical-align: middle !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button::before,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button::after,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown::before,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown::after,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-splitbutton::before,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-splitbutton::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Hide unwanted Description toolbar controls shown in the WP create editor:
+   image/upload, quote, table, undo/redo, history/revision, and help. */
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="image" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="upload" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="quote" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="blockquote" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="table" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="undo" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="redo" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="history" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="revision" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="version" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="restore" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="help" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label*="question" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="image" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="upload" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="quote" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="blockquote" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="table" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="undo" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="redo" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="history" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="revision" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="version" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="restore" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="help" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title*="question" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="image" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="upload" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="quote" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="blockquote" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="table" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="undo" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="redo" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="history" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="revision" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="version" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="restore" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="help" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text*="question" i],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="image" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="upload" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="table" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="history" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="revision" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="version" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="restore" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="help" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="question" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="image" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="upload" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="table" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="history" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="revision" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="version" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="restore" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="help" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="question" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="image" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="upload" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="table" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="history" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="revision" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="version" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="restore" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="help" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="question" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="recent" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="local" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="change" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[aria-label*="save" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="recent" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="local" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="change" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[title*="save" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="recent" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="local" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="change" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button[data-cke-tooltip-text*="save" i]),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-dropdown__button:not(.ck-button_with-text)),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button_with-text .ck-button__label:empty),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-file-dialog-button {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  min-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-button.ck-button_with-text,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown .ck-button.ck-dropdown__button.ck-button_with-text {
+  justify-content: flex-start !important;
+  width: auto !important;
+  min-width: 116px !important;
+  max-width: 156px !important;
+  padding: 4px 28px 4px 10px !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-button .ck-button__icon,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-button svg,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-icon {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  margin: 0 !important;
+  flex: 0 0 16px !important;
+  display: block !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown .ck-dropdown__button.ck-button_with-text .ck-button__icon {
+  display: none !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-splitbutton {
+  width: auto !important;
+  min-width: 32px !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown .ck-button__label {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 96px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  line-height: 22px !important;
+  font-size: 13px !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown .ck-dropdown__arrow {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: static !important;
+  transform: none !important;
+  margin: 0 !important;
+  margin-left: 8px !important;
+  pointer-events: none !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck.ck-toolbar__separator {
+  flex: 0 0 1px !important;
+  width: 1px !important;
+  min-width: 1px !important;
+  height: 18px !important;
+  margin: 0 2px !important;
+  align-self: center !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .document-editor__editable-container,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor__main {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-editor__editable,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor__editable_inline,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-content {
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 100px !important;
+  height: auto !important;
+  padding: 10px !important;
+  overflow: auto !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-top: none !important;
+  border-radius: 0 0 6px 6px !important;
+  box-sizing: border-box !important;
+  color: #1f2937 !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-editor__editable:focus,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor__editable_inline:focus,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-content:focus {
+  border-color: #1a7f4b !important;
+  box-shadow: 0 0 0 3px rgba(26, 127, 75, 0.12) !important;
+  outline: none !important;
+}
+
+/* WP create: Project, People, and Details body rhythm.
+   Details is the reference structure: its Angular wrappers are layout-only
+   (`display: contents`), so the card grid's 14px row-gap controls the top
+   body breathing room and every field-to-field interval. Project and People
+   need the same model without changing the outer card grid/widths. */
+html body.router--work-packages-full-create #content .attributes-group.-project-context,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i],
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i],
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-auto-rows: min-content !important;
+  row-gap: 12px !important;
+  align-items: start !important;
+  align-content: start !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context::before {
+  content: "Project" !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+  line-height: 1.4 !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context > div,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] > ndc-dynamic,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] > ndc-dynamic > wp-attribute-group.attributes-group--attributes {
+  display: contents !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .wp-project-context--warning {
+  grid-column: 1 / -1 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .attributes-key-value,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .wp-attribute-group--attribute,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .attributes-key-value,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .wp-attribute-group--attribute {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  gap: 6px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .attributes-key-value--key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .wp-attribute-group--attribute-key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .attributes-key-value--key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .wp-attribute-group--attribute-key {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.4 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  font-family: product-sans, "Product Sans", "Google Sans", system-ui, sans-serif !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--key wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--key wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--key .wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--key .wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key .wp-replacement-label {
+  font: inherit !important;
+  color: inherit !important;
+  line-height: inherit !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .wp-attribute-group--attribute-value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .wp-attribute-group--attribute-value-container,
+html body.router--work-packages-full-create #content .attributes-group.-project-context op-editable-attribute-field,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-editable-attribute-field,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] op-editable-attribute-field,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] op-editable-attribute-field,
+html body.router--work-packages-full-create #content .attributes-group.-project-context .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-user-autocompleter,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .inline-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-autocompleter,
+html body.router--work-packages-full-create #content .attributes-group.-project-context .ng-select,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .ng-select,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .ng-select,
+html body.router--work-packages-full-create #content .attributes-group.-project-context .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .ng-select-container {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-user-autocompleter.inline-edit--field {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .ng-select-container {
+  display: flex !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Final WP-create attachment alignment override. Scoped to the real
+   storages container only: 16px rhythm, compact dropzone, and
+   non-overlapping uploaded rows. */
+html body.router--work-packages-full-create #content .work-packages--storages {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin-top: 16px !important;
+  margin-bottom: 0 !important;
+  overflow: visible !important;
+}
+
+@media (min-width: 1024px) {
+  html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+    grid-column: 1 / 2 !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-self: stretch !important;
+    align-self: start !important;
+  }
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages op-attachments,
+html body.router--work-packages-full-create #content .work-packages--storages op-attachment-list {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
+  margin-bottom: 12px !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--drop-box,
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--drop-box_float,
+html body.router--work-packages-full-create #content .work-packages--storages [data-test-selector="op-attachments--drop-box"],
+html body.router--work-packages-full-create #content .work-packages--storages [data-test-selector="op-storage--drop-box"] {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  padding: 0 12px !important;
+  margin: 0 0 8px 0 !important;
+  float: none !important;
+  clear: both !important;
+  position: relative !important;
+  white-space: normal !important;
+  text-align: left !important;
+  line-height: 1.3 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  border: 1px dashed #cbd5e1 !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  order: 1 !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--drop-box svg,
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--drop-box-icon {
+  display: inline-flex !important;
+  flex: 0 0 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--drop-box-text {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  text-align: left !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--list,
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  order: 2 !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item,
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-floating-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-action {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 4px 0 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-title {
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding-right: 8px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-title > span {
+  display: block !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-text,
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-avatar {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-list--item-floating-actions {
+  right: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+}
+
+html body.router--work-packages-full-create #content .work-packages--storages .op-file-section--actions {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
 }
