@@ -10557,16 +10557,17 @@ html body.router--work-packages-full-create #content .attributes-group > .attrib
 html body.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container,
 html body.router--work-packages-full-create #content .attributes-group::before,
 html body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
-html body.router--work-packages-full-create #content .attributes-group.description-group::before {
+html body.router--work-packages-full-create #content .attributes-group.description-group::before,
+html body.router--work-packages-full-create #content .attributes-group.-project-context::before {
   width: auto !important;
   box-sizing: border-box !important;
-  /* horizontal margin matches each card's 24px side padding so the
+  /* horizontal margin matches each card's 18px side padding so the
      gray strip reaches both card borders edge-to-edge */
-  margin-left: -24px !important;
-  margin-right: -24px !important;
-  margin-top: -22px !important;
-  margin-bottom: 18px !important;
-  padding: 14px 22px !important;
+  margin-left: -18px !important;
+  margin-right: -18px !important;
+  margin-top: -16px !important;
+  margin-bottom: 0 !important;
+  padding: 14px 18px !important;
   background-color: #f6f8fa !important;
   border-bottom: 1px solid #e4e8f0 !important;
   display: block !important;
@@ -11419,7 +11420,7 @@ html body.router--work-packages-full-create #content .attributes-group > .attrib
 html body.router--work-packages-full-create #content .attributes-group::before,
 html body.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
 html body.router--work-packages-full-create #content .attributes-group.description-group::before {
-  margin-bottom: 12px !important;
+  margin-bottom: 0 !important;
 }
 
 html body.router--work-packages-full-create #content wp-single-view .wp-new--subject-wrapper,
@@ -11845,14 +11846,14 @@ html body.router--work-packages-full-create #content .attributes-group.descripti
 html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar {
   display: flex !important;
   align-items: center !important;
-  flex-flow: row nowrap !important;
+  flex-flow: row wrap !important;
   width: 100% !important;
   max-width: 100% !important;
   min-height: 40px !important;
-  height: 40px !important;
+  height: auto !important;
   padding: 4px 6px !important;
   gap: 4px !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   background: #f9fafb !important;
   border: 1px solid #e5e7eb !important;
   border-bottom: none !important;
@@ -11863,12 +11864,12 @@ html body.router--work-packages-full-create #content .attributes-group.descripti
 html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__items {
   display: flex !important;
   align-items: center !important;
-  flex-flow: row nowrap !important;
+  flex-flow: row wrap !important;
   flex: 1 1 auto !important;
   min-width: 0 !important;
   max-width: 100% !important;
   gap: 4px !important;
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__items > :not(.ck-toolbar__line-break),
@@ -12116,43 +12117,53 @@ html body.router--work-packages-full-create #content .attributes-group.descripti
   outline: none !important;
 }
 
-/* WP create: Project + People card inner spacing. Match the Details
-   card rhythm without changing the grid, card widths, or page layout. */
+/* WP create: Project, People, and Details body rhythm.
+   Details is the reference structure: its Angular wrappers are layout-only
+   (`display: contents`), so the card grid's 14px row-gap controls the top
+   body breathing room and every field-to-field interval. Project and People
+   need the same model without changing the outer card grid/widths. */
 html body.router--work-packages-full-create #content .attributes-group.-project-context,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] {
-  padding: 16px 18px !important;
-  box-sizing: border-box !important;
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i],
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i],
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-auto-rows: min-content !important;
+  row-gap: 12px !important;
+  align-items: start !important;
+  align-content: start !important;
 }
 
-html body.router--work-packages-full-create #content .attributes-group.-project-context > .attributes-group--header,
-html body.router--work-packages-full-create #content .attributes-group.-project-context > .attributes-group--header-container,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] > .attributes-group--header,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] > .attributes-group--header-container,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i]::before {
-  margin: -16px -18px 12px -18px !important;
-  padding: 12px 18px !important;
-  box-sizing: border-box !important;
+html body.router--work-packages-full-create #content .attributes-group.-project-context::before {
+  content: "Project" !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+  line-height: 1.4 !important;
 }
 
 html body.router--work-packages-full-create #content .attributes-group.-project-context > div,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-map {
-  display: grid !important;
-  grid-template-columns: 1fr !important;
-  row-gap: 10px !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] > ndc-dynamic,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] > ndc-dynamic > wp-attribute-group.attributes-group--attributes {
+  display: contents !important;
 }
 
 html body.router--work-packages-full-create #content .attributes-group.-project-context .wp-project-context--warning {
-  margin: 0 0 12px 0 !important;
+  grid-column: 1 / -1 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
 }
 
 html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute {
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .attributes-key-value,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .wp-attribute-group--attribute,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .attributes-key-value,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .wp-attribute-group--attribute {
   display: flex !important;
   flex-direction: column !important;
   align-items: stretch !important;
@@ -12166,30 +12177,92 @@ html body.router--work-packages-full-create #content .attributes-group[data-grou
 
 html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--key,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--key,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key {
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .attributes-key-value--key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .wp-attribute-group--attribute-key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .attributes-key-value--key,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .wp-attribute-group--attribute-key {
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
   margin: 0 !important;
   padding: 0 !important;
-  line-height: 1.25 !important;
+  line-height: 1.4 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #334155 !important;
+  font-family: product-sans, "Product Sans", "Google Sans", system-ui, sans-serif !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--key wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--key wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--key .wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--key .wp-replacement-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-key .wp-replacement-label {
+  font: inherit !important;
+  color: inherit !important;
+  line-height: inherit !important;
 }
 
 html body.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value--value-container,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .attributes-key-value--value-container,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .wp-attribute-group--attribute-value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .wp-attribute-group--attribute-value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .attributes-key-value--value-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .wp-attribute-group--attribute-value-container,
 html body.router--work-packages-full-create #content .attributes-group.-project-context op-editable-attribute-field,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-editable-attribute-field,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] op-editable-attribute-field,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] op-editable-attribute-field,
 html body.router--work-packages-full-create #content .attributes-group.-project-context .inline-edit--container,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .inline-edit--container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-user-autocompleter,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .inline-label,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-autocompleter,
 html body.router--work-packages-full-create #content .attributes-group.-project-context .ng-select,
 html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .ng-select,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .ng-select,
 html body.router--work-packages-full-create #content .attributes-group.-project-context .ng-select-container,
-html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select-container {
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .ng-select-container {
+  display: block !important;
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] op-user-autocompleter.inline-edit--field {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.-project-context .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="People" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Detail" i] .ng-select-container,
+html body.router--work-packages-full-create #content .attributes-group[data-group-name*="Properties" i] .ng-select-container {
+  display: flex !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  width: 100% !important;
   margin: 0 !important;
 }
 
