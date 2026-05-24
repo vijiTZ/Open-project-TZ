@@ -11533,33 +11533,13 @@ html body.router--work-packages-full-create #content
 html body.router--work-packages-full-create #content
 .attributes-group.description-group .ck.ck-toolbar__items {
   flex-wrap: nowrap !important;
-  overflow-x: hidden !important;
+  overflow: visible !important;
   white-space: nowrap !important;
 }
 
-/* (2) Kill the duplicate dropdown chevron on every split-button
-       in the toolbar. Both the .ck-splitbutton__arrow sub-button
-       and the legacy .ck-dropdown__arrow svg are hidden — only the
-       label's own caret stays. */
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-splitbutton__arrow,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar button.ck-splitbutton__arrow,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-splitbutton > button + button,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button.ck-dropdown__button + .ck-button.ck-dropdown__arrow,
-html body.router--work-packages-full-create #content
-.attributes-group.description-group .ck.ck-toolbar .ck-button.ck-splitbutton__action + .ck-button.ck-splitbutton__arrow {
-  display: none !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
+/* (2) Keep CKEditor's native split-button/dropdown controls active.
+       Duplicate decorative chevrons are removed by the scoped pseudo
+       reset below without hiding the clickable native arrow buttons. */
 /* (3) Hide extras that don't exist on the New-project page so the
        toolbar fits in a single row: Choose File, image upload,
        undo, redo, find/replace, help, source. */
@@ -13035,7 +13015,7 @@ html body.router--work-packages-full-create #content .work-packages--edit-action
   height: auto !important;
   min-height: unset !important;
   max-height: none !important;
-  margin: 16px 0 0 0 !important;
+  margin: 16px 0 16px 0 !important;
   padding: 0 !important;
   float: none !important;
   clear: both !important;
@@ -13055,4 +13035,263 @@ html body.router--work-packages-full-create #content .work-packages--edit-action
     width: 100% !important;
     margin-bottom: 16px !important;
   }
+}
+
+/* ================================================================
+   WP CREATE - RESTORE NATIVE CKEDITOR DESCRIPTION TOOLBAR
+   Scope only: body.router--work-packages-full-create
+   CSS-only reset for duplicated chevrons / broken toolbar overflow.
+   ================================================================ */
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-editor,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-editor,
+body.router--work-packages-full-create #content [data-field-name="description"] .op-uc-container {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor__top,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck-editor__top {
+  width: 100% !important;
+  margin: 0 !important;
+  overflow: visible !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar.ck-toolbar_grouping,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar.ck-toolbar_grouping,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 2px !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 4px 6px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  background: #f3f6f9 !important;
+  border: 1px solid #cfd7e3 !important;
+  border-bottom-width: 1px !important;
+  border-radius: 0 !important;
+  box-sizing: border-box !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__items,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar > .ck-toolbar__items {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 2px !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-button,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-dropdown,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-splitbutton,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-splitbutton,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-file-dialog-button,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-file-dialog-button {
+  display: inline-flex !important;
+  flex: 0 0 auto !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-button {
+  min-width: 30px !important;
+  padding: 4px 6px !important;
+  color: #263445 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  box-shadow: none !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button:hover,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-button:hover {
+  background: #e6ebf2 !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button.ck-on,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-button.ck-on {
+  color: #0c66e4 !important;
+  background: #dbeafe !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button::before,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button::after,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown::before,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown::after,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-splitbutton::before,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-splitbutton::after,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-button::before,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-button::after,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-dropdown::before,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-dropdown::after,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-splitbutton::before,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-splitbutton::after {
+  content: none !important;
+  display: none !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown__arrow,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-dropdown__arrow,
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-splitbutton__arrow,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar .ck-splitbutton__arrow {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__grouped-dropdown,
+body.router--work-packages-full-create #content [data-field-name="description"] .ck.ck-toolbar > .ck-toolbar__grouped-dropdown {
+  flex: 0 0 auto !important;
+  flex-shrink: 0 !important;
+  margin-left: auto !important;
+  overflow: visible !important;
+}
+
+body.router--work-packages-full-create .ck.ck-dropdown__panel {
+  z-index: 10000 !important;
+  box-sizing: border-box !important;
+  width: max-content !important;
+  min-width: min(220px, calc(100vw - 32px)) !important;
+  max-width: min(420px, calc(100vw - 32px)) !important;
+  max-height: min(320px, calc(100vh - 180px)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+body.router--work-packages-full-create .ck.ck-balloon-panel {
+  z-index: 10001 !important;
+  box-sizing: border-box !important;
+  max-width: min(420px, calc(100vw - 32px)) !important;
+  max-height: min(320px, calc(100vh - 180px)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+body.router--work-packages-full-create .ck-toolbar__grouped-dropdown .ck-dropdown__panel .ck.ck-toolbar,
+body.router--work-packages-full-create .ck-dropdown__panel .ck.ck-toolbar {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 2px !important;
+  width: max-content !important;
+  max-width: min(420px, calc(100vw - 32px)) !important;
+  max-height: min(300px, calc(100vh - 200px)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  white-space: normal !important;
+  background: #ffffff !important;
+  border: 1px solid #cfd7e3 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.16) !important;
+}
+
+body.router--work-packages-full-create .ck-toolbar__grouped-dropdown > .ck-dropdown__panel {
+  inset-inline-end: 0 !important;
+  inset-inline-start: auto !important;
+}
+
+body.router--work-packages-full-create .ck.ck-dropdown__panel .ck-list,
+body.router--work-packages-full-create .ck.ck-dropdown__panel .ck-menu,
+body.router--work-packages-full-create .ck.ck-dropdown__panel .ck-insert-table-dropdown__grid {
+  max-width: min(360px, calc(100vw - 48px)) !important;
+  max-height: min(280px, calc(100vh - 220px)) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+html body.router--work-packages-full-create #content .wp-new-top-row,
+html body.router--work-packages-full-create #content .work-package--new-state.toolbar-container,
+html body.router--work-packages-full-create #content .work-packages--new.toolbar-container,
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  padding-bottom: 16px !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar + wp-single-view {
+  margin-top: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 0 16px 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar > .title-container {
+  display: block !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 36px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row .work-packages--status-selector,
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row .work-packages--type-selector {
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .wp-new-top-row .work-packages--type-selector {
+  position: relative !important;
+  margin-left: auto !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .toolbar-items {
+  display: flex !important;
+  align-items: center !important;
+  flex: 0 0 auto !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+html body.router--work-packages-full-create #content edit-form > .toolbar .toolbar-item {
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
