@@ -28,6 +28,13 @@ services:
       - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
       # tz: SMTP defaults (editable from admin UI)
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      # tz: change PR prefix from OP# to TZ#
+      - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
+      # tz: Teams webhook integration (auto-formats payloads for Teams)
+      - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
+      # tz: GitHub repo manager (admin UI for connecting repos)
+      - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
+      - "./github_settings_show.html.erb:/app/modules/github_integration/app/views/github_integration/admin/settings/show.html.erb"
       # tz: allow webhook requests from external tunnels (ngrok/localtunnel)
       - "./tz_webhook_host_bypass.rb:/app/config/initializers/tz_webhook_host_bypass.rb"
       # tz: replace upstream homescreen initializer to hide selected
@@ -43,6 +50,8 @@ services:
       # tz: project settings information page — card layout redesign
       - "../openproject-source/app/views/projects/settings/general/show.html.erb:/app/app/views/projects/settings/general/show.html.erb"
       - "../openproject-source/app/components/projects/settings/general/show_component.html.erb:/app/app/components/projects/settings/general/show_component.html.erb"
+      # tz: branded email template (TamilZorous logo, colors, card layout)
+      - "./mailer.html.erb:/app/app/views/layouts/mailer.html.erb"
 
   worker:
     volumes:
@@ -57,7 +66,11 @@ services:
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
       - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
+      - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
+      - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
+      - "./mailer.html.erb:/app/app/views/layouts/mailer.html.erb"
 
   cron:
     volumes:
@@ -72,6 +85,7 @@ services:
       - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
       - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
 
   seeder:

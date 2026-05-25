@@ -527,3 +527,85 @@
     startPlaceholderInjector();
   }
 })();
+
+
+/* ================================================================
+   WEBHOOK TEST CONNECTION BUTTON
+   ----------------------------------------------------------------
+   Injects a "Test Connection" button on the webhook detail page
+   (/admin/settings/webhooks/:id). Sends a POST to the test endpoint
+   created by tz_teams_webhook.rb.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  function injectTestButton() {
+    // Only on webhook show pages: /admin/settings/webhooks/:id
+    var path = window.location.pathname;
+    var match = path.match(/\/admin\/settings\/webhooks\/(\d+)$/);
+    if (!match) return;
+
+    var webhookId = match[1];
+
+    // Find the page header actions area (where Edit and Delete buttons are)
+    var actionButtons = document.querySelectorAll('[data-turbo-method="delete"]');
+    if (actionButtons.length === 0) return;
+
+    var deleteBtn = actionButtons[0].closest('a') || actionButtons[0];
+    var container = deleteBtn.parentElement;
+    if (!container) return;
+
+    // Don't inject twice
+    if (document.querySelector('.tz-test-connection-btn')) return;
+
+    // Create the test button as a form (POST)
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/admin/settings/webhooks/' + webhookId + '/test_connection';
+    form.style.display = 'inline';
+
+    // Add CSRF token
+    var csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    if (csrfMeta) {
+      var csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = 'authenticity_token';
+      csrfInput.value = csrfMeta.getAttribute('content');
+      form.appendChild(csrfInput);
+    }
+
+    var btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.className = 'tz-test-connection-btn Button--medium Button Button--secondary';
+    btn.style.cssText = 'padding: 6px 16px; background: #0C66E4; color: white; border: none; ' +
+                        'border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; ' +
+                        'margin-right: 8px; display: inline-flex; align-items: center; gap: 6px;';
+    btn.innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">' +
+                    '<path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.78 5.97a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 0 1-1.06 0l-2-2a.75.75 0 1 1 1.06-1.06L7.25 9.44l3.47-3.47a.75.75 0 0 1 1.06 0z"/>' +
+                    '</svg> Test Connection';
+    btn.title = 'Send a test message to this webhook URL';
+
+    form.appendChild(btn);
+
+    // Insert before the delete button
+    container.insertBefore(form, deleteBtn.closest('a') || deleteBtn);
+
+    try { console.log('[op-custom] Test Connection button injected for webhook #' + webhookId); } catch (e) {}
+  }
+
+  // Run on page load and on turbo navigation
+  function init() {
+    injectTestButton();
+    // Re-check on Turbo navigation (OpenProject uses Turbo)
+    var observer = new MutationObserver(function () {
+      setTimeout(injectTestButton, 300);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

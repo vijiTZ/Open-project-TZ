@@ -3,3 +3,7 @@
 en:
   global_search:
     placeholder: "Search service"
+  js:
+    github_integration:
+      tab_prs:
+        empty: 'There are no pull requests linked yet. Link an existing PR by using the code <code>TZ#%{wp_id}</code> in the PR title or description, or create a new PR.'
