@@ -609,3 +609,61 @@
     init();
   }
 })();
+
+/* ================================================================
+   TZ# PREFIX OVERRIDE
+   ----------------------------------------------------------------
+   The GitHub integration tab shows "OP#<id>" in its empty-state
+   message. The JS translations are pre-compiled so YAML overrides
+   don't apply. This scans the DOM periodically and via
+   MutationObserver to replace OP# with TZ# in the GitHub tab.
+   ================================================================ */
+(function () {
+  'use strict';
+
+  function replaceOP() {
+    // Target the empty-state text box in the GitHub tab
+    var boxes = document.querySelectorAll('.op-tab-content--text-box, [class*="op-tab-content"]');
+    boxes.forEach(function (el) {
+      if (el.innerHTML && el.innerHTML.indexOf('OP#') !== -1) {
+        el.innerHTML = el.innerHTML.replace(/OP#/g, 'TZ#');
+      }
+    });
+    // Also scan any element inside github-tab or op-tab-prs
+    var ghTabs = document.querySelectorAll('github-tab, op-tab-prs, .op-github-prs');
+    ghTabs.forEach(function (tab) {
+      var all = tab.querySelectorAll('*');
+      all.forEach(function (el) {
+        if (el.children.length === 0 && el.textContent && el.textContent.indexOf('OP#') !== -1) {
+          el.textContent = el.textContent.replace(/OP#/g, 'TZ#');
+        }
+        if (el.innerHTML && el.innerHTML.indexOf('OP#') !== -1 && el.children.length > 0) {
+          el.innerHTML = el.innerHTML.replace(/OP#/g, 'TZ#');
+        }
+      });
+    });
+  }
+
+  function init() {
+    // Run immediately and on interval for Angular lazy-rendered content
+    replaceOP();
+    var attempts = 0;
+    var iv = setInterval(function () {
+      replaceOP();
+      attempts++;
+      if (attempts > 60) clearInterval(iv); // stop after ~30s
+    }, 500);
+
+    // Also watch for DOM mutations (Angular adding/changing nodes)
+    var observer = new MutationObserver(function () {
+      replaceOP();
+    });
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

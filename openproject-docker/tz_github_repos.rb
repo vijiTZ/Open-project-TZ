@@ -28,10 +28,36 @@ require "base64"
 
 Rails.application.config.after_initialize do
   begin
-  # --- Controller: handles add/remove repo actions ---
+  # --- Controller: intercept POST requests via before_action on update ---
   GithubIntegration::Admin::SettingsController.class_eval do
-    # POST /github_integration/admin/settings/connect_repo
-    def connect_repo
+    before_action :tz_handle_repo_actions, only: [:update]
+
+    # Override show to load connected repos
+    alias_method :original_show, :show
+    def show
+      original_show
+      settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
+      @connected_repos = Array(settings[:connected_repos])
+      @has_saved_token = settings[:github_admin_token].present?
+    end
+
+    private
+
+    def tz_handle_repo_actions
+      tz_action = params[:tz_action].to_s
+      return unless tz_action.present?
+
+      case tz_action
+      when "connect_repo"
+        tz_connect_repo
+      when "disconnect_repo"
+        tz_disconnect_repo
+      when "clear_saved_token"
+        tz_clear_saved_token
+      end
+    end
+
+    def tz_connect_repo
       repo_url = params[:repo_url].to_s.strip
       token = params[:github_token].to_s.strip
       save_token = params[:save_token] == "1"
@@ -44,14 +70,14 @@ Rails.application.config.after_initialize do
 
       if repo_url.blank? || token.blank?
         flash[:error] = "Repository URL and GitHub token are required."
-        redirect_to github_integration_admin_settings_path and return
+        redirect_to "/github_integration/admin/settings" and return
       end
 
       # Parse repo owner/name from URL
       match = repo_url.match(%r{github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$})
       unless match
         flash[:error] = "Invalid GitHub URL. Use format: https://github.com/owner/repo"
-        redirect_to github_integration_admin_settings_path and return
+        redirect_to "/github_integration/admin/settings" and return
       end
 
       owner, repo = match[1], match[2]
@@ -59,28 +85,28 @@ Rails.application.config.after_initialize do
 
       # Build webhook URL
       settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
-      api_user_id = settings[:github_user_id]
-      api_user = api_user_id.present? ? User.find_by(id: api_user_id) : nil
-      api_token = api_user&.api_token&.plain_value
-
-      unless api_token
-        flash[:error] = "No GitHub actor configured. Set the GitHub actor user first (needs an API token)."
-        redirect_to github_integration_admin_settings_path and return
-      end
-
       webhook_secret = settings[:webhook_secret] || ""
       host = Setting.host_name
-      protocol = Setting.protocol rescue "https"
-      webhook_url = "#{protocol}://#{host}/webhooks/github?key=#{api_token}"
+      protocol = (Setting.protocol rescue "https")
+
+      # Try to get the actor's API token for the callback key
+      api_user_id = settings[:github_user_id]
+      api_user = api_user_id.present? ? User.find_by(id: api_user_id) : nil
+      api_token = api_user&.api_tokens&.first&.plain_value
+
+      if api_token.present?
+        webhook_url = "#{protocol}://#{host}/webhooks/github?key=#{api_token}"
+      else
+        webhook_url = "#{protocol}://#{host}/webhooks/github"
+      end
 
       # Call GitHub API to create webhook
       begin
         result = TzGithubRepoManager.create_webhook(owner, repo, token, webhook_url, webhook_secret)
 
         if result[:success]
-          # Save to settings
           repos = Array(settings[:connected_repos])
-          repos.reject! { |r| r["full_name"] == full_name } # avoid duplicates
+          repos.reject! { |r| r["full_name"] == full_name }
           repos << {
             "full_name" => full_name,
             "url" => "https://github.com/#{full_name}",
@@ -89,14 +115,14 @@ Rails.application.config.after_initialize do
           }
 
           merged = settings.merge("connected_repos" => repos)
-
-          # Save token encrypted if requested
-          if save_token
-            merged["github_admin_token"] = TzGithubTokenStore.encrypt(token)
-          end
+          merged["github_admin_token"] = TzGithubTokenStore.encrypt(token) if save_token
 
           Setting.plugin_openproject_github_integration = merged
-          flash[:notice] = "Successfully connected #{full_name}! Webhook is active."
+          if result[:already_exists]
+            flash[:notice] = "Connected #{full_name}! (Webhook already existed on GitHub)"
+          else
+            flash[:notice] = "Successfully connected #{full_name}! Webhook is active."
+          end
           flash[:notice] += " Token saved securely." if save_token
         else
           flash[:error] = "Failed to connect: #{result[:error]}"
@@ -105,17 +131,15 @@ Rails.application.config.after_initialize do
         flash[:error] = "Error connecting to GitHub: #{e.message}"
       end
 
-      redirect_to github_integration_admin_settings_path
+      redirect_to "/github_integration/admin/settings"
     end
 
-    # POST /github_integration/admin/settings/disconnect_repo
-    def disconnect_repo
+    def tz_disconnect_repo
       full_name = params[:full_name].to_s.strip
       token = params[:github_token].to_s.strip
 
       settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
 
-      # Use saved token if field is blank
       if token.blank? && settings[:github_admin_token].present?
         token = TzGithubTokenStore.decrypt(settings[:github_admin_token])
       end
@@ -124,7 +148,6 @@ Rails.application.config.after_initialize do
       repo_config = repos.find { |r| r["full_name"] == full_name }
 
       if repo_config && token.present? && repo_config["hook_id"]
-        # Try to delete webhook from GitHub
         owner, repo = full_name.split("/", 2)
         begin
           TzGithubRepoManager.delete_webhook(owner, repo, token, repo_config["hook_id"])
@@ -133,42 +156,20 @@ Rails.application.config.after_initialize do
         end
       end
 
-      # Remove from settings regardless
       repos.reject! { |r| r["full_name"] == full_name }
       merged = settings.merge("connected_repos" => repos)
       Setting.plugin_openproject_github_integration = merged
       flash[:notice] = "Disconnected #{full_name}."
 
-      redirect_to github_integration_admin_settings_path
+      redirect_to "/github_integration/admin/settings"
     end
 
-    # POST /github_integration/admin/settings/clear_saved_token
-    def clear_saved_token
+    def tz_clear_saved_token
       settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
       merged = settings.except(:github_admin_token, "github_admin_token")
       Setting.plugin_openproject_github_integration = merged
       flash[:notice] = "Saved GitHub token has been removed."
-      redirect_to github_integration_admin_settings_path
-    end
-
-    # Override show to load connected repos
-    alias_method :original_show, :show
-    def show
-      original_show
-      settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
-      @connected_repos = Array(settings[:connected_repos])
-      @has_saved_token = settings[:github_admin_token].present?
-    end
-  end
-
-  # --- Routes ---
-  Rails.application.routes.draw do
-    namespace "github_integration" do
-      namespace "admin" do
-        post "settings/connect_repo", to: "settings#connect_repo", as: :connect_repo
-        post "settings/disconnect_repo", to: "settings#disconnect_repo", as: :disconnect_repo
-        post "settings/clear_saved_token", to: "settings#clear_saved_token", as: :clear_saved_token
-      end
+      redirect_to "/github_integration/admin/settings"
     end
   end
 
@@ -257,13 +258,10 @@ module TzGithubRepoManager
       data = JSON.parse(response.body)
       { success: true, hook_id: data["id"] }
     elsif response.code.to_i == 422
-      { success: false, error: "Webhook already exists on this repo or validation failed. (#{response.code})" }
+      # Webhook already exists — treat as success
+      { success: true, hook_id: nil, already_exists: true }
     else
-      error_msg = begin
-                    JSON.parse(response.body)["message"]
-                  rescue
-                    response.body.to_s.truncate(200)
-                  end
+      error_msg = (JSON.parse(response.body)["message"] rescue response.body.to_s.truncate(200))
       { success: false, error: "GitHub API returned #{response.code}: #{error_msg}" }
     end
   end
