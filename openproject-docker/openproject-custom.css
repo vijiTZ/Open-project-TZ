@@ -2785,6 +2785,39 @@ body:is(.controller-users, .controller-groups, .controller-placeholder_users, .c
 }
 
 
+/* ── USERS TABLE → ACTIONS COLUMN (Lock / Unlock / Activate) ──────
+   The generic action-button rule (line ~1746) forces a 32×32 square
+   on every td.buttons link/button — fine for icon-only actions, but
+   the users page renders text+icon labels like "🔒 Activate",
+   "Lock", "Unlock" which get clipped by the fixed width.
+
+   Override only on body.controller-users.action-index so all other
+   admin tables keep their square icon buttons. The action cell also
+   gets a bit of trailing padding so the button doesn't kiss the
+   table edge / overflow off-screen.                                */
+body.controller-users.action-index table.generic-table tbody tr td.buttons {
+  text-align: right !important;
+  white-space: nowrap !important;
+  width: auto !important;
+  min-width: 120px !important;
+  padding-right: 16px !important;
+}
+body.controller-users.action-index table.generic-table tbody tr td.buttons a,
+body.controller-users.action-index table.generic-table tbody tr td.buttons button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+}
+
+
 /* ── 9. USERS TABLE → SELECT-CHECKBOX COLUMN ────────────────────
    Styles the leading :select column injected by the
    users_table_checkbox.rb initializer. Compact width, centered
