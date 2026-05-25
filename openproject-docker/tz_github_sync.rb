@@ -82,6 +82,46 @@ Rails.application.config.after_initialize do
       end
     end
 
+    # --- Auto-sync: run every 5 minutes in the background ---
+    # Only start the thread in the web/puma process (not worker/cron)
+    if defined?(Puma) || $PROGRAM_NAME.include?("puma") || $PROGRAM_NAME.include?("rails")
+      Thread.new do
+        # Wait 90s after boot for Puma workers to be ready
+        sleep 90
+
+        loop do
+          begin
+            ActiveRecord::Base.connection_pool.with_connection do
+              settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
+              repos = Array(settings[:connected_repos])
+              token = nil
+
+              if settings[:github_admin_token].present?
+                token = TzGithubTokenStore.decrypt(settings[:github_admin_token])
+              end
+
+              if token.present? && repos.any?
+                total = 0
+                repos.each do |repo_config|
+                  owner, repo = repo_config["full_name"].split("/", 2)
+                  result = TzGithubPrSync.sync_repo(owner, repo, token)
+                  total += result[:synced]
+                rescue => e
+                  Rails.logger.warn "[TZ] Auto-sync failed for #{repo_config['full_name']}: #{e.message}"
+                end
+                Rails.logger.info "[TZ] Auto-sync complete: #{total} PRs from #{repos.size} repo(s)"
+              end
+            end
+          rescue => e
+            Rails.logger.warn "[TZ] Auto-sync error: #{e.message}"
+          end
+
+          sleep 300 # 5 minutes
+        end
+      end
+      Rails.logger.info "[TZ] GitHub PR auto-sync started (every 5 min)"
+    end
+
     Rails.logger.info "[TZ] GitHub PR sync loaded"
   rescue => e
     Rails.logger.error "[TZ] Failed to load GitHub PR sync: #{e.message}"
