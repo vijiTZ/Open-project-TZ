@@ -43,9 +43,14 @@ services:
       # blocks (welcome / new_features / meetings / community) and the
       # Community forum footer link.
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
-      # tz: locale overrides (search placeholder, etc.) — file name sorts
-      # after en.yml so values here win.
-      - "./tz_overrides.en.yml:/app/config/locales/tz_overrides.en.yml"
+      # tz: locale overrides (search placeholder, etc.). File name must
+      # start with "en." because OpenProject's Redmine::I18n.all_languages
+      # treats the first dotted segment of the basename as the locale
+      # code (lib_static/redmine/i18n.rb#all_languages); a non-locale
+      # prefix like "tz_overrides." crashes the User settings page when
+      # it builds the language dropdown. The "z_" keeps it sorted after
+      # en.yml so these values win on I18n merge order.
+      - "./en.z_tz_overrides.yml:/app/config/locales/en.z_tz_overrides.yml"
       # tz: server-side override of the New User view to add the Back
       # button into the Create / Create-and-continue action row.
       - "./users_new.html.erb:/app/app/views/users/new.html.erb"
