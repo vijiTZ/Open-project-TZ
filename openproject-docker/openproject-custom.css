@@ -1,4 +1,4 @@
-@import url('https://fonts.cdnfonts.com/css/product-sans');
+﻿@import url('https://fonts.cdnfonts.com/css/product-sans');
 
 /* ================================================================
    OPENPROJECT CUSTOM DESIGN SYSTEM
@@ -13338,7 +13338,8 @@ html op-autocompleter .ng-select .ng-value .ng-value-label {
      1. Subject field renders just "-" — replace with the cleaner
         placeholder "Enter a short, clear subject".
      2. Description renders "Description: Click to edit…" — replace
-        with "Add more details about this work package…".
+        with "Add more details about this work package…" and add
+        an "(Optional)" suffix to the section label.
      3. Estimates inputs have no helper text — inject one-line
         helper under each (Work / Remaining work / % Complete /
         Spent time / Remaining time / Story Points).
@@ -13371,10 +13372,8 @@ html body.router--work-packages-full-create .wp-new--subject-wrapper
   transform: translateY(-50%) !important;
 }
 
-/* (2) Description placeholder --------------------------------- */
-/* Rewrite the "Description: Click to edit..." placeholder. The
-   earlier "(Optional)" suffix was removed because it rendered as
-   a floating tag below the editor and consumed vertical space. */
+/* (2) Description placeholder + "(Optional)" header --------------- */
+/* a. rewrite the "Description: Click to edit..." placeholder */
 html body.router--work-packages-full-create .attributes-group.description-group
   .inline-edit--display-field.-placeholder,
 html body.router--work-packages-full-create .attributes-group.description-group
@@ -13395,6 +13394,22 @@ html body.router--work-packages-full-create .attributes-group.description-group
   position: absolute !important;
   left: 14px !important;
   top: 14px !important;
+}
+
+/* b. append "(Optional)" suffix to the Description section header.
+       The earlier rule at line 9984 injects "Description" via
+       ::before; here we add the (Optional) tag as ::after on the
+       attributes-group container. */
+html body.router--work-packages-full-create .attributes-group.description-group
+  > .attributes-group--header-container::after,
+html body.router--work-packages-full-create .attributes-group.description-group::after {
+  content: " (Optional)" !important;
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  margin-left: 6px !important;
 }
 
 /* (3) Helper text under each Estimates field ---------------------- */
@@ -13578,5 +13593,371 @@ html body[class*="project-"].router--work-packages-full-create
     display: block !important;
   }
 }
+/* ============================================================
+   (7) Split-create side panel — card-style section headers
+   Scope: body.router--work-packages-partitioned-split-view-new
+   Targets the New TASK side panel (PEOPLE / ESTIMATES AND
+   PROGRESS / DETAILS / ATTACHMENTS). Renders each
+   attributes-group as a bordered card with a styled header
+   and consistent input box sizing.
+   ============================================================ */
+html body.router--work-packages-partitioned-split-view-new .attributes-group {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 12px 14px 14px !important;
+  margin: 0 6px 10px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
 
+/* Tighten the outer side panel padding so cards have more room */
+html body.router--work-packages-partitioned-split-view-new .work-package--single-view,
+html body.router--work-packages-partitioned-split-view-new .work-package--details--content,
+html body.router--work-packages-partitioned-split-view-new wp-single-view {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
 
+/* Subject wrapper aligned with cards */
+html body.router--work-packages-partitioned-split-view-new .wp-new--subject-wrapper {
+  margin: 0 6px 10px !important;
+  padding: 12px 14px !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  position: relative !important;
+}
+html body.router--work-packages-partitioned-split-view-new .wp-new--subject-wrapper::before {
+  content: "SUBJECT" !important;
+  display: block !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #1f4e79 !important;
+  margin: 0 -14px 10px !important;
+  padding: 0 14px 8px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Description card — add a visible "DESCRIPTION" header */
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group {
+  padding: 12px 14px 14px !important;
+}
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .attributes-group--header:empty,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .attributes-group--header-container:empty {
+  display: none !important;
+}
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group::before {
+  content: "DESCRIPTION" !important;
+  display: block !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #1f4e79 !important;
+  margin: 0 -14px 10px !important;
+  padding: 0 14px 8px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* Description editor body */
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .ck-editor__main,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .ck-content,
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .inline-edit--display-field {
+  min-height: 110px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+}
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .ck-toolbar {
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px 6px 0 0 !important;
+  background: #f9fafb !important;
+}
+html body.router--work-packages-partitioned-split-view-new .attributes-group.description-group .ck-editor__main {
+  border-radius: 0 0 6px 6px !important;
+  border-top: none !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new .attributes-group > .attributes-group--header,
+html body.router--work-packages-partitioned-split-view-new .attributes-group > .attributes-group--header-container {
+  border-bottom: 1px solid #e5e7eb !important;
+  margin: 0 -16px 12px !important;
+  padding: 0 16px 8px !important;
+  background: transparent !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new .attributes-group--header-text,
+html body.router--work-packages-partitioned-split-view-new .op-attributes-group--header-text {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #1f4e79 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Row spacing inside cards */
+html body.router--work-packages-partitioned-split-view-new .attributes-group .wp-attribute-group--attribute {
+  display: grid !important;
+  grid-template-columns: 110px 1fr !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 6px 0 !important;
+  border: none !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-key {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #374151 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+/* Force value container + every wrapper inside to fill available width */
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container > *,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--container,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--field,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container op-editable-toolbar-buttons {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  flex: 1 1 100% !important;
+}
+
+/* Strip inline-edit wrapper chrome entirely — it nests a tiny pill inside
+   the real input/dropdown and hides the selected value. The actual control
+   (input or ng-select-container) carries the visible border. */
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--display-field,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--container,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--field {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  line-height: normal !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  box-shadow: none !important;
+}
+
+/* Real input boxes — uniform height, border, padding */
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container :is(
+    input.form--text-field,
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    .op-input) {
+  min-height: 32px !important;
+  height: 32px !important;
+  line-height: 30px !important;
+  padding: 0 10px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  font-size: 13px !important;
+  color: #111827 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ng-select container — same look as text inputs */
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select-container {
+  min-height: 32px !important;
+  height: 32px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  font-size: 13px !important;
+  color: #111827 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+/* ng-select internals — value-container fills the full width, arrow sits
+   on the right. The .ng-input (the actual editable input inside the
+   dropdown) is absolutely positioned and must stretch the full width
+   minus the arrow area — otherwise it renders as a tiny pill on the
+   left and clips the selected value. */
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-value-container {
+  padding: 0 36px 0 10px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  position: static !important;
+  overflow: visible !important;
+  background: transparent !important;
+  border: none !important;
+}
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-value,
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-value-label,
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-placeholder {
+  font-size: 13px !important;
+  color: #111827 !important;
+  line-height: 1 !important;
+  max-width: none !important;
+  width: auto !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  display: inline !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+  background: transparent !important;
+  border: none !important;
+}
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-placeholder {
+  color: #9aa4b2 !important;
+}
+html body.router--work-packages-partitioned-split-view-new .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 36px !important;
+  bottom: 0 !important;
+  padding: 0 0 0 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  background: transparent !important;
+  border: none !important;
+  width: auto !important;
+}
+html body.router--work-packages-partitioned-split-view-new .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input > input {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-arrow-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  flex: 0 0 28px !important;
+  border: none !important;
+  background: transparent !important;
+}
+html body.router--work-packages-partitioned-split-view-new .ng-select .ng-clear-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  right: 28px !important;
+  bottom: 0 !important;
+  width: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+}
+/* Hide placeholder when a value is selected */
+html body.router--work-packages-partitioned-split-view-new .ng-select.ng-has-value .ng-placeholder,
+html body.router--work-packages-partitioned-split-view-new .ng-has-value .ng-placeholder,
+html body.router--work-packages-partitioned-split-view-new .ng-value-container:has(.ng-value) .ng-placeholder {
+  display: none !important;
+}
+
+/* ng-select internal layout — let value text use full width, keep x/arrow on the right */
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select-container .ng-value-container {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  padding-left: 0 !important;
+}
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select-container .ng-value {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select-container .ng-placeholder {
+  position: static !important;
+  padding: 0 !important;
+  color: #9ca3af !important;
+}
+
+/* When an inline-edit display-field WRAPS an ng-select, don't draw a nested
+   box around it — the ng-select-container already has the border. */
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--display-field:has(.ng-select),
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--container:has(.ng-select),
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .inline-edit--field:has(.ng-select) {
+  border: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  background: transparent !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Tighten label column slightly so inputs get more room */
+html body.router--work-packages-partitioned-split-view-new .attributes-group .wp-attribute-group--attribute {
+  grid-template-columns: 96px 1fr !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container :is(
+    input.form--text-field,
+    .inline-edit--display-field,
+    .ng-select-container):focus,
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select.ng-select-focused .ng-select-container {
+  border-color: #1f4e79 !important;
+  box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.15) !important;
+  outline: none !important;
+}
+
+html body.router--work-packages-partitioned-split-view-new .wp-attribute-group--attribute-value-container .ng-select-container .ng-value-container {
+  padding-left: 0 !important;
+}
+
+/* Subject (What needs to be done?) input */
+html body.router--work-packages-partitioned-split-view-new .wp-new--subject-wrapper input[type="text"],
+html body.router--work-packages-partitioned-split-view-new .wp-new--subject-wrapper .op-input {
+  min-height: 36px !important;
+  height: 36px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  padding: 0 12px !important;
+  font-size: 14px !important;
+  background: #ffffff !important;
+}
+
+/* Span-all rows (description, date) — single column */
+html body.router--work-packages-partitioned-split-view-new .attributes-group .wp-attribute-group--attribute_span-all {
+  display: block !important;
+  padding: 6px 0 !important;
+}
+html body.router--work-packages-partitioned-split-view-new .attributes-group .wp-attribute-group--attribute_span-all .wp-attribute-group--attribute-key {
+  display: block !important;
+  margin-bottom: 4px !important;
+}
