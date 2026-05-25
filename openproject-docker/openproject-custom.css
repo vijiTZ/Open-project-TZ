@@ -13329,4 +13329,269 @@ html op-autocompleter .ng-select .ng-value .ng-value-label {
   white-space: nowrap !important;
 }
 
+/* ================================================================
+   WP FULL-CREATE PAGE — BRING IN-LINE WITH MOCKUP (TZ)
+   ----------------------------------------------------------------
+   The live /work_packages/new view differs from
+   task-form-redesign.html in four visible ways the user wants
+   matched. All fixable with CSS:
+     1. Subject field renders just "-" — replace with the cleaner
+        placeholder "Enter a short, clear subject".
+     2. Description renders "Description: Click to edit…" — replace
+        with "Add more details about this work package…" and add
+        an "(Optional)" suffix to the section label.
+     3. Estimates inputs have no helper text — inject one-line
+        helper under each (Work / Remaining work / % Complete /
+        Spent time / Remaining time / Story Points).
+     4. Attachments dropzone is a plain dashed line — add cloud
+        icon, drop-zone padding, and "Maximum file size: 100 MB
+        per file" caption beneath.
+   Scope: body.router--work-packages-full-create
+   ================================================================ */
+
+/* (1) Subject — inject mockup placeholder when empty -------------- */
+html body.router--work-packages-full-create .wp-new--subject-wrapper
+  .inline-edit--display-field.-placeholder[data-field-name="subject"],
+html body.router--work-packages-full-create .wp-new--subject-wrapper
+  .inline-edit--display-field:has(.inline-edit--null-value) {
+  font-size: 0 !important;
+  color: transparent !important;
+  position: relative !important;
+}
+html body.router--work-packages-full-create .wp-new--subject-wrapper
+  .inline-edit--display-field.-placeholder[data-field-name="subject"]::before,
+html body.router--work-packages-full-create .wp-new--subject-wrapper
+  .inline-edit--display-field:has(.inline-edit--null-value)::before {
+  content: "Enter a short, clear subject" !important;
+  font-size: 14px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  position: absolute !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
+/* (2) Description placeholder + "(Optional)" header --------------- */
+/* a. rewrite the "Description: Click to edit..." placeholder */
+html body.router--work-packages-full-create .attributes-group.description-group
+  .inline-edit--display-field.-placeholder,
+html body.router--work-packages-full-create .attributes-group.description-group
+  .inline-edit--display-field:has(.inline-edit--null-value) {
+  font-size: 0 !important;
+  color: transparent !important;
+  position: relative !important;
+  min-height: 80px !important;
+}
+html body.router--work-packages-full-create .attributes-group.description-group
+  .inline-edit--display-field.-placeholder::before,
+html body.router--work-packages-full-create .attributes-group.description-group
+  .inline-edit--display-field:has(.inline-edit--null-value)::before {
+  content: "Add more details about this work package…" !important;
+  font-size: 14px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  position: absolute !important;
+  left: 14px !important;
+  top: 14px !important;
+}
+
+/* b. append "(Optional)" suffix to the Description section header.
+       The earlier rule at line 9984 injects "Description" via
+       ::before; here we add the (Optional) tag as ::after on the
+       attributes-group container. */
+html body.router--work-packages-full-create .attributes-group.description-group
+  > .attributes-group--header-container::after,
+html body.router--work-packages-full-create .attributes-group.description-group::after {
+  content: " (Optional)" !important;
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  margin-left: 6px !important;
+}
+
+/* (3) Helper text under each Estimates field ---------------------- */
+/* Hook into the .attributes-key-value cell for each field and add
+   a small grey caption via ::after. The selector matches by
+   data-field-name set by OpenProject's display-field-renderer. */
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="estimatedTime"])::after,
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="remainingTime"])::after,
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="percentageDone"])::after,
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="spentTime"])::after,
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="derivedRemainingTime"])::after,
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="storyPoints"])::after {
+  display: block !important;
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  margin-top: 4px !important;
+  line-height: 1.4 !important;
+  grid-column: 1 / -1 !important;
+}
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="estimatedTime"])::after {
+  content: "Total estimated time for this work package." !important;
+}
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="remainingTime"])::after {
+  content: "Time left to complete this work package." !important;
+}
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="percentageDone"])::after {
+  content: "Progress as a percentage (0 to 100)." !important;
+}
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="spentTime"])::after {
+  content: "Total time already spent." !important;
+}
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="derivedRemainingTime"])::after {
+  content: "Time left based on progress." !important;
+}
+html body.router--work-packages-full-create
+  .attributes-key-value:has([data-field-name="storyPoints"])::after {
+  content: "Story points for this work package." !important;
+}
+
+/* (4) Attachments dropzone — clean icon + label + native caption.
+   OpenProject ALREADY renders "Maximum file size: 100 MB per file"
+   inside the dropzone — don't inject a duplicate ::after. Use flex
+   to lay out: cloud icon on the left, then the existing "Drop
+   files…" label and native max-size caption stacked on the right. */
+html body.router--work-packages-full-create .work-packages--storages
+  :is(.op-attachments--drop-box, .work-package--attachments-drop-box,
+      .attachments--drop-box, [class*="drop-box" i]) {
+  border: 2px dashed #c7d2e0 !important;
+  border-radius: 12px !important;
+  background: #f8fafc !important;
+  padding: 18px 22px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+  position: relative !important;
+}
+
+/* Circular cloud-up icon on the left */
+html body.router--work-packages-full-create .work-packages--storages
+  :is(.op-attachments--drop-box, .work-package--attachments-drop-box,
+      .attachments--drop-box, [class*="drop-box" i])::before {
+  content: "" !important;
+  flex: 0 0 44px !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background-color: #eaf2ff !important;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230c66e4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M17 8a5 5 0 0 0-9.6-1.5A4 4 0 0 0 6 14h12a3.5 3.5 0 0 0 0-7'/><path d='M12 12v7'/><path d='M9 15l3-3 3 3'/></svg>") !important;
+  background-size: 26px 26px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* The native "Drag files here or click to attach files." label */
+html body.router--work-packages-full-create .work-packages--storages
+  :is(.op-attachments--drop-box, .work-package--attachments-drop-box,
+      .attachments--drop-box, [class*="drop-box" i])
+  :is(.op-attachments--upload-label, label) {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  line-height: 1.4 !important;
+  width: auto !important;
+  flex: 1 1 auto !important;
+}
+
+/* OpenProject's native "Maximum file size: 100 MB per file" caption
+   sits as plain text inside the dropzone — push it to a new line
+   under the main label by forcing 100% width. */
+html body.router--work-packages-full-create .work-packages--storages
+  :is(.op-attachments--drop-box, .work-package--attachments-drop-box,
+      .attachments--drop-box, [class*="drop-box" i])
+  :is(.op-attachments--limit, [class*="limit" i], [class*="max" i], small) {
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+  margin: 4px 0 0 58px !important;  /* align under the label, past the icon */
+  flex: 0 0 100% !important;
+  display: block !important;
+  position: static !important;
+  background: transparent !important;
+}
+
+/* (5) Project field — read-only inside project-scoped create URL.
+   When the body has a project class (e.g. .project-demo-project)
+   OpenProject knows the project context; the project-context
+   group is auto-populated. Visually present it as a disabled
+   field so the user sees the project but can't change it. */
+html body[class*="project-"].router--work-packages-full-create
+  .attributes-group.-project-context :is(
+    .ng-select-container,
+    .inline-edit--display-field,
+    input.form--text-field) {
+  background: #f3f4f6 !important;
+  color: #475569 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  border-color: #e5e7eb !important;
+}
+html body[class*="project-"].router--work-packages-full-create
+  .attributes-group.-project-context .ng-arrow-wrapper,
+html body[class*="project-"].router--work-packages-full-create
+  .attributes-group.-project-context .ng-clear-wrapper {
+  display: none !important;
+}
+html body[class*="project-"].router--work-packages-full-create
+  .attributes-group.-project-context :is(
+    .ng-select-container,
+    .inline-edit--display-field)::after {
+  content: " (locked to current project)" !important;
+  font-size: 11px !important;
+  color: #9ca3af !important;
+  margin-left: 8px !important;
+  font-style: italic !important;
+}
+
+/* (6) Attachments card — match the width of the Estimates card.
+   The form grid uses minmax(0, 1.65fr) | minmax(320px, 0.95fr)
+   with a 16px gap (see line 10047). The left column is
+   1.65 / (1.65 + 0.95) ≈ 63.46% of (containerWidth − gap).
+   .work-packages--storages is a SIBLING of .work-package--single-view,
+   so we have to compute the width manually. Pinned with max
+   specificity so it wins against any earlier `.work-packages--storages`
+   width rule. */
+@media (min-width: 1024px) {
+  html body.router--work-packages-full-create #content edit-form .work-packages--storages,
+  html body.router--work-packages-full-create #content wp-new-full-view .work-packages--storages,
+  html body.router--work-packages-full-create #content .work-packages--storages {
+    width: calc((100% - 16px) * 0.6346) !important;
+    max-width: calc((100% - 16px) * 0.6346) !important;
+    min-width: 0 !important;
+    margin: 20px 0 0 0 !important;
+    margin-right: auto !important;
+    align-self: flex-start !important;
+    flex: 0 0 calc((100% - 16px) * 0.6346) !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  /* If Attachments is rendered as a flex child somewhere, keep it
+     aligned to the left edge of the form. */
+  html body.router--work-packages-full-create #content :is(edit-form, wp-new-full-view) {
+    display: block !important;
+  }
+}
+
 
