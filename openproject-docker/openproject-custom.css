@@ -13082,3 +13082,109 @@ body.router--work-packages-full-create.router--work-packages-full-create #conten
   clip-path: none !important;
   -webkit-clip-path: none !important;
 }
+
+
+/* ================================================================
+   WP CREATE — RESTORE CKEDITOR DROPDOWN PANELS (Paragraph/Heading)
+   ----------------------------------------------------------------
+   The earlier rules (lines ~11886, 11904) put `overflow: hidden`
+   on .ck-toolbar and .ck-toolbar__items. CKEditor v5 renders the
+   Paragraph / Heading dropdown panel as a child of the toolbar
+   button, so overflow:hidden clips it the moment the user clicks.
+
+   This block clears the clipping on the toolbar chain AND lets the
+   dropdown panel float above other elements with z-index.        */
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar > .ck-toolbar__items,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-splitbutton,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-editor__top,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-sticky-panel,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-sticky-panel__content {
+  overflow: visible !important;
+}
+
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-dropdown__panel,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck-balloon-panel {
+  z-index: 1000 !important;
+  position: absolute !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+}
+
+/* ================================================================
+   WP CREATE — RESTORE FULL CKEDITOR TOOLBAR ON DESCRIPTION
+   ----------------------------------------------------------------
+   The hide-block earlier in this file (around line 11960) forcibly
+   hid quote / blockquote / table / undo / redo / history / image
+   / upload / help buttons on the WP create description editor so
+   the toolbar matched a minimal layout. That made the editor look
+   crippled compared to the project Description editor.
+
+   This block sits at end-of-file with equal-or-higher specificity
+   than the hide rules and restores every toolbar button to its
+   normal display, so the WP description editor behaves the same
+   as the project description editor.
+   ================================================================ */
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[aria-label],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[title],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-button[data-cke-tooltip-text],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown[aria-label],
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-dropdown:has(.ck-button),
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-toolbar .ck-file-dialog-button,
+html body.router--work-packages-full-create #content .attributes-group.description-group .ck.ck-file-dialog-button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  width: auto !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+  padding: 4px !important;
+  overflow: visible !important;
+  pointer-events: auto !important;
+}
+
+
+/* ================================================================
+   WP CREATE — FORCE FULL-WIDTH FORM ON PROJECT-SCOPED ROUTE TOO
+   ----------------------------------------------------------------
+   Both `/work_packages/new` (global) and `/projects/:id/work_packages/new`
+   (project-scoped) use the same body class
+   `router--work-packages-full-create` (per wp-full-create-entry.component.ts
+   line 59). Visually, the project route renders the form narrower
+   because some Rails layout wrapper between `#content` and the
+   `wp-single-view` element ships with a `max-width: 720px` or auto
+   horizontal margins on the inner container.
+
+   This block neutralises any max-width / auto-margin on every common
+   wrapper between #content and wp-single-view so the form fills the
+   full available content width on BOTH routes, matching the global
+   page's appearance.
+   ================================================================ */
+@media (min-width: 1024px) {
+  html body.router--work-packages-full-create #content,
+  html body.router--work-packages-full-create #content #main,
+  html body.router--work-packages-full-create #content .work-packages-partitioned-page--component,
+  html body.router--work-packages-full-create #content .work-packages--new,
+  html body.router--work-packages-full-create #content .work-package--new-state,
+  html body.router--work-packages-full-create #content .wp-new-create-form,
+  html body.router--work-packages-full-create #content edit-form,
+  html body.router--work-packages-full-create #content wp-single-view,
+  html body.router--work-packages-full-create #content wp-new-full-view,
+  html body.router--work-packages-full-create #content .work-package--single-view {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Also reset any inline padding asymmetry that pushes the form
+     toward the centre. Keep top/bottom padding from earlier rules. */
+  html body.router--work-packages-full-create #content edit-form,
+  html body.router--work-packages-full-create #content wp-new-full-view {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
