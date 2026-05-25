@@ -33,18 +33,50 @@
 
   <!-- Saved Token Status -->
   <% if @has_saved_token %>
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
                 padding: 12px 16px; background: #f0fdf4; border: 1px solid #bbf7d0;
                 border-radius: 8px;">
       <span style="color: #166534; font-size: 14px; font-weight: 500;">
-        &#128274; GitHub token is saved securely — connect/disconnect without re-entering it.
+        &#128274; GitHub token saved — connect/disconnect without re-entering it.
       </span>
-      <%= form_tag(github_integration_admin_clear_saved_token_path, method: :post, style: "margin: 0;") do %>
+      <%= form_tag(github_integration_admin_settings_path, method: :patch, style: "margin: 0;") do %>
+        <%= hidden_field_tag :tz_action, "clear_saved_token" %>
         <button type="submit" onclick="return confirm('Remove saved token? You will need to enter it each time.')"
-                style="padding: 4px 12px; background: transparent; color: #dc2626;
-                       border: 1px solid #dc2626; border-radius: 6px; font-size: 12px;
+                style="padding: 6px 14px; background: #ffffff; color: #dc2626;
+                       border: 1px solid #dc2626; border-radius: 6px; font-size: 13px;
                        cursor: pointer; font-weight: 500;">
-          Remove saved token
+          Remove Token
+        </button>
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Sync PRs Button -->
+  <% if @connected_repos.present? %>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;
+                padding: 14px 18px; background: #eff6ff; border: 1px solid #bfdbfe;
+                border-radius: 8px;">
+      <div>
+        <span style="font-size: 14px; font-weight: 600; color: #1e40af;">
+          &#x1F504; Sync Pull Requests from GitHub
+        </span>
+        <p style="font-size: 12px; color: #3b82f6; margin: 4px 0 0;">
+          Fetch latest PRs (open, merged, closed) from all connected repos. Needed for localhost where webhooks can't reach.
+        </p>
+      </div>
+      <%= form_tag(github_integration_admin_settings_path, method: :patch, style: "margin: 0; display: flex; align-items: center; gap: 8px;") do %>
+        <%= hidden_field_tag :tz_action, "sync_repos" %>
+        <% unless @has_saved_token %>
+          <input type="text" name="github_token" placeholder="GitHub token"
+                 style="width: 180px; padding: 8px 12px; border: 1px solid #d0d7de;
+                        border-radius: 6px; font-size: 13px;">
+        <% end %>
+        <button type="submit"
+                style="padding: 8px 20px; background: #1e40af; color: white;
+                       border: none; border-radius: 6px; font-size: 13px;
+                       font-weight: 500; cursor: pointer; white-space: nowrap;
+                       box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
+          Sync Now
         </button>
       <% end %>
     </div>
@@ -83,7 +115,8 @@
                 </span>
               </td>
               <td style="padding: 12px 14px; text-align: right;">
-                <%= form_tag(github_integration_admin_disconnect_repo_path, method: :post) do %>
+                <%= form_tag(github_integration_admin_settings_path, method: :patch) do %>
+                  <%= hidden_field_tag :tz_action, "disconnect_repo" %>
                   <%= hidden_field_tag :full_name, repo["full_name"] %>
                   <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
                     <% unless @has_saved_token %>
@@ -120,7 +153,8 @@
       Connect a new repository
     </h4>
 
-    <%= form_tag(github_integration_admin_connect_repo_path, method: :post) do %>
+    <%= form_tag(github_integration_admin_settings_path, method: :patch) do %>
+      <%= hidden_field_tag :tz_action, "connect_repo" %>
       <div style="display: flex; flex-direction: column; gap: 14px;">
         <div>
           <label style="display: block; font-size: 13px; font-weight: 500; color: #1a1a2e; margin-bottom: 4px;">
@@ -159,15 +193,13 @@
           </p>
         </div>
 
-        <% unless @has_saved_token %>
-          <div>
-            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #1a1a2e; cursor: pointer;">
-              <input type="checkbox" name="save_token" value="1"
-                     style="width: 16px; height: 16px; accent-color: #0C66E4;">
-              <span><strong>Save token securely</strong> — encrypted with AES-256, so you don't need to re-enter it each time</span>
-            </label>
-          </div>
-        <% end %>
+        <div>
+          <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #1a1a2e; cursor: pointer;">
+            <input type="checkbox" name="save_token" value="1"
+                   style="width: 16px; height: 16px; accent-color: #0C66E4;">
+            <span><strong>Save token securely</strong> — encrypted with AES-256, so you don't need to re-enter it each time</span>
+          </label>
+        </div>
 
         <div style="margin-top: 4px;">
           <button type="submit"
