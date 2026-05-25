@@ -13338,8 +13338,7 @@ html op-autocompleter .ng-select .ng-value .ng-value-label {
      1. Subject field renders just "-" — replace with the cleaner
         placeholder "Enter a short, clear subject".
      2. Description renders "Description: Click to edit…" — replace
-        with "Add more details about this work package…" and add
-        an "(Optional)" suffix to the section label.
+        with "Add more details about this work package…".
      3. Estimates inputs have no helper text — inject one-line
         helper under each (Work / Remaining work / % Complete /
         Spent time / Remaining time / Story Points).
@@ -13372,8 +13371,10 @@ html body.router--work-packages-full-create .wp-new--subject-wrapper
   transform: translateY(-50%) !important;
 }
 
-/* (2) Description placeholder + "(Optional)" header --------------- */
-/* a. rewrite the "Description: Click to edit..." placeholder */
+/* (2) Description placeholder --------------------------------- */
+/* Rewrite the "Description: Click to edit..." placeholder. The
+   earlier "(Optional)" suffix was removed because it rendered as
+   a floating tag below the editor and consumed vertical space. */
 html body.router--work-packages-full-create .attributes-group.description-group
   .inline-edit--display-field.-placeholder,
 html body.router--work-packages-full-create .attributes-group.description-group
@@ -13394,22 +13395,6 @@ html body.router--work-packages-full-create .attributes-group.description-group
   position: absolute !important;
   left: 14px !important;
   top: 14px !important;
-}
-
-/* b. append "(Optional)" suffix to the Description section header.
-       The earlier rule at line 9984 injects "Description" via
-       ::before; here we add the (Optional) tag as ::after on the
-       attributes-group container. */
-html body.router--work-packages-full-create .attributes-group.description-group
-  > .attributes-group--header-container::after,
-html body.router--work-packages-full-create .attributes-group.description-group::after {
-  content: " (Optional)" !important;
-  font-size: 12px !important;
-  color: #9ca3af !important;
-  font-weight: 400 !important;
-  letter-spacing: 0 !important;
-  text-transform: none !important;
-  margin-left: 6px !important;
 }
 
 /* (3) Helper text under each Estimates field ---------------------- */
