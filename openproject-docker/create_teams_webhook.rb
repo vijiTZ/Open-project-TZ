@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-teams_url = "https://default43e98a1a0bea4f3881cd0f9bddfb80.52.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/9217d907f8d648569ee4c7826599c943/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=xftnCI5rFVBn8AKPhGo9uglCYIbs-ApQAHz1A6lM1iU"
+teams_url = ENV.fetch("TZ_TEAMS_WEBHOOK_URL", "YOUR_POWER_AUTOMATE_WEBHOOK_URL_HERE")
 
 # Delete any existing webhook with same name
 Webhooks::Webhook.where(name: "Teams Notifications").destroy_all

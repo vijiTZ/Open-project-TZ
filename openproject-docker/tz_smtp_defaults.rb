@@ -21,8 +21,8 @@ Rails.application.config.after_initialize do
       Setting.smtp_address          = "smtp.gmail.com"
       Setting.smtp_port             = 587
       Setting.smtp_authentication   = :plain
-      Setting.smtp_user_name        = "tamilzorous@gmail.com"
-      Setting.smtp_password         = "qwxv taym ghip jhzz"
+      Setting.smtp_user_name        = ENV.fetch("TZ_SMTP_USER", "tamilzorous@gmail.com")
+      Setting.smtp_password         = ENV.fetch("TZ_SMTP_PASS", "")
       Setting.smtp_enable_starttls_auto = true
 
       Rails.logger.info "[TZ] SMTP defaults applied. Change them in Administration → Email notifications."
