@@ -1,0 +1,290 @@
+<%#-- Tamil Zorous: Branded email template
+     Replaces the default OpenProject email layout with TamilZorous branding.
+     Colors, logo, and footer are customized to match the company identity. --%>
+<html>
+  <head>
+    <style>
+      :root {
+        color-scheme: light;
+        supported-color-schemes: light;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        font-size: 14px;
+        color: #1a1a2e;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 0;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          color: #1a1a2e !important;
+          background: #f4f6f9 !important;
+        }
+      }
+
+      h1, h2, h3 {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        color: #1a1a2e;
+      }
+      h1 { font-size: 1.3em; }
+      h2, h3 { font-size: 1.1em; }
+      h2.emailTitle { color: #0C66E4; font-size: 1.6em; }
+
+      a, a:link, a:visited { color: #0C66E4; text-decoration: none; }
+      a:hover, a:active { color: #0055CC; text-decoration: underline; }
+      a.op-uc-link_permalink { display: none; }
+
+      hr {
+        width: 100%;
+        height: 1px;
+        background: #e4e8f0;
+        border: 0;
+        margin: 16px 0;
+      }
+
+      blockquote {
+        border-left: 3px solid #0C66E4;
+        font-style: italic;
+        margin-left: 1em;
+        padding-left: 0.8em;
+        color: #6b7280;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        background: #f6f8fa;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 13px;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      .tz-email-wrapper {
+        max-width: 640px;
+        width: 100%;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      }
+
+      .tz-email-header {
+        background: linear-gradient(135deg, #0C66E4 0%, #0055CC 100%);
+        padding: 24px 32px;
+        text-align: left;
+      }
+
+      .tz-email-header img {
+        height: 36px;
+        width: auto;
+      }
+
+      .tz-email-header-text {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+      }
+
+      .tz-email-body {
+        padding: 28px 32px;
+        line-height: 1.6;
+      }
+
+      .tz-email-footer {
+        background: #f6f8fa;
+        padding: 20px 32px;
+        text-align: center;
+        font-size: 12px;
+        color: #9ca3af;
+        border-top: 1px solid #e4e8f0;
+      }
+
+      .tz-email-footer a {
+        color: #6b7280;
+      }
+
+      a.user-mention:before {
+        content: '@';
+        color: #878787;
+      }
+    </style>
+
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="viewport" content="initial-scale=1.0">
+  </head>
+  <body style="padding: 20px 0; margin: 0; background: #f4f6f9;">
+    <!-- Outer wrapper for centering -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f4f6f9;">
+      <tr>
+        <td align="center" style="padding: 20px 16px;">
+          <!-- Email card -->
+          <table class="tz-email-wrapper" cellpadding="0" cellspacing="0" border="0"
+                 style="max-width: 640px; width: 100%; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+            <!-- Header with branding -->
+            <tr>
+              <td class="tz-email-header"
+                  style="background: linear-gradient(135deg, #0C66E4 0%, #0055CC 100%); padding: 24px 32px;">
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                  <tr>
+                    <td style="vertical-align: middle;">
+                      <span class="tz-email-header-text"
+                            style="color: #ffffff; font-size: 20px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                        Tamil Zorous
+                      </span>
+                    </td>
+                    <td style="text-align: right; vertical-align: middle;">
+                      <span style="color: rgba(255,255,255,0.7); font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                        Project Management
+                      </span>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Custom header text from admin settings -->
+            <% header_text = Setting.localized_emails_header rescue "" %>
+            <% if header_text.present? %>
+            <tr>
+              <td style="padding: 16px 32px 0; font-size: 13px; color: #6b7280;">
+                <%= OpenProject::TextFormatting::Renderer.format_text(header_text) %>
+              </td>
+            </tr>
+            <% end %>
+
+            <%= call_hook(:view_layouts_mailer_html_before_content, assigns) %>
+
+            <!-- Main content -->
+            <tr>
+              <td class="tz-email-body" style="padding: 28px 32px; line-height: 1.6; font-size: 14px; color: #1a1a2e;">
+                <%= yield %>
+              </td>
+            </tr>
+
+            <%= call_hook(:view_layouts_mailer_html_after_content, assigns) %>
+
+            <!-- Footer / Signature -->
+            <tr>
+              <td style="padding: 0;">
+                <% footer_text = Setting.localized_emails_footer rescue "" %>
+                <% if footer_text.present? %>
+                  <div style="padding: 12px 32px 0; font-size: 12px; color: #9ca3af; text-align: center;">
+                    <%= OpenProject::TextFormatting::Renderer.format_text(footer_text) %>
+                  </div>
+                <% end %>
+
+                <!-- TamilZorous Signature — white card style -->
+                <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                       style="background: #ffffff; border-top: 3px solid #16a34a;">
+                  <tr>
+                    <td style="padding: 24px 32px;">
+                      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                          <!-- Left: Logo + Name + Tagline -->
+                          <td style="vertical-align: top; width: 50%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                              <tr>
+                                <!-- Z Logo -->
+                                <td style="vertical-align: top; padding-right: 14px;">
+                                  <div style="width: 52px; height: 52px; background: #16a34a; border-radius: 12px; text-align: center; line-height: 52px;">
+                                    <span style="color: #ffffff; font-size: 28px; font-weight: 800; font-family: Georgia, 'Times New Roman', serif;">Z</span>
+                                  </div>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                  <div style="font-size: 18px; font-weight: 700; color: #1a1a2e; line-height: 1.2;">
+                                    Tamilzorous
+                                  </div>
+                                  <div style="font-size: 11px; color: #16a34a; font-style: italic; margin-top: 3px;">
+                                    Making the extraordinary, everyday.
+                                  </div>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <!-- Right: Phone + Address -->
+                          <td style="vertical-align: top; width: 50%; text-align: right; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                            <div style="font-size: 13px; color: #1a1a2e; margin-bottom: 6px;">
+                              <a href="tel:+919363724124" style="color: #1a1a2e; text-decoration: none; font-weight: 600;">
+                                +91 9363724124
+                              </a>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; line-height: 1.5;">
+                              Second Floor, TIDEL Neo,<br>
+                              Karuppur PO, Omalur TK,<br>
+                              Salem DT &ndash; 636011
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- Divider -->
+                      <div style="border-top: 1px solid #e5e7eb; margin: 16px 0;"></div>
+
+                      <!-- Social Icons Row -->
+                      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tr>
+                          <td style="text-align: center;">
+                            <table cellpadding="0" cellspacing="0" border="0" align="center">
+                              <tr>
+                                <!-- Website -->
+                                <td style="padding: 0 6px;">
+                                  <a href="https://tamilzorous.com/" target="_blank"
+                                     style="display: inline-block; width: 34px; height: 34px; background: #16a34a; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
+                                    <span style="color: #ffffff; font-size: 16px;">&#9679;</span>
+                                  </a>
+                                </td>
+                                <!-- Facebook -->
+                                <td style="padding: 0 6px;">
+                                  <a href="https://www.facebook.com/people/Tamilzorous-Private-Limited/61571464070750/" target="_blank"
+                                     style="display: inline-block; width: 34px; height: 34px; background: #1877F2; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
+                                    <span style="color: #ffffff; font-size: 17px; font-weight: 700; font-family: Georgia, serif;">f</span>
+                                  </a>
+                                </td>
+                                <!-- LinkedIn -->
+                                <td style="padding: 0 6px;">
+                                  <a href="https://www.linkedin.com/company/tamil-zorous" target="_blank"
+                                     style="display: inline-block; width: 34px; height: 34px; background: #0A66C2; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
+                                    <span style="color: #ffffff; font-size: 13px; font-weight: 700; font-family: -apple-system, sans-serif;">in</span>
+                                  </a>
+                                </td>
+                                <!-- Instagram -->
+                                <td style="padding: 0 6px;">
+                                  <a href="https://www.instagram.com/tz_tamilzorous/" target="_blank"
+                                     style="display: inline-block; width: 34px; height: 34px; background: #E4405F; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
+                                    <span style="color: #ffffff; font-size: 16px; font-weight: 700; font-family: -apple-system, sans-serif;">ig</span>
+                                  </a>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- Dashboard link -->
+                      <div style="text-align: center; margin-top: 14px;">
+                        <a href="<%= Setting.protocol rescue 'http' %>://<%= Setting.host_name rescue 'localhost' %>"
+                           style="color: #0C66E4; text-decoration: none; font-size: 12px; font-weight: 500;">
+                          Open Dashboard &rarr;
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -11427,7 +11427,7 @@ html body.router--work-packages-full-create #content wp-single-view .wp-new--sub
 html body.router--work-packages-full-create #content wp-single-view .attributes-group {
   padding: 16px 18px !important;
   margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin-bottom: 8px !important;
 }
 
 html body.router--work-packages-full-create #content wp-single-view .attributes-group:not(.description-group) .attributes-map {
@@ -11441,7 +11441,7 @@ html body.router--work-packages-full-create #content wp-single-view .attributes-
 }
 
 html body.router--work-packages-full-create #content wp-single-view .attributes-group.-project-context .wp-project-context--warning {
-  margin: 0 0 10px 0 !important;
+  margin: 12px 0 4px 0 !important;
   padding: 10px 12px !important;
   line-height: 1.4 !important;
 }
@@ -11587,12 +11587,14 @@ html body.router--work-packages-full-create #content wp-single-view > .work-pack
 
 html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
 html body.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
-html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages,
+html body.router--work-packages-full-create #content wp-single-view .work-package--single-view > .work-packages--storages,
+html body.router--work-packages-full-create #content .work-packages--storages {
   height: auto !important;
   min-height: unset !important;
   max-height: none !important;
   margin-top: 0 !important;
-  margin-bottom: 16px !important;
+  margin-bottom: 8px !important;
   align-self: start !important;
   place-self: start stretch !important;
   flex: none !important;
@@ -11663,7 +11665,10 @@ html body.router--work-packages-full-create #content wp-single-view .attributes-
   align-content: start !important;
 }
 
-html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages,
+html body.router--work-packages-full-create #content wp-single-view .work-package--single-view > .work-packages--storages,
+html body.router--work-packages-full-create #content .work-packages--storages {
+  float: none !important;
   clear: both !important;
   grid-column: 1 / -1 !important;
   grid-row: auto !important;
@@ -11672,7 +11677,7 @@ html body.router--work-packages-full-create #content wp-single-view > .work-pack
   height: auto !important;
   min-height: unset !important;
   max-height: none !important;
-  margin: 0 0 0 0 !important;
+  margin: 8px 0 8px 0 !important;
   padding: 16px 18px !important;
   align-self: start !important;
   flex: none !important;
@@ -11681,7 +11686,9 @@ html body.router--work-packages-full-create #content wp-single-view > .work-pack
 }
 
 html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages > div,
-html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages ndc-dynamic {
+html body.router--work-packages-full-create #content wp-single-view > .work-packages--storages ndc-dynamic,
+html body.router--work-packages-full-create #content .work-packages--storages > div,
+html body.router--work-packages-full-create #content .work-packages--storages ndc-dynamic {
   display: block !important;
   height: auto !important;
   min-height: 0 !important;
@@ -12152,7 +12159,7 @@ html body.router--work-packages-full-create #content .attributes-group[data-grou
 
 html body.router--work-packages-full-create #content .attributes-group.-project-context .wp-project-context--warning {
   grid-column: 1 / -1 !important;
-  margin: 0 !important;
+  margin: 12px 0 4px 0 !important;
   box-sizing: border-box !important;
   width: 100% !important;
 }
@@ -12433,4 +12440,612 @@ html body.router--work-packages-full-create #content .work-packages--storages .o
   padding: 0 !important;
   overflow: hidden !important;
   pointer-events: none !important;
+}
+
+/* ================================================================
+   DEFINITIVE LAYOUT FIX — Create Work Package Page
+   ----------------------------------------------------------------
+   Earlier sections contain 6+ conflicting override passes that
+   fight over card padding, header strip margins, grid gaps, and
+   field spacing. This single block at the END of the file resolves
+   every conflict.
+
+   Specificity: uses doubled class selector
+   body.router--work-packages-full-create.router--work-packages-full-create
+   which is valid CSS and beats any single-class `body.router--…`
+   or `html body.router--…` rule.
+   ================================================================ */
+
+/* ── 1. PAGE BACKGROUND ──────────────────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #main #content,
+body.router--work-packages-full-create.router--work-packages-full-create #content,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--new,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--new-state,
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new-create-form,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages-partitioned-page--component,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view {
+  background: #ffffff !important;
+}
+
+/* ── 2. FORM REGION ──────────────────────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--new,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--new-state,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view {
+  padding: 24px 28px 16px 28px !important;
+}
+
+/* ── 3. OUTER GRID — 2-column layout ─────────────────────────────── */
+@media (min-width: 1024px) {
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr) !important;
+    grid-auto-rows: auto !important;
+    gap: 20px !important;
+    align-items: start !important;
+    padding: 24px 28px 16px 28px !important;
+  }
+
+  /* (row 1, col 1) Basic information */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper {
+    grid-column: 1 / 2 !important;
+    grid-row: 1 / 2 !important;
+    margin: 0 !important;
+  }
+
+  /* (rows 1–2, col 2) Description spans 2 rows */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    grid-column: 2 / 3 !important;
+    grid-row: 1 / 3 !important;
+    margin: 0 !important;
+  }
+
+  /* (row 2, col 1) People */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="assignee"]) {
+    grid-column: 1 / 2 !important;
+    grid-row: 2 / 3 !important;
+    margin: 0 !important;
+  }
+
+  /* (row 3, col 1) Estimates and progress */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Progress" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="estimatedTime"]) {
+    grid-column: 1 / 2 !important;
+    grid-row: 3 / 4 !important;
+    margin: 0 !important;
+  }
+
+  /* (rows 3–4, col 2) Details spans 2 rows */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="priority"]) {
+    grid-column: 2 / 3 !important;
+    grid-row: 3 / 5 !important;
+    margin: 0 !important;
+  }
+
+  /* (row 4, col 1) Attachments */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    grid-column: 1 / 2 !important;
+    grid-row: 4 / 5 !important;
+    margin: 0 !important;
+  }
+
+  /* Project-context banner — full width */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group.-project-context {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    margin: 0 !important;
+  }
+
+  /* Inner field grid → single column for half-width cards */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="People" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="assignee"]),
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="estimatedTime"]),
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group:has([data-field-name="priority"]) {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+    row-gap: 16px !important;
+  }
+
+  /* Subject + Description are block */
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group.description-group {
+    display: block !important;
+  }
+}
+
+/* Below 1024px: single column */
+@media (max-width: 1023px) {
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view {
+    display: block !important;
+  }
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .wp-new--subject-wrapper,
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .attributes-group,
+  body.router--work-packages-full-create.router--work-packages-full-create #content .work-package--single-view > .work-packages--storages {
+    margin: 0 0 16px 0 !important;
+  }
+}
+
+/* ── 4. CARD CHROME — consistent border, radius, padding ─────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group:not(.-project-context),
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages {
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  overflow: visible !important;
+  padding: 20px 20px 28px 20px !important;
+  margin-bottom: 16px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* ── 5. CARD HEADER STRIP — gray bar edge-to-edge ────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group > .attributes-group--header,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group > .attributes-group--header-container {
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  margin: -20px -20px 16px -20px !important;
+  padding: 12px 20px !important;
+  grid-column: 1 / -1 !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+/* ::before pseudo-headers */
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper::before,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.description-group::before {
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  margin: -20px -20px 16px -20px !important;
+  padding: 12px 20px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper::before {
+  content: "Basic information" !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.description-group::before {
+  content: "Description" !important;
+}
+
+/* Attachments header strip */
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header {
+  display: block !important;
+  background-color: #f6f8fa !important;
+  border-bottom: 1px solid #e4e8f0 !important;
+  margin: -20px -20px 16px -20px !important;
+  padding: 12px 20px !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+/* Header text style */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group--header-text,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages .op-tab-content--header-text {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  color: #1a1a2e !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* ── 6. FIELD ROWS — label above input ───────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-key-value {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* Field label */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-key-value--key {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #1a1a2e !important;
+  text-align: left !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  line-height: 1.4 !important;
+}
+
+/* Field value container */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-key-value--value-container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-key-value--value {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  flex: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ── 7. INPUTS — consistent 40px height, 8px radius ─────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content input[type="text"],
+body.router--work-packages-full-create.router--work-packages-full-create #content input[type="number"],
+body.router--work-packages-full-create.router--work-packages-full-create #content input[type="date"],
+body.router--work-packages-full-create.router--work-packages-full-create #content input[type="email"],
+body.router--work-packages-full-create.router--work-packages-full-create #content input[type="search"],
+body.router--work-packages-full-create.router--work-packages-full-create #content select,
+body.router--work-packages-full-create.router--work-packages-full-create #content .op-input,
+body.router--work-packages-full-create.router--work-packages-full-create #content .inline-edit--display-field,
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-select-container {
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 12px !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Textarea */
+body.router--work-packages-full-create.router--work-packages-full-create #content textarea {
+  height: auto !important;
+  min-height: 80px !important;
+  max-height: none !important;
+  padding: 10px 12px !important;
+  display: block !important;
+  line-height: 1.5 !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+}
+
+/* Subject input — taller */
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper input,
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper .inline-edit--display-field,
+body.router--work-packages-full-create.router--work-packages-full-create #content [data-field-name="subject"] input {
+  height: 44px !important;
+  min-height: 44px !important;
+  max-height: 44px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+/* ── 8. WRAPPER ELEMENTS — transparent ───────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content op-editable-attribute-field,
+body.router--work-packages-full-create.router--work-packages-full-create #content .inline-edit--container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .inline-edit--display-container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-edit-field,
+body.router--work-packages-full-create.router--work-packages-full-create #content .single-attribute,
+body.router--work-packages-full-create.router--work-packages-full-create #content .inline-edit--field:not(input):not(select):not(textarea) {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: block !important;
+  width: 100% !important;
+}
+
+/* ── 9. HIDE Costs / Other / Budget ──────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create .attributes-group[data-group-name="Costs" i],
+body.router--work-packages-full-create.router--work-packages-full-create .attributes-group[data-group-name="Other" i],
+body.router--work-packages-full-create.router--work-packages-full-create .attributes-group[data-group-name="Budget" i],
+body.router--work-packages-full-create.router--work-packages-full-create .attributes-group[data-group-name*="Cost" i],
+body.router--work-packages-full-create.router--work-packages-full-create [data-field-name="budget"] {
+  display: none !important;
+}
+
+/* ── 10. FOOTER — Save / Cancel buttons ──────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--edit-actions {
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: flex-end !important;
+  padding: 16px 28px !important;
+  margin: 0 !important;
+  background: #ffffff !important;
+  border-top: 1px solid #e4e8f0 !important;
+}
+
+body.router--work-packages-full-create.router--work-packages-full-create #content #work-packages--edit-actions-save {
+  background: #3866e1 !important;
+  border: 1px solid #3866e1 !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  height: 40px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content #work-packages--edit-actions-save:hover {
+  background: #2952b8 !important;
+  border-color: #2952b8 !important;
+}
+
+body.router--work-packages-full-create.router--work-packages-full-create #content #work-packages--edit-actions-cancel {
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #334155 !important;
+  border-radius: 8px !important;
+  height: 40px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* ── 11. ng-select FIXES ─────────────────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-select-container {
+  padding: 0 !important;
+  position: relative !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-value-container {
+  padding: 0 32px 0 12px !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-value,
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-value-label {
+  font-size: 14px !important;
+  color: #0f172a !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+  display: inline !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-placeholder {
+  color: #9aa4b2 !important;
+  font-size: 14px !important;
+  position: static !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select.ng-has-value .ng-placeholder,
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-has-value .ng-placeholder,
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select:has(.ng-value) .ng-placeholder {
+  display: none !important;
+}
+body.router--work-packages-full-create.router--work-packages-full-create #content .ng-select .ng-arrow-wrapper {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ── 12. DESCRIPTION GROUP interior ──────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.description-group .single-attribute {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* ── 13. ndc-dynamic wrappers ────────────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content ndc-dynamic,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-attribute-group,
+body.router--work-packages-full-create.router--work-packages-full-create #content op-form-group {
+  display: contents !important;
+}
+
+/* ── 14. HEADER ROW ──────────────────────────────────────────────── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .toolbar-container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--toolbar-container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .PageHeader {
+  position: static !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #eef1f5 !important;
+  padding: 18px 28px !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  z-index: auto !important;
+}
+
+/* ================================================================
+   15. FLOAT-LAYOUT SPACING FIX
+   ----------------------------------------------------------------
+   The actual layout uses CSS floats (not grid) via wp-single-view.
+   Cards are floated left/right with calc widths. This section
+   ensures proper vertical spacing between ALL floated cards.
+   Selectors match the wp-single-view path with doubled-class
+   specificity to beat the earlier html body rules.
+   ================================================================ */
+
+/* All cards inside the float layout get bottom margin for spacing */
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .work-packages--storages,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-packages--storages {
+  margin-top: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+/* Left-floated cards (Basic info, Description, Estimates) — add right margin for gutter */
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .wp-new--subject-wrapper,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.description-group,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+  float: left !important;
+  clear: left !important;
+  width: calc(60% - 12px) !important;
+  margin-right: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+/* Right-floated cards (Project context, People, Details) */
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group.-project-context,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="People" i],
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Detail" i],
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Properties" i] {
+  float: right !important;
+  clear: right !important;
+  width: calc(40% - 12px) !important;
+  margin-left: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+/* Attachments — full width spanning both columns */
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-packages--storages,
+body.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view .work-package--single-view > .work-packages--storages,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages {
+  float: none !important;
+  clear: both !important;
+  width: 100% !important;
+  margin: 10px 0 20px 0 !important;
+  padding: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid #e4e8f0 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+
+/* Estimates card — stretch to fill height, match Details card end */
+body.router--work-packages-full-create.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Estimate" i],
+body.router--work-packages-full-create.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view > .work-package--single-view > .attributes-group[data-group-name*="Progress" i] {
+  margin-bottom: 10px !important;
+  padding: 18px 18px 40px 18px !important;
+  min-height: 280px !important;
+}
+
+/* Estimates — inner field grid: proper row gap */
+body.router--work-packages-full-create.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Estimate" i] .attributes-map,
+body.router--work-packages-full-create.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Progress" i] .attributes-map {
+  row-gap: 18px !important;
+}
+
+/* Estimates — each field row needs breathing room */
+body.router--work-packages-full-create.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Estimate" i] .attributes-key-value,
+body.router--work-packages-full-create.router--work-packages-full-create.router--work-packages-full-create #content wp-single-view .attributes-group[data-group-name*="Progress" i] .attributes-key-value {
+  margin-bottom: 6px !important;
+}
+
+/* ================================================================
+   16. PROJECT CONTEXT CARD — compact & clean
+   ----------------------------------------------------------------
+   The -project-context card has the "Project *" label, a dropdown,
+   and a blue info alert. Fix: tighter padding, smaller gap between
+   field and alert, compact blue info box.
+   ================================================================ */
+
+/* Card padding — proper breathing room */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context {
+  padding: 20px !important;
+  overflow: visible !important;
+  margin-bottom: 16px !important;
+}
+
+/* Blue alert needs space below it inside the card */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context .wp-project-context--warning {
+  margin-bottom: 6px !important;
+}
+
+/* Header strip for project context */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context > .attributes-group--header,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context > .attributes-group--header-container {
+  margin: -20px -20px 16px -20px !important;
+  padding: 12px 20px !important;
+}
+
+/* Inner wrapper — breathing room */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context > div:not(.attributes-group--header) {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Project field row — proper gap between label, input, and alert */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group.-project-context .attributes-key-value {
+  gap: 6px !important;
+  margin-bottom: 16px !important;
+}
+
+/* Blue info alert — with proper spacing above and below */
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-project-context--warning {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 8px !important;
+  padding: 12px 14px !important;
+  margin: 16px 0 0 0 !important;
+  color: #1e3a8a !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+/* Basic information card — also tighten */
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper {
+  padding: 16px !important;
+}
+
+/* Basic info header strip — match tighter padding */
+body.router--work-packages-full-create.router--work-packages-full-create #content .wp-new--subject-wrapper::before {
+  margin: -16px -16px 12px -16px !important;
+  padding: 10px 16px !important;
+}
+
+/* ── 17. OVERFLOW VISIBLE on all card internals — prevent dropdown clipping ── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group > div,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .attributes-map,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .attributes-key-value,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .attributes-key-value--value-container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .inline-edit--container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .inline-edit--display-container,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .wp-edit-field,
+body.router--work-packages-full-create.router--work-packages-full-create #content .attributes-group .single-attribute {
+  overflow: visible !important;
+}
+
+/* ── 18. ATTACHMENTS (storages) — overflow visible on all inner elements + avatar fix ── */
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages *,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages > div,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages ndc-dynamic,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages op-attachments {
+  overflow: visible !important;
+}
+
+/* Avatar circles inside Attachments — ensure fully visible */
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages .op-avatar,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages .avatar,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages .op-principal,
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages [class*="avatar"],
+body.router--work-packages-full-create.router--work-packages-full-create #content .work-packages--storages .spot-avatar {
+  overflow: visible !important;
+  clip-path: none !important;
+  -webkit-clip-path: none !important;
 }
