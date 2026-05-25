@@ -1,401 +1,359 @@
 # frozen_string_literal: true
 
-# Tamil Zorous: Microsoft Teams webhook integration
+# Tamil Zorous: Microsoft Teams / Power Automate webhook integration
 #
-# OpenProject's built-in webhook system sends JSON payloads in its own
-# format. Microsoft Teams expects an Adaptive Card (or MessageCard) format.
-#
-# This initializer monkey-patches the outgoing webhook request service
-# so that when the target URL is a Teams webhook (*.webhook.office.com
-# or *.logic.azure.com), the payload is automatically converted to a
-# Teams Adaptive Card before sending.
-#
-# Also adds a "Test Connection" endpoint so admins can verify webhook
-# URLs work before relying on them.
-#
-# Setup (done by admin in UI):
-#   1. Administration → API and Webhooks → Webhooks
-#   2. Add new webhook → paste Teams Incoming Webhook URL
-#   3. Select events: work_package:created, work_package:updated
-#   4. Choose projects (all or specific)
-#   5. Save — done, notifications flow to Teams automatically
-#   6. Click "Test Connection" on the webhook detail page to verify
-#
-# No code changes needed to add/remove/change Teams channels.
+# Intercepts outgoing webhook requests and converts OpenProject's JSON
+# payload to a Teams Adaptive Card when the target URL is Teams or
+# Power Automate. Also handles GitHub PR notifications.
 
 Rails.application.config.after_initialize do
-  service = Webhooks::Outgoing::RequestWebhookService
+  begin
+    service = Webhooks::Outgoing::RequestWebhookService
 
-  # Save original method
-  service.class_eval do
-    alias_method :original_perform, :perform
-  end
-
-  service.define_method(:perform) do
-    webhook_url = @webhook&.url.to_s
-
-    # Detect Teams webhook URLs
-    is_teams = webhook_url.include?("webhook.office.com") ||
-               webhook_url.include?("logic.azure.com") ||
-               webhook_url.include?("webhook.office365.com")
-
-    if is_teams && @event_name && @payload
-      begin
-        teams_payload = TzTeamsFormatter.format(@event_name, @payload, @webhook)
-        if teams_payload
-          uri = URI.parse(webhook_url)
-          http = Net::HTTP.new(uri.host, uri.port)
-          http.use_ssl = (uri.scheme == "https")
-          http.open_timeout = 10
-          http.read_timeout = 15
-
-          request = Net::HTTP::Post.new(uri.request_uri)
-          request["Content-Type"] = "application/json"
-          request.body = teams_payload.to_json
-
-          response = http.request(request)
-
-          # Log the delivery
-          Webhooks::Log.create!(
-            webhook: @webhook,
-            event_name: @event_name,
-            url: webhook_url,
-            request_headers: { "Content-Type" => "application/json" },
-            request_body: teams_payload.to_json.truncate(10_000),
-            response_code: response.code.to_i,
-            response_headers: response.each_header.to_h,
-            response_body: response.body.to_s.truncate(5_000)
-          )
-
-          Rails.logger.info "[TZ Teams] Sent notification to Teams: #{@event_name} → #{response.code}"
-          return
-        end
-      rescue => e
-        Rails.logger.error "[TZ Teams] Failed to send to Teams: #{e.message}"
-      end
+    service.class_eval do
+      alias_method :original_call!, :call!
     end
 
-    # Fall back to original for non-Teams webhooks
-    original_perform
-  end
-
-  # --- Test Connection endpoint ---
-  # POST /admin/settings/webhooks/:webhook_id/test_connection
-  Webhooks::Outgoing::AdminController.class_eval do
-    def test_connection
-      webhook = ::Webhooks::Webhook.find(params[:webhook_id])
-      webhook_url = webhook.url.to_s
+    service.define_method(:call!) do |body:, headers:|
+      webhook_url = webhook&.url.to_s
 
       is_teams = webhook_url.include?("webhook.office.com") ||
                  webhook_url.include?("logic.azure.com") ||
-                 webhook_url.include?("webhook.office365.com")
-
-      host = Setting.host_name rescue "localhost:8080"
-      protocol = Setting.protocol rescue "http"
-      now = Time.now.strftime("%B %d, %Y at %H:%M")
+                 webhook_url.include?("webhook.office365.com") ||
+                 webhook_url.include?("powerplatform.com") ||
+                 webhook_url.include?("powerautomate")
 
       if is_teams
-        # Send a Teams Adaptive Card test message
-        test_payload = {
-          type: "message",
-          attachments: [
-            {
-              contentType: "application/vnd.microsoft.card.adaptive",
-              contentUrl: nil,
-              content: {
-                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-                type: "AdaptiveCard",
-                version: "1.4",
-                body: [
-                  { type: "TextBlock", text: "Test Connection Successful!", weight: "Bolder", size: "Medium", color: "Good" },
-                  { type: "TextBlock", text: "This is a test message from **OpenProject** (Tamil Zorous).", wrap: true },
-                  { type: "TextBlock", text: "Webhook: **#{webhook.name}**", size: "Small", isSubtle: true },
-                  { type: "TextBlock", text: "Sent: #{now}", size: "Small", isSubtle: true }
-                ],
-                actions: [
-                  { type: "Action.OpenUrl", title: "Open OpenProject", url: "#{protocol}://#{host}" }
-                ]
-              }
-            }
-          ]
-        }
-      else
-        # Send a generic JSON test payload
-        test_payload = {
-          test: true,
-          source: "OpenProject (Tamil Zorous)",
-          webhook_name: webhook.name,
-          timestamp: Time.now.iso8601,
-          message: "Test connection from OpenProject webhook '#{webhook.name}'"
-        }
-      end
+        begin
+          parsed = JSON.parse(body) rescue {}
+          teams_card = TzTeamsFormatter.format_from_payload(event_name.to_s, parsed)
 
-      begin
-        uri = URI.parse(webhook_url)
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = (uri.scheme == "https")
-        http.open_timeout = 10
-        http.read_timeout = 15
+          if teams_card
+            response = OpenProject::SsrfProtection.post(
+              webhook_url,
+              headers: { "Content-Type": "application/json" },
+              body: teams_card.to_json
+            )
 
-        request = Net::HTTP::Post.new(uri.request_uri)
-        request["Content-Type"] = "application/json"
-        request["User-Agent"] = "OpenProject-TZ"
-        request.body = test_payload.to_json
+            log!(
+              body: teams_card.to_json,
+              headers: { "Content-Type": "application/json" },
+              response: response,
+              exception: nil
+            )
 
-        response = http.request(request)
-
-        # Log the test delivery
-        Webhooks::Log.create!(
-          webhook: webhook,
-          event_name: "test_connection",
-          url: webhook_url,
-          request_headers: { "Content-Type" => "application/json" },
-          request_body: test_payload.to_json.truncate(10_000),
-          response_code: response.code.to_i,
-          response_headers: response.each_header.to_h,
-          response_body: response.body.to_s.truncate(5_000)
-        )
-
-        if response.code.to_i.between?(200, 299)
-          flash[:notice] = "Test successful! #{is_teams ? 'Teams' : 'Webhook'} responded with #{response.code}. Check your #{is_teams ? 'Teams channel' : 'endpoint'} for the test message."
-        else
-          flash[:error] = "Test failed. Server responded with HTTP #{response.code}: #{response.body.to_s.truncate(200)}"
+            Rails.logger.info "[TZ Teams] Sent: #{event_name} -> #{response&.code}"
+            return
+          end
+        rescue => e
+          Rails.logger.error "[TZ Teams] Error: #{e.message}"
         end
-      rescue Net::OpenTimeout, Net::ReadTimeout => e
-        flash[:error] = "Test failed: Connection timed out (#{e.message}). Check the URL."
+      end
+
+      original_call!(body: body, headers: headers)
+    end
+
+    Rails.logger.info "[TZ] Teams webhook formatter loaded"
+
+    # Subscribe to GitHub PR events and forward to Teams
+    ::OpenProject::Notifications.subscribe("github.pull_request") do |payload|
+      begin
+        pr_payload = payload[:payload] || payload
+        action = pr_payload["action"].to_s
+        pr = pr_payload["pull_request"] || {}
+
+        pr_title = pr["title"] || "Unknown PR"
+        pr_number = pr["number"] || "?"
+        pr_url = pr["html_url"] || ""
+        pr_author = pr.dig("user", "login") || "Someone"
+        pr_repo = pr.dig("base", "repo", "full_name") || pr.dig("head", "repo", "full_name") || ""
+        pr_merged = pr["merged"] == true
+        effective_action = (action == "closed" && pr_merged) ? "merged" : action
+
+        # Extract work package IDs from PR body (TZ#123 or OP#123 patterns)
+        pr_body = pr["body"].to_s
+        host = Setting.host_name rescue "localhost:8080"
+        wp_regex = /(?:TZ|OP)#(\d+)|https?:\/\/#{Regexp.escape(host)}\/(?:\S+?\/)*(?:work_packages|wp)\/(\d+)/i
+        wp_ids = pr_body.scan(wp_regex).map { |first, second| (first || second).to_i }.select(&:positive?).uniq
+
+        pr_data = {
+          title: pr_title,
+          number: pr_number,
+          url: pr_url,
+          action: effective_action,
+          author: pr_author,
+          repo: pr_repo,
+          work_package_ids: wp_ids
+        }
+
+        teams_card = TzTeamsFormatter.format_github_pr(pr_data)
+
+        # Send to all Teams-type webhooks
+        Webhooks::Webhook.where(enabled: true).each do |wh|
+          url = wh.url.to_s
+          is_teams = url.include?("webhook.office.com") ||
+                     url.include?("logic.azure.com") ||
+                     url.include?("webhook.office365.com") ||
+                     url.include?("powerplatform.com") ||
+                     url.include?("powerautomate")
+          next unless is_teams
+
+          begin
+            response = OpenProject::SsrfProtection.post(
+              url,
+              headers: { "Content-Type": "application/json" },
+              body: teams_card.to_json
+            )
+            Rails.logger.info "[TZ Teams] GitHub PR #{effective_action} ##{pr_number} sent to Teams -> #{response&.code}"
+          rescue => e
+            Rails.logger.error "[TZ Teams] Failed to send GitHub PR to Teams: #{e.message}"
+          end
+        end
       rescue => e
-        flash[:error] = "Test failed: #{e.message}"
-      end
-
-      redirect_to admin_outgoing_webhook_path(webhook)
-    end
-  end
-
-  # Add the test_connection route
-  Rails.application.routes.draw do
-    scope "admin" do
-      scope :settings do
-        post "webhooks/:webhook_id/test_connection",
-             to: "webhooks/outgoing/admin#test_connection",
-             as: "test_webhook_connection"
+        Rails.logger.error "[TZ Teams] GitHub PR notification error: #{e.message}"
       end
     end
-  end
 
-  Rails.logger.info "[TZ] Teams webhook formatter loaded"
-rescue => e
-  Rails.logger.error "[TZ] Failed to load Teams webhook: #{e.message}"
+    Rails.logger.info "[TZ] GitHub PR -> Teams notification subscriber loaded"
+  rescue => e
+    Rails.logger.error "[TZ] Failed to load Teams webhook: #{e.message}"
+  end
 end
 
-# Formatter: converts OpenProject webhook payloads to Teams Adaptive Cards
+# Formatter: rich Adaptive Cards for Teams / Power Automate
 module TzTeamsFormatter
-  COLORS = {
-    "created" => "Good",      # green
-    "updated" => "Accent",    # blue
-    "commented" => "Warning"  # yellow
-  }.freeze
+  def self.format_from_payload(event_name, data)
+    action = event_name.split(":").last rescue "unknown"
+    resource_type = event_name.split(":").first rescue "unknown"
 
-  def self.format(event_name, payload, webhook)
-    action = event_name.to_s.split(":").last # "created", "updated", etc.
-
-    case event_name.to_s
-    when /work_package/
-      format_work_package(action, payload)
-    when /project/
-      format_project(action, payload)
-    when /attachment/
-      format_attachment(action, payload)
+    case resource_type
+    when "work_package"
+      format_work_package(action, data)
+    when "work_package_comment"
+      format_comment(action, data)
+    when "project"
+      format_project(action, data)
+    when "attachment"
+      format_attachment(action, data)
+    when "time_entry"
+      format_time_entry(action, data)
     else
-      format_generic(event_name, payload)
+      format_generic(event_name, data)
     end
   rescue => e
     Rails.logger.error "[TZ Teams] Format error: #{e.message}"
     nil
   end
 
-  def self.format_work_package(action, payload)
-    wp = payload.is_a?(Hash) ? payload : payload.to_h rescue {}
+  def self.format_work_package(action, data)
+    wp = data["work_package"] || data
+    actor = data["actor"] || {}
 
-    # Extract work package data (handles both symbolized and string keys)
-    wp_data = wp[:work_package] || wp["work_package"] || wp
-    actor = wp[:actor] || wp["actor"] || {}
+    subject = dig(wp, "_links", "subject", "title") ||
+              dig(wp, "subject") ||
+              dig(wp, "_embedded", "subject") || "Untitled"
+    wp_id = dig(wp, "id") || "?"
+    status = dig(wp, "_embedded", "status", "name") ||
+             dig(wp, "_links", "status", "title") || ""
+    priority = dig(wp, "_embedded", "priority", "name") ||
+               dig(wp, "_links", "priority", "title") || ""
+    assignee = dig(wp, "_embedded", "assignee", "name") ||
+               dig(wp, "_links", "assignee", "title") || "Unassigned"
+    project_name = dig(wp, "_embedded", "project", "name") ||
+                   dig(wp, "_links", "project", "title") || ""
+    author = dig(actor, "name") ||
+             dig(wp, "_embedded", "author", "name") || "Someone"
+    wp_type = dig(wp, "_embedded", "type", "name") ||
+              dig(wp, "_links", "type", "title") || "Task"
+    responsible = dig(wp, "_embedded", "responsible", "name") ||
+                  dig(wp, "_links", "responsible", "title") || ""
+    description_raw = dig(wp, "description", "raw") || ""
 
-    subject = dig_value(wp_data, :subject, :_links, :subject) || "Unknown task"
-    wp_id = dig_value(wp_data, :id) || "?"
-    status = dig_value(wp_data, :_embedded, :status, :name) ||
-             dig_value(wp_data, :status) || ""
-    priority = dig_value(wp_data, :_embedded, :priority, :name) ||
-               dig_value(wp_data, :priority) || ""
-    assignee = dig_value(wp_data, :_embedded, :assignee, :name) ||
-               dig_value(wp_data, :assignee) || "Unassigned"
-    project_name = dig_value(wp_data, :_embedded, :project, :name) ||
-                   dig_value(wp_data, :project) || ""
-    author = dig_value(actor, :name) ||
-             dig_value(wp_data, :_embedded, :author, :name) || "Someone"
-    wp_url = dig_value(wp_data, :_links, :self, :href) || ""
-    description = dig_value(wp_data, :description, :raw) || ""
-
-    # Build the host URL for the link
     host = Setting.host_name rescue "localhost:8080"
     protocol = Setting.protocol rescue "http"
     view_url = "#{protocol}://#{host}/work_packages/#{wp_id}"
 
-    title = case action
-            when "created" then "New Task Created"
-            when "updated" then "Task Updated"
-            when "comment", "internal_comment" then "New Comment"
-            else "Task #{action.capitalize}"
-            end
-
     emoji = case action
-            when "created" then "🆕"
-            when "updated" then "✏️"
-            when "comment", "internal_comment" then "💬"
-            else "📋"
+            when "created" then "\u{1F195}"
+            when "updated" then "\u{270F}\u{FE0F}"
+            else "\u{1F4CB}"
             end
 
-    color = COLORS[action] || "Default"
+    color = case action
+            when "created" then "Good"
+            when "updated" then "Accent"
+            else "Default"
+            end
 
-    # Teams Adaptive Card format
-    {
-      type: "message",
-      attachments: [
+    title = "#{emoji} #{wp_type} #{action.capitalize}: #{subject}"
+
+    facts = []
+    facts << { "title" => "Project", "value" => project_name } if project_name.present?
+    facts << { "title" => "Status", "value" => status } if status.present?
+    facts << { "title" => "Priority", "value" => priority } if priority.present?
+    facts << { "title" => "Assignee", "value" => "**#{assignee}**" }
+    facts << { "title" => "Responsible", "value" => responsible } if responsible.present?
+    facts << { "title" => "By", "value" => author }
+
+    body_items = [
+      { "type" => "TextBlock", "text" => title, "weight" => "Bolder", "size" => "Medium", "color" => color, "wrap" => true },
+      { "type" => "TextBlock", "text" => "**##{wp_id}** - #{subject}", "wrap" => true },
+      {
+        "type" => "FactSet",
+        "facts" => facts
+      }
+    ]
+
+    if description_raw.present? && action == "created"
+      desc_short = description_raw.truncate(200)
+      body_items << { "type" => "TextBlock", "text" => desc_short, "wrap" => true, "size" => "Small", "isSubtle" => true }
+    end
+
+    adaptive_card(body_items, view_url)
+  end
+
+  def self.format_comment(action, data)
+    wp = data["work_package"] || data["comment"] || data
+    actor = data["actor"] || {}
+    comment = data["comment"] || {}
+
+    subject = dig(wp, "subject") || dig(wp, "_links", "subject", "title") || "Unknown"
+    wp_id = dig(wp, "id") || "?"
+    author = dig(actor, "name") || "Someone"
+    comment_body = dig(comment, "body", "raw") || dig(comment, "rawBody") || ""
+
+    host = Setting.host_name rescue "localhost:8080"
+    protocol = Setting.protocol rescue "http"
+    view_url = "#{protocol}://#{host}/work_packages/#{wp_id}/activity"
+
+    body_items = [
+      { "type" => "TextBlock", "text" => "\u{1F4AC} New Comment on ##{wp_id}", "weight" => "Bolder", "size" => "Medium", "color" => "Warning", "wrap" => true },
+      { "type" => "TextBlock", "text" => "**#{subject}**", "wrap" => true },
+      { "type" => "TextBlock", "text" => "**#{author}** commented:", "wrap" => true, "size" => "Small" },
+      { "type" => "TextBlock", "text" => comment_body.truncate(300), "wrap" => true, "size" => "Small", "isSubtle" => true }
+    ]
+
+    adaptive_card(body_items, view_url)
+  end
+
+  def self.format_project(action, data)
+    project = data["project"] || data
+    name = dig(project, "name") || dig(project, "identifier") || "Unknown"
+    host = Setting.host_name rescue "localhost:8080"
+    protocol = Setting.protocol rescue "http"
+    url = "#{protocol}://#{host}"
+
+    body_items = [
+      { "type" => "TextBlock", "text" => "\u{1F4C1} Project #{action.capitalize}", "weight" => "Bolder", "size" => "Medium" },
+      { "type" => "TextBlock", "text" => "**#{name}**", "wrap" => true }
+    ]
+
+    adaptive_card(body_items, url)
+  end
+
+  def self.format_attachment(action, data)
+    body_items = [
+      { "type" => "TextBlock", "text" => "\u{1F4CE} Attachment #{action.capitalize}", "weight" => "Bolder", "size" => "Medium" }
+    ]
+    adaptive_card(body_items, nil)
+  end
+
+  def self.format_time_entry(action, data)
+    body_items = [
+      { "type" => "TextBlock", "text" => "\u{23F1} Time Entry #{action.capitalize}", "weight" => "Bolder", "size" => "Medium" }
+    ]
+    adaptive_card(body_items, nil)
+  end
+
+  def self.format_generic(event_name, data)
+    body_items = [
+      { "type" => "TextBlock", "text" => "\u{1F4CB} #{event_name}", "weight" => "Bolder", "size" => "Medium" }
+    ]
+    adaptive_card(body_items, nil)
+  end
+
+  # Build a GitHub PR notification card
+  def self.format_github_pr(pr_data)
+    pr_title = pr_data[:title] || "Unknown PR"
+    pr_number = pr_data[:number] || "?"
+    pr_url = pr_data[:url] || ""
+    pr_action = pr_data[:action] || "opened"
+    pr_author = pr_data[:author] || "Someone"
+    pr_repo = pr_data[:repo] || ""
+    wp_ids = pr_data[:work_package_ids] || []
+
+    host = Setting.host_name rescue "localhost:8080"
+    protocol = Setting.protocol rescue "http"
+
+    emoji = case pr_action
+            when "opened" then "\u{1F7E2}"
+            when "closed" then "\u{1F534}"
+            when "merged" then "\u{1F7E3}"
+            when "synchronize", "updated" then "\u{1F504}"
+            else "\u{1F517}"
+            end
+
+    color = case pr_action
+            when "opened" then "Good"
+            when "closed" then "Attention"
+            when "merged" then "Accent"
+            else "Default"
+            end
+
+    facts = [
+      { "title" => "Repository", "value" => pr_repo },
+      { "title" => "Author", "value" => "**#{pr_author}**" },
+      { "title" => "Action", "value" => pr_action.capitalize }
+    ]
+
+    if wp_ids.any?
+      wp_links = wp_ids.map { |id| "[TZ##{id}](#{protocol}://#{host}/work_packages/#{id})" }.join(", ")
+      facts << { "title" => "Work Packages", "value" => wp_links }
+    end
+
+    body_items = [
+      { "type" => "TextBlock", "text" => "#{emoji} Pull Request #{pr_action.capitalize}", "weight" => "Bolder", "size" => "Medium", "color" => color, "wrap" => true },
+      { "type" => "TextBlock", "text" => "**##{pr_number}** #{pr_title}", "wrap" => true },
+      { "type" => "FactSet", "facts" => facts }
+    ]
+
+    adaptive_card(body_items, pr_url)
+  end
+
+  private_class_method def self.adaptive_card(body_items, action_url)
+    card = {
+      "type" => "message",
+      "attachments" => [
         {
-          contentType: "application/vnd.microsoft.card.adaptive",
-          contentUrl: nil,
-          content: {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            type: "AdaptiveCard",
-            version: "1.4",
-            body: [
-              {
-                type: "TextBlock",
-                text: "#{emoji} #{title}",
-                weight: "Bolder",
-                size: "Medium",
-                color: color
-              },
-              {
-                type: "TextBlock",
-                text: "**#{subject}** (##{wp_id})",
-                wrap: true,
-                size: "Default"
-              },
-              {
-                type: "ColumnSet",
-                columns: [
-                  {
-                    type: "Column",
-                    width: "auto",
-                    items: [
-                      { type: "TextBlock", text: "**Project:**", size: "Small", isSubtle: true },
-                      { type: "TextBlock", text: "**Status:**", size: "Small", isSubtle: true },
-                      { type: "TextBlock", text: "**Priority:**", size: "Small", isSubtle: true },
-                      { type: "TextBlock", text: "**Assignee:**", size: "Small", isSubtle: true },
-                      { type: "TextBlock", text: "**By:**", size: "Small", isSubtle: true }
-                    ]
-                  },
-                  {
-                    type: "Column",
-                    width: "stretch",
-                    items: [
-                      { type: "TextBlock", text: project_name.to_s, size: "Small" },
-                      { type: "TextBlock", text: status.to_s, size: "Small" },
-                      { type: "TextBlock", text: priority.to_s, size: "Small" },
-                      { type: "TextBlock", text: assignee.to_s, size: "Small" },
-                      { type: "TextBlock", text: author.to_s, size: "Small" }
-                    ]
-                  }
-                ]
-              }
-            ],
-            actions: [
-              {
-                type: "Action.OpenUrl",
-                title: "View in OpenProject →",
-                url: view_url
-              }
-            ]
+          "contentType" => "application/vnd.microsoft.card.adaptive",
+          "contentUrl" => nil,
+          "content" => {
+            "$schema" => "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type" => "AdaptiveCard",
+            "version" => "1.4",
+            "body" => body_items
           }
         }
       ]
     }
-  end
 
-  def self.format_project(action, payload)
-    project = payload.is_a?(Hash) ? (payload[:project] || payload["project"] || payload) : {}
-    name = dig_value(project, :name) || "Unknown project"
-
-    {
-      type: "message",
-      attachments: [
-        {
-          contentType: "application/vnd.microsoft.card.adaptive",
-          contentUrl: nil,
-          content: {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            type: "AdaptiveCard",
-            version: "1.4",
-            body: [
-              { type: "TextBlock", text: "📁 Project #{action}", weight: "Bolder", size: "Medium" },
-              { type: "TextBlock", text: "**#{name}**", wrap: true }
-            ]
-          }
-        }
+    if action_url.present?
+      card["attachments"][0]["content"]["actions"] = [
+        { "type" => "Action.OpenUrl", "title" => "View in OpenProject \u{2192}", "url" => action_url }
       ]
-    }
+    end
+
+    card
   end
 
-  def self.format_attachment(action, payload)
-    {
-      type: "message",
-      attachments: [
-        {
-          contentType: "application/vnd.microsoft.card.adaptive",
-          contentUrl: nil,
-          content: {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            type: "AdaptiveCard",
-            version: "1.4",
-            body: [
-              { type: "TextBlock", text: "📎 Attachment #{action}", weight: "Bolder", size: "Medium" }
-            ]
-          }
-        }
-      ]
-    }
-  end
-
-  def self.format_generic(event_name, payload)
-    {
-      type: "message",
-      attachments: [
-        {
-          contentType: "application/vnd.microsoft.card.adaptive",
-          contentUrl: nil,
-          content: {
-            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-            type: "AdaptiveCard",
-            version: "1.4",
-            body: [
-              { type: "TextBlock", text: "📋 #{event_name}", weight: "Bolder", size: "Medium" }
-            ]
-          }
-        }
-      ]
-    }
-  end
-
-  # Helper to dig into nested hashes with string or symbol keys
-  def self.dig_value(hash, *keys)
+  private_class_method def self.dig(hash, *keys)
     return nil unless hash.is_a?(Hash)
-
     result = hash
     keys.each do |key|
       break unless result.is_a?(Hash)
-      result = result[key] || result[key.to_s]
+      result = result[key] || result[key.to_s] || result[key.to_sym]
     end
-    result unless result.is_a?(Hash)
+    result unless result.is_a?(Hash) && keys.last != keys.last
   rescue
     nil
   end

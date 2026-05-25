@@ -78,21 +78,15 @@
       }
 
       .tz-email-header {
-        background: linear-gradient(135deg, #0C66E4 0%, #0055CC 100%);
-        padding: 24px 32px;
+        background: #ffffff;
+        padding: 20px 32px;
         text-align: left;
+        border-bottom: 1px solid #e4e8f0;
       }
 
       .tz-email-header img {
-        height: 36px;
+        height: 44px;
         width: auto;
-      }
-
-      .tz-email-header-text {
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: 600;
-        letter-spacing: -0.3px;
       }
 
       .tz-email-body {
@@ -130,20 +124,21 @@
           <!-- Email card -->
           <table class="tz-email-wrapper" cellpadding="0" cellspacing="0" border="0"
                  style="max-width: 640px; width: 100%; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+            <!-- Green accent bar -->
+            <tr>
+              <td style="background: #16a34a; height: 6px; font-size: 0; line-height: 0;">&nbsp;</td>
+            </tr>
             <!-- Header with branding -->
             <tr>
-              <td class="tz-email-header"
-                  style="background: linear-gradient(135deg, #0C66E4 0%, #0055CC 100%); padding: 24px 32px;">
+              <td style="background: #ffffff; padding: 20px 32px; border-bottom: 1px solid #e4e8f0;">
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                   <tr>
                     <td style="vertical-align: middle;">
-                      <span class="tz-email-header-text"
-                            style="color: #ffffff; font-size: 20px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                        Tamil Zorous
-                      </span>
+                      <img src="<%= Setting.protocol rescue 'http' %>://<%= Setting.host_name rescue 'localhost' %>/tz-assets/tamilzorous-logo-slogan.png"
+                           alt="Tamilzorous" height="44" style="height: 44px; width: auto; display: block;" />
                     </td>
                     <td style="text-align: right; vertical-align: middle;">
-                      <span style="color: rgba(255,255,255,0.7); font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                      <span style="color: #6b7280; font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                         Project Management
                       </span>
                     </td>
@@ -194,19 +189,10 @@
                           <td style="vertical-align: top; width: 50%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
                             <table cellpadding="0" cellspacing="0" border="0">
                               <tr>
-                                <!-- Z Logo -->
-                                <td style="vertical-align: top; padding-right: 14px;">
-                                  <div style="width: 52px; height: 52px; background: #16a34a; border-radius: 12px; text-align: center; line-height: 52px;">
-                                    <span style="color: #ffffff; font-size: 28px; font-weight: 800; font-family: Georgia, 'Times New Roman', serif;">Z</span>
-                                  </div>
-                                </td>
                                 <td style="vertical-align: middle;">
-                                  <div style="font-size: 18px; font-weight: 700; color: #1a1a2e; line-height: 1.2;">
-                                    Tamilzorous
-                                  </div>
-                                  <div style="font-size: 11px; color: #16a34a; font-style: italic; margin-top: 3px;">
-                                    Making the extraordinary, everyday.
-                                  </div>
+                                  <img src="<%= Setting.protocol rescue 'http' %>://<%= Setting.host_name rescue 'localhost' %>/tz-assets/tamilzorous-logo-slogan.png"
+                                       alt="Tamilzorous — Making the extraordinary, everyday."
+                                       height="56" style="height: 56px; width: auto; display: block;" />
                                 </td>
                               </tr>
                             </table>

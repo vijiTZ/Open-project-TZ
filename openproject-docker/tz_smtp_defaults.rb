@@ -12,25 +12,31 @@
 # UI, those values are preserved across restarts.
 
 Rails.application.config.after_initialize do
-  # Only seed if email delivery method hasn't been configured yet
-  if Setting.email_delivery_method.blank? || Setting.email_delivery_method == :sendmail
-    Rails.logger.info "[TZ] Setting default SMTP configuration (editable via admin UI)..."
+  begin
+    # Only seed if email delivery method hasn't been configured yet
+    if Setting.email_delivery_method.blank? || Setting.email_delivery_method == :sendmail
+      Rails.logger.info "[TZ] Setting default SMTP configuration (editable via admin UI)..."
 
-    Setting.email_delivery_method = :smtp
-    Setting.smtp_address          = "smtp.gmail.com"
-    Setting.smtp_port             = 587
-    Setting.smtp_authentication   = :login
-    Setting.smtp_user_name        = "tamilzorous@gmail.com"
-    Setting.smtp_password         = "qwxv taym ghip jhzz"
-    Setting.smtp_enable_starttls_auto = true
+      Setting.email_delivery_method = :smtp
+      Setting.smtp_address          = "smtp.gmail.com"
+      Setting.smtp_port             = 587
+      Setting.smtp_authentication   = :plain
+      Setting.smtp_user_name        = "tamilzorous@gmail.com"
+      Setting.smtp_password         = "qwxv taym ghip jhzz"
+      Setting.smtp_enable_starttls_auto = true
 
-    Rails.logger.info "[TZ] SMTP defaults applied. Change them in Administration → Email notifications."
+      Rails.logger.info "[TZ] SMTP defaults applied. Change them in Administration → Email notifications."
+    end
+
+    # Set mail_from if still default
+    if Setting.mail_from.blank? || Setting.mail_from == "openproject@example.net"
+      Setting.mail_from = "tamilzorous@gmail.com"
+    end
+
+    # Ensure ActionMailer picks up the DB settings
+    Setting.reload_mailer_settings!
+    Rails.logger.info "[TZ] Mailer settings reloaded from database"
+  rescue => e
+    Rails.logger.error "[TZ] Failed to set SMTP defaults: #{e.message}"
   end
-
-  # Set mail_from if still default
-  if Setting.mail_from.blank? || Setting.mail_from == "openproject@example.net"
-    Setting.mail_from = "tamilzorous@gmail.com"
-  end
-rescue => e
-  Rails.logger.error "[TZ] Failed to set SMTP defaults: #{e.message}"
 end

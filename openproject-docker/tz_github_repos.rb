@@ -27,6 +27,7 @@ require "openssl"
 require "base64"
 
 Rails.application.config.after_initialize do
+  begin
   # --- Controller: handles add/remove repo actions ---
   GithubIntegration::Admin::SettingsController.class_eval do
     # POST /github_integration/admin/settings/connect_repo
@@ -172,8 +173,9 @@ Rails.application.config.after_initialize do
   end
 
   Rails.logger.info "[TZ] GitHub repo manager loaded"
-rescue => e
-  Rails.logger.error "[TZ] Failed to load GitHub repo manager: #{e.message}"
+  rescue => e
+    Rails.logger.error "[TZ] Failed to load GitHub repo manager: #{e.message}"
+  end
 end
 
 # --- Encrypted token storage ---
