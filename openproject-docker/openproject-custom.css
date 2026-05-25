@@ -13188,3 +13188,145 @@ html body.router--work-packages-full-create #content .attributes-group.descripti
     padding-right: 0 !important;
   }
 }
+
+/* ================================================================
+   GLOBAL CKEDITOR TOOLBAR — single wrapping row, no kebab,
+   aligned dropdown panel (TZ)
+   ----------------------------------------------------------------
+   Applies anywhere CKEditor renders (any router, any page).
+   Three goals:
+     (a) All toolbar buttons sit in ONE wrapping row — hide the
+         forced .ck-toolbar__line-break that CKEditor injects.
+     (b) Hide the kebab (⋮) overflow dropdown that appears at the
+         right of the toolbar plus its trailing separator.
+     (c) If the kebab is still rendered by an upstream rule, align
+         its dropdown panel so buttons inside it lay out cleanly.
+   ================================================================ */
+
+/* (a) Toolbar row layout ------------------------------------------ */
+html .ck.ck-toolbar {
+  display: flex !important;
+  align-items: center !important;
+  flex-flow: row wrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 4px !important;
+  padding: 4px 6px !important;
+  box-sizing: border-box !important;
+}
+
+html .ck.ck-toolbar > .ck-toolbar__items {
+  display: flex !important;
+  align-items: center !important;
+  flex-flow: row wrap !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  gap: 4px !important;
+}
+
+html .ck.ck-toolbar .ck-toolbar__line-break,
+html .ck-toolbar__line-break {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  flex: 0 0 0 !important;
+  flex-basis: 0 !important;
+}
+
+html .ck.ck-toolbar > .ck-toolbar__items > :not(.ck-toolbar__line-break) {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  margin: 0 !important;
+}
+
+/* (b) Hide kebab + trailing separator ----------------------------- */
+html .ck.ck-toolbar .ck.ck-toolbar__grouped-dropdown,
+html .ck.ck-toolbar .ck-dropdown.ck-toolbar-dropdown,
+html .ck.ck-toolbar .ck-dropdown[class*="grouped" i],
+html .ck.ck-toolbar .ck-button[aria-label*="More" i],
+html .ck.ck-toolbar .ck-button[aria-label*="Show more" i],
+html .ck.ck-toolbar > .ck-toolbar__items > .ck-toolbar__separator:last-of-type,
+html .ck.ck-toolbar > .ck-toolbar__items > .ck-toolbar__separator:has(+ .ck.ck-toolbar__grouped-dropdown) {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  pointer-events: none !important;
+}
+
+/* (c) Fallback — if kebab still renders, align its dropdown panel
+       so the row of hidden buttons displays neatly as a single
+       wrapping row inside a clean white popup. */
+html .ck.ck-toolbar .ck.ck-toolbar__grouped-dropdown .ck-dropdown__panel,
+html .ck.ck-dropdown.ck-toolbar-dropdown .ck-dropdown__panel {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.10) !important;
+  padding: 6px !important;
+  min-width: 280px !important;
+  max-width: 480px !important;
+}
+
+html .ck.ck-toolbar .ck.ck-toolbar__grouped-dropdown .ck-dropdown__panel .ck.ck-toolbar,
+html .ck.ck-dropdown.ck-toolbar-dropdown .ck-dropdown__panel .ck.ck-toolbar {
+  display: flex !important;
+  flex-flow: row wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+html .ck.ck-toolbar .ck.ck-toolbar__grouped-dropdown .ck-dropdown__panel .ck.ck-toolbar .ck-button,
+html .ck.ck-dropdown.ck-toolbar-dropdown .ck-dropdown__panel .ck.ck-toolbar .ck-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  margin: 0 !important;
+  border-radius: 4px !important;
+}
+
+/* ================================================================
+   ASSIGNEE / ACCOUNTABLE — let the chip grow so the full user name
+   shows instead of "Vikraa…". Just widen the chip + label, do NOT
+   stretch the field to the full cell width (keeps the compact pill
+   look the user prefers).
+   ================================================================ */
+html op-user-autocompleter .ng-select,
+html op-principal-autocompleter .ng-select,
+html op-autocompleter .ng-select {
+  min-width: 220px !important;
+}
+
+html op-user-autocompleter .ng-select .ng-select-container,
+html op-principal-autocompleter .ng-select .ng-select-container,
+html op-autocompleter .ng-select .ng-select-container {
+  min-width: 220px !important;
+}
+
+html op-user-autocompleter .ng-select .ng-value-container,
+html op-principal-autocompleter .ng-select .ng-value-container,
+html op-autocompleter .ng-select .ng-value-container {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+html op-user-autocompleter .ng-select .ng-value .ng-value-label,
+html op-principal-autocompleter .ng-select .ng-value .ng-value-label,
+html op-autocompleter .ng-select .ng-value .ng-value-label {
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+
