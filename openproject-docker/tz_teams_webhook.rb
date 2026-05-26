@@ -55,66 +55,9 @@ Rails.application.config.after_initialize do
 
     Rails.logger.info "[TZ] Teams webhook formatter loaded"
 
-    # Subscribe to GitHub PR events and forward to Teams
-    ::OpenProject::Notifications.subscribe("github.pull_request") do |payload|
-      begin
-        pr_payload = payload[:payload] || payload
-        action = pr_payload["action"].to_s
-        pr = pr_payload["pull_request"] || {}
-
-        pr_title = pr["title"] || "Unknown PR"
-        pr_number = pr["number"] || "?"
-        pr_url = pr["html_url"] || ""
-        pr_author = pr.dig("user", "login") || "Someone"
-        pr_repo = pr.dig("base", "repo", "full_name") || pr.dig("head", "repo", "full_name") || ""
-        pr_merged = pr["merged"] == true
-        effective_action = (action == "closed" && pr_merged) ? "merged" : action
-
-        # Extract work package IDs from PR body (TZ#123 or OP#123 patterns)
-        pr_body = pr["body"].to_s
-        host = Setting.host_name rescue "localhost:8080"
-        wp_regex = /(?:TZ|OP)#(\d+)|https?:\/\/#{Regexp.escape(host)}\/(?:\S+?\/)*(?:work_packages|wp)\/(\d+)/i
-        wp_ids = pr_body.scan(wp_regex).map { |first, second| (first || second).to_i }.select(&:positive?).uniq
-
-        pr_data = {
-          title: pr_title,
-          number: pr_number,
-          url: pr_url,
-          action: effective_action,
-          author: pr_author,
-          repo: pr_repo,
-          work_package_ids: wp_ids
-        }
-
-        teams_card = TzTeamsFormatter.format_github_pr(pr_data)
-
-        # Send to all Teams-type webhooks
-        Webhooks::Webhook.where(enabled: true).each do |wh|
-          url = wh.url.to_s
-          is_teams = url.include?("webhook.office.com") ||
-                     url.include?("logic.azure.com") ||
-                     url.include?("webhook.office365.com") ||
-                     url.include?("powerplatform.com") ||
-                     url.include?("powerautomate")
-          next unless is_teams
-
-          begin
-            response = OpenProject::SsrfProtection.post(
-              url,
-              headers: { "Content-Type": "application/json" },
-              body: teams_card.to_json
-            )
-            Rails.logger.info "[TZ Teams] GitHub PR #{effective_action} ##{pr_number} sent to Teams -> #{response&.code}"
-          rescue => e
-            Rails.logger.error "[TZ Teams] Failed to send GitHub PR to Teams: #{e.message}"
-          end
-        end
-      rescue => e
-        Rails.logger.error "[TZ Teams] GitHub PR notification error: #{e.message}"
-      end
-    end
-
-    Rails.logger.info "[TZ] GitHub PR -> Teams notification subscriber loaded"
+    # NOTE: GitHub PR Teams notifications are handled by tz_pr_sync_module.rb
+    # (notify_teams_pr_sync). The subscriber below is disabled to avoid duplicates.
+    Rails.logger.info "[TZ] GitHub PR -> Teams notification handled by tz_pr_sync_module.rb"
   rescue => e
     Rails.logger.error "[TZ] Failed to load Teams webhook: #{e.message}"
   end
@@ -268,65 +211,10 @@ module TzTeamsFormatter
   end
 
   def self.format_attachment(action, data)
-    attachment = data["attachment"] || data
-    wp = data["work_package"] || {}
-
-    file_name = dig(attachment, "fileName") ||
-                dig(attachment, "_links", "self", "title") ||
-                dig(attachment, "name") || "Unknown file"
-    file_size = dig(attachment, "fileSize") || dig(attachment, "size") || 0
-    content_type = dig(attachment, "contentType") || ""
-    download_url = dig(attachment, "_links", "downloadLocation", "href") ||
-                   dig(attachment, "_links", "self", "href") || ""
-
-    wp_id = dig(wp, "id") || dig(attachment, "_links", "container", "href").to_s.scan(/\d+/).last || "?"
-    wp_subject = dig(wp, "subject") ||
-                 dig(wp, "_links", "container", "title") || ""
-
-    host = Setting.host_name rescue "localhost:8080"
-    protocol = Setting.protocol rescue "http"
-    view_url = "#{protocol}://#{host}/work_packages/#{wp_id}"
-
-    # Build download link — use API download URL if available
-    if download_url.present? && !download_url.start_with?("http")
-      download_url = "#{protocol}://#{host}#{download_url}"
-    end
-
-    # Try to get all attachments for this WP to group them
-    attachments_list = []
-    if wp_id != "?"
-      begin
-        wp_obj = WorkPackage.find_by(id: wp_id)
-        if wp_obj
-          wp_subject = wp_obj.subject if wp_subject.blank?
-          wp_obj.attachments.order(created_at: :desc).limit(10).each do |att|
-            att_url = "#{protocol}://#{host}/api/v3/attachments/#{att.id}/content"
-            size_kb = (att.filesize / 1024.0).round(1)
-            attachments_list << { name: att.filename, url: att_url, size: "#{size_kb} KB" }
-          end
-        end
-      rescue => e
-        Rails.logger.warn "[TZ Teams] Could not fetch WP attachments: #{e.message}"
-      end
-    end
-
-    # Fallback: if we couldn't fetch grouped attachments, show just this one
-    if attachments_list.empty?
-      size_kb = (file_size.to_i / 1024.0).round(1)
-      attachments_list << { name: file_name, url: download_url, size: "#{size_kb} KB" }
-    end
-
-    body_items = [
-      { "type" => "TextBlock", "text" => "\u{1F4CE} Attachment #{action.capitalize} on ##{wp_id}", "weight" => "Bolder", "size" => "Medium", "color" => "Accent", "wrap" => true }
-    ]
-    body_items << { "type" => "TextBlock", "text" => "**#{wp_subject}**", "wrap" => true } if wp_subject.present?
-    body_items << { "type" => "TextBlock", "text" => "\u{1F4C2} **Attachments (#{attachments_list.size}):**", "weight" => "Bolder", "size" => "Small", "wrap" => true }
-
-    attachments_list.each do |att|
-      body_items << { "type" => "TextBlock", "text" => "\u{1F4CE} [#{att[:name]}](#{att[:url]}) (#{att[:size]})", "wrap" => true, "size" => "Small" }
-    end
-
-    adaptive_card(body_items, view_url)
+    # Suppress individual attachment notifications — attachments are shown
+    # grouped inside the work_package:created/updated card instead.
+    Rails.logger.info "[TZ Teams] Attachment #{action} suppressed (shown in WP card)"
+    nil
   end
 
   def self.format_time_entry(action, data)
