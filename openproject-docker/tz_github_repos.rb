@@ -73,23 +73,34 @@ Rails.application.config.after_initialize do
         redirect_to "/github_integration/admin/settings" and return
       end
 
-      # Parse repo owner/name from URL
-      match = repo_url.match(%r{github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$})
-      unless match
-        flash[:error] = "Invalid GitHub URL. Use format: https://github.com/owner/repo"
+      settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
+
+      # Detect if this is an org URL (https://github.com/org-name) or repo URL (https://github.com/owner/repo)
+      org_match = repo_url.match(%r{github\.com/([^/]+)/?$})
+      repo_match = repo_url.match(%r{github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$})
+
+      if repo_match
+        # Individual repo connection
+        owner, repo = repo_match[1], repo_match[2]
+        tz_connect_single_repo(owner, repo, token, save_token, settings)
+      elsif org_match
+        # Organization connection — fetch all repos and connect them
+        org_name = org_match[1]
+        tz_connect_org(org_name, token, save_token, settings)
+      else
+        flash[:error] = "Invalid GitHub URL. Use https://github.com/org or https://github.com/owner/repo"
         redirect_to "/github_integration/admin/settings" and return
       end
+    end
 
-      owner, repo = match[1], match[2]
+    def tz_connect_single_repo(owner, repo, token, save_token, settings)
       full_name = "#{owner}/#{repo}"
 
       # Build webhook URL
-      settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
       webhook_secret = settings[:webhook_secret] || ""
       host = Setting.host_name
       protocol = (Setting.protocol rescue "https")
 
-      # Try to get the actor's API token for the callback key
       api_user_id = settings[:github_user_id]
       api_user = api_user_id.present? ? User.find_by(id: api_user_id) : nil
       api_token = api_user&.api_tokens&.first&.plain_value
@@ -100,7 +111,6 @@ Rails.application.config.after_initialize do
         webhook_url = "#{protocol}://#{host}/webhooks/github"
       end
 
-      # Call GitHub API to create webhook
       begin
         result = TzGithubRepoManager.create_webhook(owner, repo, token, webhook_url, webhook_secret)
 
@@ -111,7 +121,8 @@ Rails.application.config.after_initialize do
             "full_name" => full_name,
             "url" => "https://github.com/#{full_name}",
             "hook_id" => result[:hook_id],
-            "connected_at" => Time.now.iso8601
+            "connected_at" => Time.now.iso8601,
+            "type" => "repo"
           }
 
           merged = settings.merge("connected_repos" => repos)
@@ -134,8 +145,53 @@ Rails.application.config.after_initialize do
       redirect_to "/github_integration/admin/settings"
     end
 
+    def tz_connect_org(org_name, token, save_token, settings)
+      begin
+        org_repos = TzGithubRepoManager.fetch_org_repos(org_name, token)
+
+        if org_repos.nil?
+          flash[:error] = "Could not fetch repos for '#{org_name}'. Check the token has access to this org."
+          redirect_to "/github_integration/admin/settings" and return
+        end
+
+        if org_repos.empty?
+          flash[:warning] = "No repositories found under '#{org_name}'."
+          redirect_to "/github_integration/admin/settings" and return
+        end
+
+        repos = Array(settings[:connected_repos])
+
+        # Remove any previous org entry for this org
+        repos.reject! { |r| r["type"] == "org" && r["org_name"] == org_name }
+        # Remove individual repos from this org that were auto-added by a previous org connect
+        repos.reject! { |r| r["org_name"] == org_name && r["type"] == "org_repo" }
+
+        # Add the org entry (this is what the sync thread uses to expand repos)
+        repos << {
+          "full_name" => org_name,
+          "url" => "https://github.com/#{org_name}",
+          "type" => "org",
+          "org_name" => org_name,
+          "connected_at" => Time.now.iso8601,
+          "repo_count" => org_repos.size
+        }
+
+        merged = settings.merge("connected_repos" => repos)
+        merged["github_admin_token"] = TzGithubTokenStore.encrypt(token) if save_token
+
+        Setting.plugin_openproject_github_integration = merged
+        flash[:notice] = "Connected org '#{org_name}' — #{org_repos.size} repos will be synced automatically."
+        flash[:notice] += " Token saved securely." if save_token
+      rescue => e
+        flash[:error] = "Error connecting org: #{e.message}"
+      end
+
+      redirect_to "/github_integration/admin/settings"
+    end
+
     def tz_disconnect_repo
       full_name = params[:full_name].to_s.strip
+      entry_type = params[:entry_type].to_s.strip
       token = params[:github_token].to_s.strip
 
       settings = Hash(Setting.plugin_openproject_github_integration).with_indifferent_access
@@ -145,21 +201,31 @@ Rails.application.config.after_initialize do
       end
 
       repos = Array(settings[:connected_repos])
-      repo_config = repos.find { |r| r["full_name"] == full_name }
 
-      if repo_config && token.present? && repo_config["hook_id"]
-        owner, repo = full_name.split("/", 2)
-        begin
-          TzGithubRepoManager.delete_webhook(owner, repo, token, repo_config["hook_id"])
-        rescue => e
-          Rails.logger.warn "[TZ] Could not delete webhook from GitHub: #{e.message}"
+      if entry_type == "org"
+        # Disconnect org — remove the org entry (existing PRs in DB stay)
+        repos.reject! { |r| r["full_name"] == full_name && r["type"] == "org" }
+        repos.reject! { |r| r["org_name"] == full_name && r["type"] == "org_repo" }
+        flash[:notice] = "Disconnected org '#{full_name}'. Existing PRs remain visible but no new PRs will sync."
+      else
+        # Disconnect individual repo
+        repo_config = repos.find { |r| r["full_name"] == full_name && r["type"] != "org" }
+
+        if repo_config && token.present? && repo_config["hook_id"]
+          owner, repo = full_name.split("/", 2)
+          begin
+            TzGithubRepoManager.delete_webhook(owner, repo, token, repo_config["hook_id"])
+          rescue => e
+            Rails.logger.warn "[TZ] Could not delete webhook from GitHub: #{e.message}"
+          end
         end
+
+        repos.reject! { |r| r["full_name"] == full_name && r["type"] != "org" }
+        flash[:notice] = "Disconnected #{full_name}. Existing PRs remain visible but no new PRs will sync."
       end
 
-      repos.reject! { |r| r["full_name"] == full_name }
       merged = settings.merge("connected_repos" => repos)
       Setting.plugin_openproject_github_integration = merged
-      flash[:notice] = "Disconnected #{full_name}."
 
       redirect_to "/github_integration/admin/settings"
     end
@@ -264,6 +330,41 @@ module TzGithubRepoManager
       error_msg = (JSON.parse(response.body)["message"] rescue response.body.to_s.truncate(200))
       { success: false, error: "GitHub API returned #{response.code}: #{error_msg}" }
     end
+  end
+
+  # Fetch all repos for a GitHub org (paginated, up to 200)
+  def self.fetch_org_repos(org_name, token)
+    all_repos = []
+    page = 1
+
+    loop do
+      uri = URI("https://api.github.com/orgs/#{org_name}/repos?per_page=100&page=#{page}&type=all")
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http.open_timeout = 10
+      http.read_timeout = 20
+
+      request = Net::HTTP::Get.new(uri.request_uri)
+      request["Authorization"] = "token #{token}"
+      request["Accept"] = "application/vnd.github+json"
+      request["User-Agent"] = "OpenProject-TZ"
+
+      response = http.request(request)
+
+      if response.code.to_i == 200
+        repos = JSON.parse(response.body)
+        break if repos.empty?
+        all_repos.concat(repos.map { |r| r["full_name"] })
+        break if repos.size < 100 || page >= 2 # cap at 200 repos
+        page += 1
+      else
+        Rails.logger.warn "[TZ] GitHub API returned #{response.code} for org #{org_name}"
+        return nil if all_repos.empty?
+        break
+      end
+    end
+
+    all_repos
   end
 
   def self.delete_webhook(owner, repo, token, hook_id)

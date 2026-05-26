@@ -3,14 +3,26 @@
      Colors, logo, and footer are customized to match the company identity. --%>
 <%
   # Attach TZ logos as inline CID so they render in all email clients.
-  # Safe to call even if already attached (e.g. by TzWorkPackageMailer).
+  # Using explicit mime_type + binread for Outlook compatibility.
   unless attachments["tz-logo-slogan.png"].present?
     slogan_path = Rails.root.join("public", "tz-assets", "tamilzorous-logo-slogan.png")
-    attachments.inline["tz-logo-slogan.png"] = File.read(slogan_path) if File.exist?(slogan_path)
+    if File.exist?(slogan_path)
+      attachments.inline["tz-logo-slogan.png"] = {
+        mime_type: "image/png",
+        content: File.binread(slogan_path),
+        encoding: "base64"
+      }
+    end
   end
   unless attachments["tz-logo.png"].present?
     logo_path = Rails.root.join("public", "tz-assets", "tamilzorous-logo.png")
-    attachments.inline["tz-logo.png"] = File.read(logo_path) if File.exist?(logo_path)
+    if File.exist?(logo_path)
+      attachments.inline["tz-logo.png"] = {
+        mime_type: "image/png",
+        content: File.binread(logo_path),
+        encoding: "base64"
+      }
+    end
   end
 %>
 <html>

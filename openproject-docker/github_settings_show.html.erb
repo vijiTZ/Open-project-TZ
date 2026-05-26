@@ -100,8 +100,17 @@
               <td style="padding: 12px 14px;">
                 <a href="<%= repo['url'] %>" target="_blank"
                    style="color: #0C66E4; text-decoration: none; font-weight: 500;">
-                  <%= repo["full_name"] %>
+                  <% if repo["type"] == "org" %>
+                    &#x1F3E2; <%= repo["full_name"] %>
+                  <% else %>
+                    &#x1F4C1; <%= repo["full_name"] %>
+                  <% end %>
                 </a>
+                <% if repo["type"] == "org" && repo["repo_count"] %>
+                  <span style="font-size: 12px; color: #6b7280; margin-left: 6px;">
+                    (<%= repo["repo_count"] %> repos)
+                  </span>
+                <% end %>
               </td>
               <td style="padding: 12px 14px; color: #6b7280;">
                 <% if repo["connected_at"] %>
@@ -109,15 +118,23 @@
                 <% end %>
               </td>
               <td style="padding: 12px 14px;">
-                <span style="display: inline-block; padding: 2px 10px; border-radius: 12px;
-                             background: #dcfce7; color: #166534; font-size: 12px; font-weight: 500;">
-                  Active
-                </span>
+                <% if repo["type"] == "org" %>
+                  <span style="display: inline-block; padding: 2px 10px; border-radius: 12px;
+                               background: #dbeafe; color: #1e40af; font-size: 12px; font-weight: 500;">
+                    Org &middot; Active
+                  </span>
+                <% else %>
+                  <span style="display: inline-block; padding: 2px 10px; border-radius: 12px;
+                               background: #dcfce7; color: #166534; font-size: 12px; font-weight: 500;">
+                    Repo &middot; Active
+                  </span>
+                <% end %>
               </td>
               <td style="padding: 12px 14px; text-align: right;">
                 <%= form_tag(github_integration_admin_settings_path, method: :patch) do %>
                   <%= hidden_field_tag :tz_action, "disconnect_repo" %>
                   <%= hidden_field_tag :full_name, repo["full_name"] %>
+                  <%= hidden_field_tag :entry_type, repo["type"] || "repo" %>
                   <div style="display: flex; align-items: center; gap: 8px; justify-content: flex-end;">
                     <% unless @has_saved_token %>
                       <input type="text" name="github_token" placeholder="Token (to remove webhook)"
@@ -125,7 +142,7 @@
                                     border-radius: 6px; font-size: 13px;">
                     <% end %>
                     <button type="submit"
-                            onclick="return confirm('Disconnect <%= repo["full_name"] %>?')"
+                            onclick="return confirm('Disconnect <%= repo["full_name"] %>? Existing PRs will remain visible but no new PRs will sync.')"
                             style="padding: 6px 14px; background: #dc2626; color: white;
                                    border: none; border-radius: 6px; font-size: 13px;
                                    cursor: pointer; font-weight: 500;">
@@ -150,7 +167,7 @@
   <div style="background: #ffffff; border: 1px solid #e4e8f0; border-radius: 10px;
               padding: 20px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
     <h4 style="font-size: 15px; font-weight: 600; color: #1a1a2e; margin: 0 0 16px 0;">
-      Connect a new repository
+      Connect a repository or organization
     </h4>
 
     <%= form_tag(github_integration_admin_settings_path, method: :patch) do %>
@@ -158,16 +175,17 @@
       <div style="display: flex; flex-direction: column; gap: 14px;">
         <div>
           <label style="display: block; font-size: 13px; font-weight: 500; color: #1a1a2e; margin-bottom: 4px;">
-            Repository URL
+            GitHub URL (Org or Repo)
           </label>
           <input type="text" name="repo_url"
-                 placeholder="https://github.com/owner/repo"
+                 placeholder="https://github.com/your-org or https://github.com/owner/repo"
                  required
                  style="width: 100%; max-width: 500px; padding: 10px 14px;
                         border: 1px solid #d0d7de; border-radius: 8px;
                         font-size: 14px; box-sizing: border-box;">
           <p style="font-size: 12px; color: #9ca3af; margin: 4px 0 0;">
-            The full GitHub repository URL (e.g., https://github.com/your-org/your-repo)
+            <strong>Org URL</strong> (e.g., https://github.com/your-org) &mdash; syncs PRs from all repos in the org.<br>
+            <strong>Repo URL</strong> (e.g., https://github.com/owner/repo) &mdash; syncs PRs from that repo only.
           </p>
         </div>
 
@@ -207,7 +225,7 @@
                          border: none; border-radius: 8px; font-size: 14px;
                          font-weight: 500; cursor: pointer;
                          box-shadow: 0 1px 2px rgba(0,0,0,0.1);">
-            Connect Repository
+            Connect
           </button>
         </div>
       </div>
