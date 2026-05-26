@@ -116,10 +116,10 @@ Rails.application.config.after_initialize do
             Rails.logger.warn "[TZ] Auto-sync error: #{e.message}"
           end
 
-          sleep 300 # 5 minutes
+          sleep 60 # 1 minute
         end
       end
-      Rails.logger.info "[TZ] GitHub PR auto-sync started (every 5 min)"
+      Rails.logger.info "[TZ] GitHub PR auto-sync started (every 1 min)"
     end
 
     Rails.logger.info "[TZ] GitHub PR sync loaded"
@@ -225,10 +225,12 @@ module TzGithubPrSync
 
     # The list endpoint doesn't return merged, additions, deletions, changed_files, merged_by.
     # Always fetch full detail for PRs that reference our work packages.
+    mergeable_status = nil
     if wp_ids.any?
       detail = fetch_pr_detail(owner, repo, token, pr_data["number"])
       if detail
         pr_data = detail
+        mergeable_status = detail["mergeable"]
         # Re-extract merged_by from detail
         merged_by_data = pr_data["merged_by"] ? {
           "id" => pr_data["merged_by"]["id"],
@@ -236,6 +238,47 @@ module TzGithubPrSync
           "html_url" => pr_data["merged_by"]["html_url"],
           "avatar_url" => pr_data["merged_by"]["avatar_url"]
         } : nil
+      end
+    end
+
+    # Infer merged from merged_at if the explicit field isn't set
+    # (the list endpoint returns merged_at but not merged boolean)
+    is_merged = pr_data["merged"] || pr_data["merged_at"].present?
+
+    # Check existing PR state BEFORE upsert to detect changes
+    existing_pr = GithubPullRequest.find_by(github_id: pr_data["id"])
+    old_state = existing_pr&.state
+    old_merged = existing_pr&.merged
+    old_labels = existing_pr&.labels&.map { |l| l[:name] || l["name"] } || []
+
+    # Build labels: keep original GitHub labels + add TZ status labels
+    labels = Array(pr_data["labels"]).map { |l| { "name" => l["name"] || "", "color" => l["color"] || "000000" } }
+
+    # Remove old TZ status labels before re-adding
+    labels.reject! { |l| l["name"].start_with?("TZ:") }
+
+    # Add conflict label if mergeable is explicitly false (open PRs only)
+    if pr_data["state"] == "open" && mergeable_status == false
+      labels << { "name" => "TZ: Conflicts", "color" => "d73a49" }
+    end
+
+    # Detect reopened PRs and find who reopened
+    reopener = nil
+    if existing_pr && old_state == "closed" && pr_data["state"] == "open" && !is_merged
+      reopener = fetch_pr_reopener(owner, repo, token, pr_data["number"])
+      labels << { "name" => "TZ: Reopened by @#{reopener}", "color" => "e3b341" } if reopener
+    end
+
+    # Fetch latest PR comments for WP-linked PRs
+    if wp_ids.any?
+      comments_data = fetch_pr_comments(owner, repo, token, pr_data["number"])
+      if comments_data.is_a?(Array) && comments_data.any?
+        comments_data.first(3).each_with_index do |c, i|
+          user_login = c.dig("user", "login") || "unknown"
+          comment_body = c["body"].to_s.gsub(/\s+/, " ").strip
+          comment_body = comment_body[0..120] + "..." if comment_body.length > 120
+          labels << { "name" => "TZ: @#{user_login}: #{comment_body}", "color" => "0075ca" }
+        end
       end
     end
 
@@ -248,7 +291,7 @@ module TzGithubPrSync
       "title" => pr_data["title"],
       "body" => pr_data["body"].presence || "-",
       "draft" => pr_data["draft"] || false,
-      "merged" => pr_data["merged"] || false,
+      "merged" => is_merged,
       "merged_at" => pr_data["merged_at"],
       "merge_commit_sha" => pr_data["merge_commit_sha"],
       "merged_by" => merged_by_data,
@@ -258,7 +301,7 @@ module TzGithubPrSync
       "additions" => pr_data["additions"] || 0,
       "deletions" => pr_data["deletions"] || 0,
       "changed_files" => pr_data["changed_files"] || 0,
-      "labels" => Array(pr_data["labels"]).map { |l| { "name" => l["name"] || "", "color" => l["color"] || "000000" } },
+      "labels" => labels,
       "base" => {
         "repo" => {
           "full_name" => full_name,
@@ -269,7 +312,203 @@ module TzGithubPrSync
 
     pr = OpenProject::GithubIntegration::Services::UpsertPullRequest.new.call(payload, work_packages: work_packages)
 
+    # Determine what changed and notify Teams
+    if wp_ids.any?
+      is_new = existing_pr.nil?
+      state_changed = old_state != pr_data["state"]
+      merged_changed = old_merged != is_merged
+      is_reopened = old_state == "closed" && pr_data["state"] == "open" && !is_merged
+      has_conflicts = labels.any? { |l| l["name"] == "TZ: Conflicts" }
+      had_conflicts = old_labels.include?("TZ: Conflicts")
+      new_conflicts = has_conflicts && !had_conflicts
+
+      # Collect latest comments for notification
+      comment_texts = labels.select { |l| l["name"].to_s.start_with?("TZ: @") }.map { |l| l["name"].sub(/^TZ:\s*/, "") }
+
+      if is_new || state_changed || merged_changed || new_conflicts
+        notify_teams_pr_sync(
+          pr_data: pr_data,
+          full_name: full_name,
+          wp_ids: wp_ids,
+          is_merged: is_merged,
+          has_conflicts: has_conflicts,
+          comment_texts: comment_texts,
+          is_new: is_new,
+          is_reopened: is_reopened,
+          reopener: reopener
+        )
+      end
+    end
+
     { linked_count: work_packages.size, pr: pr }
+  end
+
+  # Send a Teams notification about a PR sync event
+  def self.notify_teams_pr_sync(pr_data:, full_name:, wp_ids:, is_merged:, has_conflicts:, comment_texts:, is_new:, is_reopened: false, reopener: nil)
+    host = Setting.host_name rescue "localhost:8080"
+    protocol = Setting.protocol rescue "http"
+
+    pr_author = pr_data.dig("user", "login") || "Someone"
+    pr_number = pr_data["number"]
+    pr_title = pr_data["title"] || "Unknown PR"
+    pr_url = pr_data["html_url"] || ""
+
+    # Determine effective status
+    if is_merged
+      status = "Merged"
+      emoji = "\u{1F7E3}"
+      color = "Accent"
+    elsif is_reopened
+      status = "Reopened"
+      emoji = "\u{1F7E0}"
+      color = "Warning"
+    elsif pr_data["state"] == "closed"
+      status = "Closed"
+      emoji = "\u{1F534}"
+      color = "Attention"
+    else
+      status = "Open"
+      emoji = "\u{1F7E2}"
+      color = "Good"
+    end
+
+    # For reopened, show who reopened (may differ from original author)
+    action_actor = pr_author
+    action_text = if is_new
+                    "raised"
+                  elsif is_reopened
+                    action_actor = reopener || pr_author
+                    "reopened"
+                  elsif is_merged
+                    "merged"
+                  elsif pr_data["state"] == "closed"
+                    "closed"
+                  else
+                    "updated"
+                  end
+
+    # Build WP links
+    wp_links = wp_ids.map { |id| "[TZ##{id}](#{protocol}://#{host}/work_packages/#{id})" }.join(", ")
+
+    facts = [
+      { "title" => "Repository", "value" => full_name },
+      { "title" => "Author", "value" => "**#{pr_author}**" },
+      { "title" => "Status", "value" => "**#{status}**" },
+      { "title" => "Work Packages", "value" => wp_links }
+    ]
+
+    if has_conflicts
+      facts << { "title" => "\u{26A0} Conflicts", "value" => "**This PR has merge conflicts**" }
+    end
+
+    body_items = [
+      { "type" => "TextBlock", "text" => "#{emoji} **#{action_actor}** #{action_text} PR for #{wp_links}", "weight" => "Bolder", "size" => "Medium", "color" => color, "wrap" => true },
+      { "type" => "TextBlock", "text" => "**##{pr_number}** #{pr_title}", "wrap" => true },
+      { "type" => "FactSet", "facts" => facts }
+    ]
+
+    # Add conflict warning
+    if has_conflicts
+      body_items << { "type" => "TextBlock", "text" => "\u{26A0}\u{FE0F} **This PR has merge conflicts!**", "color" => "Attention", "weight" => "Bolder", "wrap" => true }
+    end
+
+    # Add latest comments
+    if comment_texts.any?
+      body_items << { "type" => "TextBlock", "text" => "\u{1F4AC} **Latest Comments:**", "weight" => "Bolder", "size" => "Small", "wrap" => true }
+      comment_texts.each do |ct|
+        body_items << { "type" => "TextBlock", "text" => ct, "wrap" => true, "size" => "Small", "isSubtle" => true }
+      end
+    end
+
+    card = {
+      "type" => "message",
+      "attachments" => [
+        {
+          "contentType" => "application/vnd.microsoft.card.adaptive",
+          "contentUrl" => nil,
+          "content" => {
+            "$schema" => "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type" => "AdaptiveCard",
+            "version" => "1.4",
+            "body" => body_items,
+            "actions" => [
+              { "type" => "Action.OpenUrl", "title" => "View PR \u{2192}", "url" => pr_url }
+            ]
+          }
+        }
+      ]
+    }
+
+    # Send to all Teams webhooks
+    Webhooks::Webhook.where(enabled: true).each do |wh|
+      url = wh.url.to_s
+      is_teams = url.include?("webhook.office.com") ||
+                 url.include?("logic.azure.com") ||
+                 url.include?("webhook.office365.com") ||
+                 url.include?("powerplatform.com") ||
+                 url.include?("powerautomate")
+      next unless is_teams
+
+      begin
+        response = OpenProject::SsrfProtection.post(
+          url,
+          headers: { "Content-Type": "application/json" },
+          body: card.to_json
+        )
+        Rails.logger.info "[TZ Teams] PR sync notification ##{pr_number} (#{status}) sent -> #{response&.code}"
+      rescue => e
+        Rails.logger.error "[TZ Teams] Failed to send PR sync notification: #{e.message}"
+      end
+    end
+  rescue => e
+    Rails.logger.error "[TZ Teams] PR sync notification error: #{e.message}"
+  end
+
+  # Fetch who reopened a PR (from GitHub Events API)
+  def self.fetch_pr_reopener(owner, repo, token, pr_number)
+    uri = URI("https://api.github.com/repos/#{owner}/#{repo}/issues/#{pr_number}/events?per_page=10")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.open_timeout = 10
+    http.read_timeout = 15
+
+    request = Net::HTTP::Get.new(uri.request_uri)
+    request["Authorization"] = "token #{token}"
+    request["Accept"] = "application/vnd.github+json"
+    request["User-Agent"] = "OpenProject-TZ"
+
+    response = http.request(request)
+    return nil unless response.code.to_i == 200
+
+    events = JSON.parse(response.body)
+    # Find the latest "reopened" event
+    reopened_event = events.reverse.find { |e| e["event"] == "reopened" }
+    reopened_event&.dig("actor", "login")
+  rescue => e
+    Rails.logger.warn "[TZ] Failed to fetch reopener for PR ##{pr_number}: #{e.message}"
+    nil
+  end
+
+  # Fetch latest comments on a PR (via issues API which includes PR comments)
+  def self.fetch_pr_comments(owner, repo, token, pr_number)
+    uri = URI("https://api.github.com/repos/#{owner}/#{repo}/issues/#{pr_number}/comments?per_page=5&sort=updated&direction=desc")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.open_timeout = 10
+    http.read_timeout = 15
+
+    request = Net::HTTP::Get.new(uri.request_uri)
+    request["Authorization"] = "token #{token}"
+    request["Accept"] = "application/vnd.github+json"
+    request["User-Agent"] = "OpenProject-TZ"
+
+    response = http.request(request)
+    return [] unless response.code.to_i == 200
+
+    JSON.parse(response.body)
+  rescue => e
+    Rails.logger.warn "[TZ] Failed to fetch comments for PR ##{pr_number}: #{e.message}"
+    []
   end
 
   def self.extract_token_from_context
