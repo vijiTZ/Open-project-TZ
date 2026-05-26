@@ -12,8 +12,12 @@
 services:
   web:
     environment:
-      # tz: allow tunnel hostnames for GitHub webhooks
-      OPENPROJECT_ADDITIONAL__HOST__NAMES: ".loca.lt .ngrok-free.app .ngrok.io"
+      # tz: allow tunnel hostnames for GitHub webhooks. `web` MUST stay
+      # in this list — hocuspocus calls back to http://web:8080/... to
+      # authenticate WebSocket sessions; without it, real-time editing
+      # fails with "collaboration server unreachable" because the host
+      # check returns 400 Bad Request before the API even runs.
+      OPENPROJECT_ADDITIONAL__HOST__NAMES: "web .loca.lt .ngrok-free.app .ngrok.io"
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
       - "./openproject-custom.js:/app/public/custom-redesign.js"
@@ -36,6 +40,8 @@ services:
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
       # tz: auto-heal workflow gaps so Kanban drags never error
       - "./tz_workflow_defaults.rb:/app/config/initializers/tz_workflow_defaults.rb"
+      # tz: skip required-field validation on status-only edits (Kanban drag)
+      # - "./tz_kanban_status_only.rb:/app/config/initializers/tz_kanban_status_only.rb"
       # tz: change PR prefix from OP# to TZ#
       - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
       # tz: Teams webhook integration (auto-formats payloads for Teams)
@@ -90,6 +96,7 @@ services:
       - "./tz_notify.text.erb:/app/app/views/tz_work_package_mailer/notify.text.erb"
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
       - "./tz_workflow_defaults.rb:/app/config/initializers/tz_workflow_defaults.rb"
+      # - "./tz_kanban_status_only.rb:/app/config/initializers/tz_kanban_status_only.rb"
       - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
       - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
       - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
