@@ -5127,12 +5127,14 @@ nav#main-menu #sidebar label   { color: #6B7280 !important; }
   visibility: visible !important;
 }
 
-/* Pill-shaped buttons - scoped to work package creation page .work-packages--new */
+/* Buttons on the WP creation page — match the header "+ Create" button's
+   6px corner radius. Padding, size, colors, and icons remain whatever
+   OpenProject's defaults / other rules set. */
 .work-packages--new button,
 .work-packages--new .button,
 .work-packages--new #work-packages--edit-actions-save,
 .work-packages--new #work-packages--edit-actions-cancel {
-  border-radius: 999px !important;
+  border-radius: 6px !important;
   max-width: unset !important;
   width: auto !important;
   float: right !important;
@@ -13960,4 +13962,117 @@ html body.router--work-packages-partitioned-split-view-new .attributes-group .wp
 html body.router--work-packages-partitioned-split-view-new .attributes-group .wp-attribute-group--attribute_span-all .wp-attribute-group--attribute-key {
   display: block !important;
   margin-bottom: 4px !important;
+}
+
+/* ================================================================
+   AVATAR SETTINGS PAGE (/my/avatar) — round the preview images.
+   Wrappers come from modules/avatars/app/views/avatars/users/
+     _gravatars.html.erb       → .avatars--current-gravatar
+     _local_avatars.html.erb   → .avatars--local-gravatar
+                                  .avatars--current-local-avatar
+   The avatar is rendered as an Angular <opce-principal> that hydrates
+   into an <img class="op-avatar op-principal--avatar ...">. The
+   global .op-avatar rule (line ~2438) forces 32x32 which is too
+   small for a profile preview, so we re-size here at a larger
+   diameter and re-assert border-radius 50% in case any parent or
+   raw <img> (before Angular bootstraps) is shown.
+   ================================================================ */
+
+/* Outer wrappers should not clip or constrain the avatar shape.
+   Also strip the upstream 1px grey border + 10px padding (from
+   frontend/src/global_styles/content/modules/_avatars.sass) — combined
+   with our border-radius: 50% on the wrapper it rendered as an outer
+   grey ring around the avatar. */
+.avatars--current-gravatar,
+.avatars--current-local-avatar,
+.avatars--local-gravatar {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+/* Gravatar preview — larger circle (mirrors the profile look) */
+.avatars--current-gravatar,
+.avatars--current-gravatar .op-principal,
+.avatars--current-gravatar .op-avatar,
+.avatars--current-gravatar .op-principal--avatar,
+.avatars--current-gravatar img {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+.avatars--current-gravatar .op-avatar,
+.avatars--current-gravatar .op-principal--avatar,
+.avatars--current-gravatar img {
+  width: 64px !important;
+  height: 64px !important;
+  min-width: 64px !important;
+  min-height: 64px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* Current custom avatar preview — smaller circle next to Delete link */
+.avatars--current-local-avatar,
+.avatars--current-local-avatar .op-principal,
+.avatars--current-local-avatar .op-avatar,
+.avatars--current-local-avatar .op-principal--avatar,
+.avatars--current-local-avatar img {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+.avatars--current-local-avatar .op-avatar,
+.avatars--current-local-avatar .op-principal--avatar,
+.avatars--current-local-avatar img {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* Belt-and-suspenders: any raw <img> directly inside these containers
+   (e.g., upload preview before Angular re-renders) should also round */
+.avatars--current-gravatar > img,
+.avatars--current-local-avatar > img,
+.avatars--local-gravatar > img {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+/* ================================================================
+   USER-MENU DROPDOWN AVATAR — the side-panel header (top-right
+   "OpenProject Admin" panel). The avatar is wrapped in a
+   .op-top-menu-user-avatar class (set in
+   lib/redmine/menu_manager/top_menu/user_menu.rb#render_user_drop_down)
+   and rendered inside the Primer dialog header
+   .op-app-header--modules-menu-header. The global .op-avatar rule
+   forces 32x32; here we re-assert a proper circle and bump the size
+   slightly so the avatar reads as a profile picture in the panel
+   header instead of looking like a tiny table-row glyph.
+   ================================================================ */
+.op-app-header--modules-menu-header .op-top-menu-user-avatar,
+.op-app-header--modules-menu-header .op-top-menu-user-avatar .op-principal,
+.op-app-header--modules-menu-header .op-top-menu-user-avatar .op-avatar,
+.op-app-header--modules-menu-header .op-top-menu-user-avatar .op-principal--avatar,
+.op-app-header--modules-menu-header .op-top-menu-user-avatar img {
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+.op-app-header--modules-menu-header .op-top-menu-user-avatar .op-avatar,
+.op-app-header--modules-menu-header .op-top-menu-user-avatar .op-principal--avatar,
+.op-app-header--modules-menu-header .op-top-menu-user-avatar img {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  aspect-ratio: 1 / 1 !important;
+  display: block !important;
 }

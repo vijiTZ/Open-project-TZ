@@ -34,6 +34,8 @@ services:
       - "./tz_notify.text.erb:/app/app/views/tz_work_package_mailer/notify.text.erb"
       # tz: SMTP defaults (editable from admin UI)
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      # tz: auto-heal workflow gaps so Kanban drags never error
+      - "./tz_workflow_defaults.rb:/app/config/initializers/tz_workflow_defaults.rb"
       # tz: change PR prefix from OP# to TZ#
       - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
       # tz: Teams webhook integration (auto-formats payloads for Teams)
@@ -85,6 +87,7 @@ services:
       - "./tz_notify.html.erb:/app/app/views/tz_work_package_mailer/notify.html.erb"
       - "./tz_notify.text.erb:/app/app/views/tz_work_package_mailer/notify.text.erb"
       - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      - "./tz_workflow_defaults.rb:/app/config/initializers/tz_workflow_defaults.rb"
       - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
       - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
       - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
