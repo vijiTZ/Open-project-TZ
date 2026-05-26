@@ -42,6 +42,8 @@ services:
       - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
       # tz: GitHub repo manager (admin UI for connecting repos)
       - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
+      # tz: GitHub PR sync module (must load before tz_github_sync.rb alphabetically)
+      - "./tz_pr_sync_module.rb:/app/config/initializers/tz_pr_sync_module.rb"
       # tz: GitHub PR sync (fetch PRs via API for localhost dev)
       - "./tz_github_sync.rb:/app/config/initializers/tz_github_sync.rb"
       - "./github_settings_show.html.erb:/app/modules/github_integration/app/views/github_integration/admin/settings/show.html.erb"
@@ -91,8 +93,10 @@ services:
       - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
       - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
       - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
+      - "./tz_pr_sync_module.rb:/app/config/initializers/tz_pr_sync_module.rb"
       - "./tz_github_sync.rb:/app/config/initializers/tz_github_sync.rb"
       - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
+      - "./en.z_tz_overrides.yml:/app/config/locales/en.z_tz_overrides.yml"
       - "./mailer.html.erb:/app/app/views/layouts/mailer.html.erb"
 
   cron:

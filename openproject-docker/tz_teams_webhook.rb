@@ -209,6 +209,22 @@ module TzTeamsFormatter
       body_items << { "type" => "TextBlock", "text" => desc_short, "wrap" => true, "size" => "Small", "isSubtle" => true }
     end
 
+    # Include attachments if any
+    begin
+      wp_obj = WorkPackage.find_by(id: wp_id)
+      if wp_obj && wp_obj.attachments.any?
+        atts = wp_obj.attachments.order(created_at: :desc).limit(10)
+        body_items << { "type" => "TextBlock", "text" => "\u{1F4C2} **Attachments (#{atts.size}):**", "weight" => "Bolder", "size" => "Small", "wrap" => true }
+        atts.each do |att|
+          att_url = "#{protocol}://#{host}/api/v3/attachments/#{att.id}/content"
+          size_kb = (att.filesize / 1024.0).round(1)
+          body_items << { "type" => "TextBlock", "text" => "\u{1F4CE} [#{att.filename}](#{att_url}) (#{size_kb} KB)", "wrap" => true, "size" => "Small" }
+        end
+      end
+    rescue => e
+      Rails.logger.warn "[TZ Teams] Could not fetch attachments for WP ##{wp_id}: #{e.message}"
+    end
+
     adaptive_card(body_items, view_url)
   end
 
@@ -252,10 +268,65 @@ module TzTeamsFormatter
   end
 
   def self.format_attachment(action, data)
+    attachment = data["attachment"] || data
+    wp = data["work_package"] || {}
+
+    file_name = dig(attachment, "fileName") ||
+                dig(attachment, "_links", "self", "title") ||
+                dig(attachment, "name") || "Unknown file"
+    file_size = dig(attachment, "fileSize") || dig(attachment, "size") || 0
+    content_type = dig(attachment, "contentType") || ""
+    download_url = dig(attachment, "_links", "downloadLocation", "href") ||
+                   dig(attachment, "_links", "self", "href") || ""
+
+    wp_id = dig(wp, "id") || dig(attachment, "_links", "container", "href").to_s.scan(/\d+/).last || "?"
+    wp_subject = dig(wp, "subject") ||
+                 dig(wp, "_links", "container", "title") || ""
+
+    host = Setting.host_name rescue "localhost:8080"
+    protocol = Setting.protocol rescue "http"
+    view_url = "#{protocol}://#{host}/work_packages/#{wp_id}"
+
+    # Build download link — use API download URL if available
+    if download_url.present? && !download_url.start_with?("http")
+      download_url = "#{protocol}://#{host}#{download_url}"
+    end
+
+    # Try to get all attachments for this WP to group them
+    attachments_list = []
+    if wp_id != "?"
+      begin
+        wp_obj = WorkPackage.find_by(id: wp_id)
+        if wp_obj
+          wp_subject = wp_obj.subject if wp_subject.blank?
+          wp_obj.attachments.order(created_at: :desc).limit(10).each do |att|
+            att_url = "#{protocol}://#{host}/api/v3/attachments/#{att.id}/content"
+            size_kb = (att.filesize / 1024.0).round(1)
+            attachments_list << { name: att.filename, url: att_url, size: "#{size_kb} KB" }
+          end
+        end
+      rescue => e
+        Rails.logger.warn "[TZ Teams] Could not fetch WP attachments: #{e.message}"
+      end
+    end
+
+    # Fallback: if we couldn't fetch grouped attachments, show just this one
+    if attachments_list.empty?
+      size_kb = (file_size.to_i / 1024.0).round(1)
+      attachments_list << { name: file_name, url: download_url, size: "#{size_kb} KB" }
+    end
+
     body_items = [
-      { "type" => "TextBlock", "text" => "\u{1F4CE} Attachment #{action.capitalize}", "weight" => "Bolder", "size" => "Medium" }
+      { "type" => "TextBlock", "text" => "\u{1F4CE} Attachment #{action.capitalize} on ##{wp_id}", "weight" => "Bolder", "size" => "Medium", "color" => "Accent", "wrap" => true }
     ]
-    adaptive_card(body_items, nil)
+    body_items << { "type" => "TextBlock", "text" => "**#{wp_subject}**", "wrap" => true } if wp_subject.present?
+    body_items << { "type" => "TextBlock", "text" => "\u{1F4C2} **Attachments (#{attachments_list.size}):**", "weight" => "Bolder", "size" => "Small", "wrap" => true }
+
+    attachments_list.each do |att|
+      body_items << { "type" => "TextBlock", "text" => "\u{1F4CE} [#{att[:name]}](#{att[:url]}) (#{att[:size]})", "wrap" => true, "size" => "Small" }
+    end
+
+    adaptive_card(body_items, view_url)
   end
 
   def self.format_time_entry(action, data)
@@ -339,7 +410,7 @@ module TzTeamsFormatter
 
     if action_url.present?
       card["attachments"][0]["content"]["actions"] = [
-        { "type" => "Action.OpenUrl", "title" => "View in OpenProject \u{2192}", "url" => action_url }
+        { "type" => "Action.OpenUrl", "title" => "View in TZ-WorkSpace \u{2192}", "url" => action_url }
       ]
     end
 
