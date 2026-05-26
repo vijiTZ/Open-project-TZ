@@ -32,6 +32,8 @@ module CustomCssInjector
   TZ_JS_FILE = "/app/public/tz-table.js".freeze
   GH_JS_URL  = "/tz-github-pr-click.js".freeze
   GH_JS_FILE = "/app/public/tz-github-pr-click.js".freeze
+  PR_INFO_JS_URL  = "/tz-github-pr-info.js".freeze
+  PR_INFO_JS_FILE = "/app/public/tz-github-pr-info.js".freeze
   # NOTE: The logo is no longer served from /tz-assets/tamilzorous-logo.png.
   # It is now embedded as a base64 data URI directly in openproject-custom.css
   # because Docker Desktop bind-mounts of single image files were unreliable
@@ -75,7 +77,9 @@ module CustomCssInjector
         tz_script = %(<script src="#{TZ_JS_URL}?v=#{tz_js_ver}" defer></script>)
         gh_js_ver = CustomCssInjector.asset_version(GH_JS_FILE)
         gh_script = %(<script src="#{GH_JS_URL}?v=#{gh_js_ver}" defer></script>)
-        body = body.sub("</head>", "#{link}\n#{custom_script}\n#{script}\n#{tz_script}\n#{gh_script}\n</head>")
+        pr_info_ver = CustomCssInjector.asset_version(PR_INFO_JS_FILE)
+        pr_info_script = %(<script src="#{PR_INFO_JS_URL}?v=#{pr_info_ver}" defer></script>)
+        body = body.sub("</head>", "#{link}\n#{custom_script}\n#{script}\n#{tz_script}\n#{gh_script}\n#{pr_info_script}\n</head>")
         headers.delete_if { |k, _| %w[content-length etag].include?(k.to_s.downcase) }
       end
 

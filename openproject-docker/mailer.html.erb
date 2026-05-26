@@ -1,6 +1,18 @@
 <%#-- Tamil Zorous: Branded email template
      Replaces the default OpenProject email layout with TamilZorous branding.
      Colors, logo, and footer are customized to match the company identity. --%>
+<%
+  # Attach TZ logos as inline CID so they render in all email clients.
+  # Safe to call even if already attached (e.g. by TzWorkPackageMailer).
+  unless attachments["tz-logo-slogan.png"].present?
+    slogan_path = Rails.root.join("public", "tz-assets", "tamilzorous-logo-slogan.png")
+    attachments.inline["tz-logo-slogan.png"] = File.read(slogan_path) if File.exist?(slogan_path)
+  end
+  unless attachments["tz-logo.png"].present?
+    logo_path = Rails.root.join("public", "tz-assets", "tamilzorous-logo.png")
+    attachments.inline["tz-logo.png"] = File.read(logo_path) if File.exist?(logo_path)
+  end
+%>
 <html>
   <head>
     <style>
@@ -65,6 +77,30 @@
       img {
         max-width: 100%;
         height: auto;
+      }
+
+      @media only screen and (max-width: 480px) {
+        .tz-sig-table td {
+          display: block !important;
+          width: 100% !important;
+          text-align: center !important;
+        }
+        .tz-sig-left {
+          text-align: center !important;
+          padding-bottom: 16px !important;
+        }
+        .tz-sig-right {
+          text-align: center !important;
+        }
+        .tz-sig-contact-row {
+          display: inline-block !important;
+        }
+        .tz-social-icons td {
+          display: inline-block !important;
+        }
+        .tz-email-body {
+          padding: 20px 16px !important;
+        }
       }
 
       .tz-email-wrapper {
@@ -134,8 +170,15 @@
                 <table cellpadding="0" cellspacing="0" border="0" width="100%">
                   <tr>
                     <td style="vertical-align: middle;">
-                      <img src="<%= Setting.protocol rescue 'http' %>://<%= Setting.host_name rescue 'localhost' %>/tz-assets/tamilzorous-logo-slogan.png"
-                           alt="Tamilzorous" height="44" style="height: 44px; width: auto; display: block;" />
+                      <% if attachments["tz-logo-slogan.png"].present? %>
+                        <img src="<%= attachments['tz-logo-slogan.png'].url %>"
+                             alt="Tamilzorous" height="44" style="height: 44px; width: auto; display: block;" />
+                      <% elsif attachments["tz-logo.png"].present? %>
+                        <img src="<%= attachments['tz-logo.png'].url %>"
+                             alt="Tamilzorous" height="44" style="height: 44px; width: auto; display: block;" />
+                      <% else %>
+                        <span style="font-size: 18px; font-weight: 700; color: #16a34a;">TamilZorous</span>
+                      <% end %>
                     </td>
                     <td style="text-align: right; vertical-align: middle;">
                       <span style="color: #6b7280; font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
@@ -178,43 +221,97 @@
                   </div>
                 <% end %>
 
-                <!-- TamilZorous Signature — white card style -->
+                <!-- TamilZorous Signature — dark card style -->
                 <table cellpadding="0" cellspacing="0" border="0" width="100%"
-                       style="background: #ffffff; border-top: 3px solid #16a34a;">
+                       style="background: #2d2d2d;">
                   <tr>
                     <td style="padding: 24px 32px;">
-                      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                      <!-- Regards -->
+                      <div style="font-size: 14px; color: #cccccc; margin-bottom: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                        Regards,
+                      </div>
+
+                      <table class="tz-sig-table" cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tr>
-                          <!-- Left: Logo + Name + Tagline -->
-                          <td style="vertical-align: top; width: 50%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                          <!-- Left: Name + Role + Contact -->
+                          <td class="tz-sig-left" style="vertical-align: top; width: 55%; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                            <div style="font-size: 16px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">
+                              TZ-WorkSpace Team
+                            </div>
+                            <div style="font-size: 12px; color: #9ca3af; margin-bottom: 14px;">
+                              Tamilzorous Private Limited
+                            </div>
+
+                            <!-- Email -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px;">
+                              <tr>
+                                <td style="vertical-align: middle; padding-right: 10px; width: 24px;">
+                                  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:24px;height:24px;" arcsize="50%" fillcolor="#16a34a" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:13px;color:#ffffff;">&#9993;</center></v:textbox></v:roundrect><![endif]-->
+                                  <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 24px; height: 24px; background-color: #16a34a; border-radius: 12px; text-align: center; vertical-align: middle; font-size: 13px; line-height: 24px; color: #ffffff;">&#9993;</td></tr></table><!--<![endif]-->
+                                </td>
+                                <td style="vertical-align: middle;">
+                                  <a href="mailto:tamilzorous@gmail.com" style="color: #cccccc; text-decoration: none; font-size: 12px; font-family: -apple-system, sans-serif;">
+                                    tamilzorous@gmail.com
+                                  </a>
+                                </td>
+                              </tr>
+                            </table>
+
+                            <!-- Phone -->
+                            <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 8px;">
+                              <tr>
+                                <td style="vertical-align: middle; padding-right: 10px; width: 24px;">
+                                  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:24px;height:24px;" arcsize="50%" fillcolor="#16a34a" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:13px;color:#ffffff;">&#9743;</center></v:textbox></v:roundrect><![endif]-->
+                                  <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 24px; height: 24px; background-color: #16a34a; border-radius: 12px; text-align: center; vertical-align: middle; font-size: 13px; line-height: 24px; color: #ffffff;">&#9743;</td></tr></table><!--<![endif]-->
+                                </td>
+                                <td style="vertical-align: middle;">
+                                  <a href="tel:+919363724124" style="color: #cccccc; text-decoration: none; font-size: 12px; font-family: -apple-system, sans-serif;">
+                                    +91 9363724124
+                                  </a>
+                                </td>
+                              </tr>
+                            </table>
+
+                            <!-- Address -->
                             <table cellpadding="0" cellspacing="0" border="0">
                               <tr>
-                                <td style="vertical-align: middle;">
-                                  <img src="<%= Setting.protocol rescue 'http' %>://<%= Setting.host_name rescue 'localhost' %>/tz-assets/tamilzorous-logo-slogan.png"
-                                       alt="Tamilzorous — Making the extraordinary, everyday."
-                                       height="56" style="height: 56px; width: auto; display: block;" />
+                                <td style="vertical-align: top; padding-right: 10px; padding-top: 2px; width: 24px;">
+                                  <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:24px;height:24px;" arcsize="50%" fillcolor="#16a34a" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:12px;color:#ffffff;">&#128205;</center></v:textbox></v:roundrect><![endif]-->
+                                  <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 24px; height: 24px; background-color: #16a34a; border-radius: 12px; text-align: center; vertical-align: middle; font-size: 12px; line-height: 24px; color: #ffffff;">&#128205;</td></tr></table><!--<![endif]-->
+                                </td>
+                                <td style="vertical-align: top;">
+                                  <span style="color: #9ca3af; font-size: 11px; line-height: 1.4; font-family: -apple-system, sans-serif;">
+                                    Second Floor, TIDEL Neo,<br>
+                                    Karuppur PO, Omalur TK,<br>
+                                    Salem DT &ndash; 636011
+                                  </span>
                                 </td>
                               </tr>
                             </table>
                           </td>
-                          <!-- Right: Phone + Address -->
-                          <td style="vertical-align: top; width: 50%; text-align: right; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-                            <div style="font-size: 13px; color: #1a1a2e; margin-bottom: 6px;">
-                              <a href="tel:+919363724124" style="color: #1a1a2e; text-decoration: none; font-weight: 600;">
-                                +91 9363724124
-                              </a>
-                            </div>
-                            <div style="font-size: 11px; color: #6b7280; line-height: 1.5;">
-                              Second Floor, TIDEL Neo,<br>
-                              Karuppur PO, Omalur TK,<br>
-                              Salem DT &ndash; 636011
-                            </div>
+
+                          <!-- Right: Logo with slogan -->
+                          <td class="tz-sig-right" style="vertical-align: middle; width: 45%; text-align: right;">
+                            <% if attachments["tz-logo-slogan.png"].present? %>
+                              <img src="<%= attachments['tz-logo-slogan.png'].url %>"
+                                   alt="Tamilzorous — Making the extraordinary, everyday."
+                                   height="70" style="height: 70px; width: auto; display: inline-block;" />
+                            <% elsif attachments["tz-logo.png"].present? %>
+                              <img src="<%= attachments['tz-logo.png'].url %>"
+                                   alt="Tamilzorous"
+                                   height="60" style="height: 60px; width: auto; display: inline-block;" />
+                            <% else %>
+                              <div style="text-align: right;">
+                                <span style="font-size: 22px; font-weight: 700; color: #16a34a;">TamilZorous</span><br>
+                                <span style="font-size: 10px; color: #9ca3af; font-style: italic;">Making the extraordinary, everyday.</span>
+                              </div>
+                            <% end %>
                           </td>
                         </tr>
                       </table>
 
                       <!-- Divider -->
-                      <div style="border-top: 1px solid #e5e7eb; margin: 16px 0;"></div>
+                      <div style="border-top: 1px solid #4a4a4a; margin: 18px 0 14px;"></div>
 
                       <!-- Social Icons Row -->
                       <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -224,30 +321,30 @@
                               <tr>
                                 <!-- Website -->
                                 <td style="padding: 0 6px;">
-                                  <a href="https://tamilzorous.com/" target="_blank"
-                                     style="display: inline-block; width: 34px; height: 34px; background: #16a34a; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
-                                    <span style="color: #ffffff; font-size: 16px;">&#9679;</span>
+                                  <a href="https://tamilzorous.com/" target="_blank" style="text-decoration: none;">
+                                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:36px;height:36px;" arcsize="50%" fillcolor="#16a34a" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:18px;color:#ffffff;">&#9673;</center></v:textbox></v:roundrect><![endif]-->
+                                    <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 36px; height: 36px; background-color: #16a34a; border-radius: 18px; text-align: center; vertical-align: middle; line-height: 36px; font-size: 18px; color: #ffffff;">&#9673;</td></tr></table><!--<![endif]-->
                                   </a>
                                 </td>
                                 <!-- Facebook -->
                                 <td style="padding: 0 6px;">
-                                  <a href="https://www.facebook.com/people/Tamilzorous-Private-Limited/61571464070750/" target="_blank"
-                                     style="display: inline-block; width: 34px; height: 34px; background: #1877F2; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
-                                    <span style="color: #ffffff; font-size: 17px; font-weight: 700; font-family: Georgia, serif;">f</span>
+                                  <a href="https://www.facebook.com/people/Tamilzorous-Private-Limited/61571464070750/" target="_blank" style="text-decoration: none;">
+                                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:36px;height:36px;" arcsize="50%" fillcolor="#1877F2" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:20px;font-weight:700;color:#ffffff;font-family:Georgia,serif;">f</center></v:textbox></v:roundrect><![endif]-->
+                                    <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 36px; height: 36px; background-color: #1877F2; border-radius: 18px; text-align: center; vertical-align: middle; line-height: 36px; font-size: 20px; font-weight: 700; color: #ffffff; font-family: Georgia, serif;">f</td></tr></table><!--<![endif]-->
                                   </a>
                                 </td>
                                 <!-- LinkedIn -->
                                 <td style="padding: 0 6px;">
-                                  <a href="https://www.linkedin.com/company/tamil-zorous" target="_blank"
-                                     style="display: inline-block; width: 34px; height: 34px; background: #0A66C2; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
-                                    <span style="color: #ffffff; font-size: 13px; font-weight: 700; font-family: -apple-system, sans-serif;">in</span>
+                                  <a href="https://www.linkedin.com/company/tamil-zorous" target="_blank" style="text-decoration: none;">
+                                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:36px;height:36px;" arcsize="50%" fillcolor="#0A66C2" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:14px;font-weight:700;color:#ffffff;">in</center></v:textbox></v:roundrect><![endif]-->
+                                    <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 36px; height: 36px; background-color: #0A66C2; border-radius: 18px; text-align: center; vertical-align: middle; line-height: 36px; font-size: 14px; font-weight: 700; color: #ffffff; font-family: -apple-system, sans-serif;">in</td></tr></table><!--<![endif]-->
                                   </a>
                                 </td>
                                 <!-- Instagram -->
                                 <td style="padding: 0 6px;">
-                                  <a href="https://www.instagram.com/tz_tamilzorous/" target="_blank"
-                                     style="display: inline-block; width: 34px; height: 34px; background: #E4405F; border-radius: 50%; text-align: center; line-height: 34px; text-decoration: none;">
-                                    <span style="color: #ffffff; font-size: 16px; font-weight: 700; font-family: -apple-system, sans-serif;">ig</span>
+                                  <a href="https://www.instagram.com/tz_tamilzorous/" target="_blank" style="text-decoration: none;">
+                                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" style="width:36px;height:36px;" arcsize="50%" fillcolor="#E4405F" stroke="f"><v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0"><center style="font-size:16px;font-weight:700;color:#ffffff;font-family:-apple-system,sans-serif;">IG</center></v:textbox></v:roundrect><![endif]-->
+                                    <!--[if !mso]><!--><table cellpadding="0" cellspacing="0" border="0"><tr><td style="width: 36px; height: 36px; background-color: #E4405F; border-radius: 18px; text-align: center; vertical-align: middle; line-height: 36px; font-size: 14px; font-weight: 700; color: #ffffff; font-family: -apple-system, sans-serif;">IG</td></tr></table><!--<![endif]-->
                                   </a>
                                 </td>
                               </tr>
@@ -257,9 +354,9 @@
                       </table>
 
                       <!-- Dashboard link -->
-                      <div style="text-align: center; margin-top: 14px;">
+                      <div style="text-align: center; margin-top: 12px;">
                         <a href="<%= Setting.protocol rescue 'http' %>://<%= Setting.host_name rescue 'localhost' %>"
-                           style="color: #0C66E4; text-decoration: none; font-size: 12px; font-weight: 500;">
+                           style="color: #16a34a; text-decoration: none; font-size: 12px; font-weight: 500; font-family: -apple-system, sans-serif;">
                           Open Dashboard &rarr;
                         </a>
                       </div>
