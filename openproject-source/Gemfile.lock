@@ -1660,6 +1660,7 @@ DEPENDENCIES
   md_to_pdf!
   meta-tags (~> 2.23.0)
   mini_magick (~> 5.3.0)
+  msgpack (>= 1.7.0)
   multi_json (~> 1.20.0)
   my_page!
   net-ldap (~> 0.20.0)

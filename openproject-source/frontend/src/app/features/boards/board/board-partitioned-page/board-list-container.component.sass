@@ -1,7 +1,8 @@
 @import 'helpers'
 
-$board-list-max-width: 300px
+$board-list-max-width: 320px
 $board-list-top-offset: 18px
+$board-list-gap: 16px
 
 .boards-list--container
   display: flex
@@ -9,6 +10,8 @@ $board-list-top-offset: 18px
   flex-wrap: nowrap
   flex-grow: 1
   height: 100%
+  gap: $board-list-gap
+  padding: 8px 8px 16px 8px
 
   // Make it scrollable
   overflow-y: auto
@@ -17,11 +20,12 @@ $board-list-top-offset: 18px
 .boards-list-item-handle
   position: absolute
   font-size: 14px
-  left: 0
+  left: 4px
   top: $board-list-top-offset
   z-index: 100
   opacity: 0
   cursor: grab
+  transition: opacity 0.15s ease
 
   .boards-list--container.-free &
     top: 13px
@@ -31,19 +35,24 @@ $board-list-top-offset: 18px
     color: var(--light-gray)
 
   .boards-list--item:hover &
-    opacity: 1
+    opacity: 0.7
 
 .boards-list--add-item
   flex: 0 0 auto
   // Same height as board list header
-  height: 42px
-  line-height: 42px
+  height: 56px
+  line-height: 56px
   font-size: 14px
+  font-weight: 500
   cursor: pointer
   color: var(--fgColor-muted)
+  align-self: flex-start
+  border-radius: 12px
+  padding: 0 4px
+  transition: background-color 0.15s ease, color 0.15s ease
 
   .boards-list--add-item-text
-    padding: 5px 15px 0 15px
+    padding: 0 16px
     white-space: nowrap
 
   .boards-list--container.-free &
@@ -51,6 +60,7 @@ $board-list-top-offset: 18px
 
   &:hover
     color: var(--body-font-color)
+    background-color: rgba(15, 23, 42, 0.04)
 
 .boards-list--item
   flex: 0 0 $board-list-max-width
@@ -58,7 +68,7 @@ $board-list-top-offset: 18px
   position: relative
 
   &:first-of-type
-    margin-left: 5px
+    margin-left: 0
 
   &.cdk-drag-placeholder
     @include modifying--placeholder

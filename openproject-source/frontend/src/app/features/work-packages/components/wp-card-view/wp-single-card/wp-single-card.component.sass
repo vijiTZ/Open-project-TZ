@@ -8,15 +8,20 @@
   // Leave space for the shadow to be displayed
   width: calc(100% - 2px)
   border: 1px solid var(--borderColor-default)
-  border-radius: 2px
-  padding: 10px
+  border-radius: 10px
+  padding: 12px 14px
   position: relative
-  box-shadow: 1px 1px 3px 0px var(--borderColor-default)
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.06)
   background: var(--body-background)
   color: var(--body-font-color)
   font-size: var(--body-font-size)
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease
 
   &:hover
+    transform: translateY(-2px)
+    border-color: rgba(15, 23, 42, 0.18)
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06), 0 10px 24px rgba(15, 23, 42, 0.08)
+
     .op-wp-single-card--inline-buttons
       opacity: 1
       z-index: 2
@@ -48,10 +53,10 @@
     height: 100%
 
   &_vertical
-    margin-top: 10px
+    margin-top: 12px
     // Take care that the shadow of the last element is still visible
     &:last-of-type
-      margin-bottom: 5px
+      margin-bottom: 8px
 
   &_inline &--content
     grid-template-columns: max-content max-content auto auto 1fr
@@ -142,11 +147,11 @@
 
   &--highlighting
     width: 100%
-    height: 2px
+    height: 3px
     position: absolute
     top: 0
     left: 0
-    border-radius: 2px 2px 0 0
+    border-radius: 10px 10px 0 0
 
   &--card-actions
     display: flex

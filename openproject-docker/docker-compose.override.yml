@@ -1,21 +1,126 @@
-# Mounts our CSS file and enterprise unlock initializer persistently.
+# Bind-mounts custom CSS / JS / Ruby initializers + a directory of static
+# assets (the brand logo, etc.).
+#
+# IMPORTANT: assets/ is mounted as a *directory*, not a single file. On
+# Windows Docker Desktop, single-file bind-mounts break silently when the
+# host file is replaced (delete+create as opposed to in-place save) — the
+# inode changes and Docker loses its reference. A directory mount stays
+# stable through arbitrary file replacements inside it. Drop new versions
+# of tamilzorous-logo.png (or other static assets) into ./assets/ and
+# they will be live without restarting the container.
 
 services:
   web:
+    environment:
+      # tz: allow tunnel hostnames for GitHub webhooks
+      OPENPROJECT_ADDITIONAL__HOST__NAMES: ".loca.lt .ngrok-free.app .ngrok.io"
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./openproject-custom.js:/app/public/custom-redesign.js"
+      - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
+      - "./tz_table.js:/app/public/tz-table.js"
+      - "./tz_github_pr_click.js:/app/public/tz-github-pr-click.js"
+      - "./tz_github_pr_info.js:/app/public/tz-github-pr-info.js"
+      - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
+      - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      # tz: instant email for assigned/commented/created/shared (not just mentions)
+      - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
+      - "./tz_mail_work_package_strategy.rb:/app/app/services/notifications/mail_service/work_package_strategy.rb"
+      - "./tz_create_work_package_strategy.rb:/app/app/services/notifications/create_from_model_service/work_package_strategy.rb"
+      - "./tz_work_package_mailer.rb:/app/app/mailers/tz_work_package_mailer.rb"
+      - "./tz_notify.html.erb:/app/app/views/tz_work_package_mailer/notify.html.erb"
+      - "./tz_notify.text.erb:/app/app/views/tz_work_package_mailer/notify.text.erb"
+      # tz: SMTP defaults (editable from admin UI)
+      - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      # tz: change PR prefix from OP# to TZ#
+      - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
+      # tz: Teams webhook integration (auto-formats payloads for Teams)
+      - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
+      # tz: GitHub repo manager (admin UI for connecting repos)
+      - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
+      # tz: GitHub PR sync (fetch PRs via API for localhost dev)
+      - "./tz_github_sync.rb:/app/config/initializers/tz_github_sync.rb"
+      - "./github_settings_show.html.erb:/app/modules/github_integration/app/views/github_integration/admin/settings/show.html.erb"
+      # tz: allow webhook requests from external tunnels (ngrok/localtunnel)
+      - "./tz_webhook_host_bypass.rb:/app/config/initializers/tz_webhook_host_bypass.rb"
+      # tz: replace upstream homescreen initializer to hide selected
+      # blocks (welcome / new_features / meetings / community) and the
+      # Community forum footer link.
+      - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
+      # tz: locale overrides (search placeholder, etc.). File name must
+      # start with "en." because OpenProject's Redmine::I18n.all_languages
+      # treats the first dotted segment of the basename as the locale
+      # code (lib_static/redmine/i18n.rb#all_languages); a non-locale
+      # prefix like "tz_overrides." crashes the User settings page when
+      # it builds the language dropdown. The "z_" keeps it sorted after
+      # en.yml so these values win on I18n merge order.
+      - "./en.z_tz_overrides.yml:/app/config/locales/en.z_tz_overrides.yml"
+      # tz: server-side override of the New User view to add the Back
+      # button into the Create / Create-and-continue action row.
+      - "./users_new.html.erb:/app/app/views/users/new.html.erb"
+      # tz: project settings information page — card layout redesign
+      - "../openproject-source/app/views/projects/settings/general/show.html.erb:/app/app/views/projects/settings/general/show.html.erb"
+      - "../openproject-source/app/components/projects/settings/general/show_component.html.erb:/app/app/components/projects/settings/general/show_component.html.erb"
+      # tz: branded email template (TamilZorous logo, colors, card layout)
+      - "./mailer.html.erb:/app/app/views/layouts/mailer.html.erb"
 
   worker:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./openproject-custom.js:/app/public/custom-redesign.js"
+      - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
+      - "./tz_table.js:/app/public/tz-table.js"
+      - "./tz_github_pr_click.js:/app/public/tz-github-pr-click.js"
+      - "./tz_github_pr_info.js:/app/public/tz-github-pr-info.js"
+      - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
+      - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
+      - "./tz_mail_work_package_strategy.rb:/app/app/services/notifications/mail_service/work_package_strategy.rb"
+      - "./tz_create_work_package_strategy.rb:/app/app/services/notifications/create_from_model_service/work_package_strategy.rb"
+      - "./tz_work_package_mailer.rb:/app/app/mailers/tz_work_package_mailer.rb"
+      - "./tz_notify.html.erb:/app/app/views/tz_work_package_mailer/notify.html.erb"
+      - "./tz_notify.text.erb:/app/app/views/tz_work_package_mailer/notify.text.erb"
+      - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
+      - "./tz_teams_webhook.rb:/app/config/initializers/tz_teams_webhook.rb"
+      - "./tz_github_repos.rb:/app/config/initializers/tz_github_repos.rb"
+      - "./tz_github_sync.rb:/app/config/initializers/tz_github_sync.rb"
+      - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
+      - "./mailer.html.erb:/app/app/views/layouts/mailer.html.erb"
 
   cron:
     volumes:
       - "./openproject-custom.css:/app/public/custom-redesign.css"
+      - "./openproject-custom.js:/app/public/custom-redesign.js"
+      - "./tz_bulk_select.js:/app/public/tz-bulk-select.js"
+      - "./tz_table.js:/app/public/tz-table.js"
+      - "./tz_github_pr_click.js:/app/public/tz-github-pr-click.js"
+      - "./tz_github_pr_info.js:/app/public/tz-github-pr-info.js"
+      - "./assets:/app/public/tz-assets:ro"
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
+      - "./pdf_logo_override.rb:/app/config/initializers/pdf_logo_override.rb"
+      - "./tz_instant_mail.rb:/app/config/initializers/tz_instant_mail.rb"
+      - "./tz_smtp_defaults.rb:/app/config/initializers/tz_smtp_defaults.rb"
+      - "./tz_wp_prefix.rb:/app/config/initializers/tz_wp_prefix.rb"
+      - "./homescreen_initializer.rb:/app/config/initializers/homescreen.rb"
 
   seeder:
     volumes:
       - "./ee_unlock.rb:/app/config/initializers/ee_unlock.rb"
+      - "./css_injector.rb:/app/config/initializers/css_injector.rb"
+
+  # tz: local email testing — catches all outgoing emails
+  # View emails at http://localhost:8025
+  mailhog:
+    image: mailhog/mailhog
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - backend

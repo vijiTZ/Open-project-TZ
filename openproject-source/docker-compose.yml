@@ -30,6 +30,7 @@ x-op-frontend-build: &frontend-build
   args:
     DEV_UID: $DEV_UID
     DEV_GID: $DEV_GID
+x-op-backend: &backend
   tty: true
   stdin_open: true
   build:

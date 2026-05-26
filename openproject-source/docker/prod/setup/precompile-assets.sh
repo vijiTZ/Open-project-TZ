@@ -9,6 +9,10 @@ else
   echo "Assets need to be compiled"
   JOBS=8 npm install
 
+  if [ -f frontend/node_modules/i18n-js/src/helpers/parseBigNumber.ts ]; then
+    sed -i 's|from "typing"|from "../typing"|' frontend/node_modules/i18n-js/src/helpers/parseBigNumber.ts
+  fi
+
   SECRET_KEY_BASE="$(openssl rand -hex 64)" RAILS_ENV=production DATABASE_URL=nulldb://db \
     bin/rails openproject:plugins:register_frontend assets:precompile
 
