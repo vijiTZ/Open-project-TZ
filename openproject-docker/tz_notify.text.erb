@@ -1,0 +1,22 @@
+<%= @author.name %> <%= case @reason; when :assigned then "assigned you a task"; when :responsible then "made you accountable"; when :commented then "commented on a task"; when :created then "created a new task"; when :shared then "shared a task with you"; when :watched then "updated a task you watch"; when :mentioned then "mentioned you"; else "updated a task"; end %>
+
+#<%= @work_package.id %> - <%= @work_package.subject %>
+Project: <%= @work_package.project.name %>
+Type: <%= @work_package.type.name %>
+Status: <%= @work_package.status.name %>
+<% if @work_package.priority %>Priority: <%= @work_package.priority.name %><% end %>
+<% if @work_package.assigned_to %>Assignee: <%= @work_package.assigned_to.name %><% end %>
+<% if @work_package.responsible %>Accountable: <%= @work_package.responsible.name %><% end %>
+<% if @work_package.start_date %>Start Date: <%= @work_package.start_date %><% end %>
+<% if @work_package.due_date %>Due Date: <%= @work_package.due_date %><% end %>
+<% if @work_package.estimated_hours.present? && @work_package.estimated_hours > 0 %>Estimated: <%= @work_package.estimated_hours %> hours<% end %>
+<% if @work_package.description.present? %>
+Description:
+<%= @work_package.description.to_s.gsub(/<[^>]+>/, '') %>
+<% end %>
+<% if @journal.notes.present? %>
+Comment by <%= @author.name %>:
+<%= @journal.notes.to_s.gsub(/<[^>]+>/, '') %>
+<% end %>
+
+View task: <%= Setting.protocol %>://<%= Setting.host_name %>/work_packages/<%= @work_package.id %>

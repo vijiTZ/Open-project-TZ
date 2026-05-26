@@ -1,0 +1,12 @@
+# Tamilzorous locale overrides
+en:
+  global_search:
+    placeholder: "Search service"
+  mail_body_register: "Welcome to TZ-WorkSpace. Please activate your account by clicking on this link:"
+  mail_body_register_links_html: " "
+  mail_body_register_closing: "Your TZ-WorkSpace team"
+  mail_body_register_ending: "Stay connected! Kind regards,"
+  js:
+    github_integration:
+      tab_prs:
+        empty: 'There are no pull requests linked yet. Link an existing PR by using the code <code>TZ#%{wp_id}</code> in the PR title or description, or create a new PR.'

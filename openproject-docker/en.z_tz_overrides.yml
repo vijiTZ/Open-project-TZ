@@ -3,6 +3,13 @@
 en:
   global_search:
     placeholder: "Search service"
+  mail_body_register_header_title: "TZ-WorkSpace Invitation"
+  mail_body_register_user: "Dear %{name},"
+  mail_body_register: "Welcome to TZ-WorkSpace! Please activate your account by clicking on this link:"
+  mail_body_register_links_html: " "
+  mail_body_register_closing: "Your TZ-WorkSpace Team"
+  mail_body_register_ending: "Kind regards,"
+  mail_subject_register: "Your TZ-WorkSpace account activation"
   js:
     github_integration:
       tab_prs:

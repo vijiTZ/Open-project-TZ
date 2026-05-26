@@ -1,0 +1,206 @@
+<%# TZ Work Package Notification Email Template %>
+
+<% reason_text = case @reason
+  when :assigned then "assigned you a task"
+  when :responsible then "made you accountable"
+  when :commented then "commented on a task"
+  when :created then "created a new task"
+  when :shared then "shared a task with you"
+  when :watched then "updated a task you watch"
+  when :mentioned then "mentioned you"
+  else "updated a task"
+end %>
+
+<!-- Reason banner -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td style="padding: 12px 16px; background: #EBF5FF; border-radius: 8px; border-left: 4px solid #0C66E4;">
+      <span style="font-size: 15px; font-weight: 600; color: #0C66E4;">
+        <%= @author.name %> <%= reason_text %>
+      </span>
+    </td>
+  </tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 20px;"></td></tr>
+</table>
+
+<!-- Task title -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td>
+      <h2 style="font-size: 20px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px;">
+        #<%= @work_package.id %> &mdash; <%= @work_package.subject %>
+      </h2>
+      <span style="font-size: 13px; color: #6b7280;">
+        Project: <strong><%= @work_package.project.name %></strong>
+        &nbsp;&bull;&nbsp;
+        Type: <strong><%= @work_package.type.name %></strong>
+      </span>
+    </td>
+  </tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 16px;"></td></tr>
+</table>
+
+<!-- Details card -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%"
+       style="background: #f8fafc; border: 1px solid #e4e8f0; border-radius: 8px;">
+  <tr>
+    <td style="padding: 16px 20px;">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <!-- Status -->
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Status</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e; font-weight: 600;">
+            <%= @work_package.status.name %>
+          </td>
+        </tr>
+        <!-- Priority -->
+        <% if @work_package.priority %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Priority</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e; font-weight: 600;">
+            <%= @work_package.priority.name %>
+          </td>
+        </tr>
+        <% end %>
+        <!-- Assignee -->
+        <% if @work_package.assigned_to %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Assignee</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e;">
+            <%= @work_package.assigned_to.name %>
+          </td>
+        </tr>
+        <% end %>
+        <!-- Accountable -->
+        <% if @work_package.responsible %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Accountable</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e;">
+            <%= @work_package.responsible.name %>
+          </td>
+        </tr>
+        <% end %>
+        <!-- Start Date -->
+        <% if @work_package.start_date %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Start Date</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e;">
+            <%= @work_package.start_date.strftime("%d %b %Y") %>
+          </td>
+        </tr>
+        <% end %>
+        <!-- Due Date -->
+        <% if @work_package.due_date %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Due Date</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e;">
+            <%= @work_package.due_date.strftime("%d %b %Y") %>
+          </td>
+        </tr>
+        <% end %>
+        <!-- Estimated Time -->
+        <% if @work_package.estimated_hours.present? && @work_package.estimated_hours > 0 %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Estimated Time</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e;">
+            <%= @work_package.estimated_hours %> hours
+          </td>
+        </tr>
+        <% end %>
+        <!-- % Done -->
+        <% if @work_package.done_ratio.present? && @work_package.done_ratio > 0 %>
+        <tr>
+          <td style="padding: 6px 0; width: 140px; font-size: 13px; color: #6b7280; vertical-align: top;">Progress</td>
+          <td style="padding: 6px 0; font-size: 13px; color: #1a1a2e;">
+            <%= @work_package.done_ratio %>%
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- Description -->
+<% if @work_package.description.present? %>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 16px;"></td></tr>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td>
+      <strong style="font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Description</strong>
+      <div style="margin-top: 8px; font-size: 14px; color: #1a1a2e; line-height: 1.6;">
+        <%= format_text @work_package.description, only_path: false %>
+      </div>
+    </td>
+  </tr>
+</table>
+<% end %>
+
+<!-- Journal notes (comment) -->
+<% if @journal.notes.present? %>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 16px;"></td></tr>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td>
+      <strong style="font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Comment by <%= @author.name %></strong>
+      <div style="margin-top: 8px; padding: 12px 16px; background: #fffbeb; border-left: 3px solid #f59e0b; border-radius: 4px; font-size: 14px; color: #1a1a2e; line-height: 1.6;">
+        <%= format_text @journal.notes, only_path: false %>
+      </div>
+    </td>
+  </tr>
+</table>
+<% end %>
+
+<!-- Attachments -->
+<% attachments = @work_package.attachments.to_a rescue [] %>
+<% if attachments.any? %>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 16px;"></td></tr>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td>
+      <strong style="font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">Attachments (<%= attachments.size %>)</strong>
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top: 8px;">
+        <% attachments.each do |att| %>
+        <tr>
+          <td style="padding: 4px 0; font-size: 13px;">
+            &#128206; <a href="<%= Setting.protocol %>://<%= Setting.host_name %>/api/v3/attachments/<%= att.id %>/content" style="color: #0C66E4;"><%= att.filename %></a>
+            <span style="color: #9ca3af; font-size: 12px;">(<%= number_to_human_size(att.filesize) rescue att.filesize %>)</span>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+</table>
+<% end %>
+
+<!-- View button -->
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 24px;"></td></tr>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td align="center">
+      <a href="<%= Setting.protocol %>://<%= Setting.host_name %>/work_packages/<%= @work_package.id %>"
+         style="display: inline-block; padding: 12px 28px; background: #0C66E4; color: #ffffff; font-size: 14px; font-weight: 600; border-radius: 6px; text-decoration: none;">
+        View Task &rarr;
+      </a>
+    </td>
+  </tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr><td style="height: 12px;"></td></tr>
+</table>
