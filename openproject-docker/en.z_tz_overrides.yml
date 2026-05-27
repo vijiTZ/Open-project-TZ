@@ -1,8 +1,15 @@
 # Tamilzorous locale overrides — bind-mounted into /app/config/locales/.
 # Loaded after en.yml (alphabetical order), so values here take precedence.
 en:
+  general_app_title: "TZ-WorkSpace"
   global_search:
     placeholder: "Search service"
+  welcome_title: "Welcome to TZ-WorkSpace!"
+  homescreen:
+    title: "TZ-WorkSpace"
+    welcome: "Welcome to TZ-WorkSpace! To get started, you can create a new project."
+    upsale:
+      title: "TZ-WorkSpace Enterprise"
   mail_body_register_header_title: "TZ-WorkSpace Invitation"
   mail_body_register_user: "Dear %{name},"
   mail_body_register: "Welcome to TZ-WorkSpace! Please activate your account by clicking on this link:"
