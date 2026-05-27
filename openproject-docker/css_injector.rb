@@ -79,7 +79,15 @@ module CustomCssInjector
         gh_script = %(<script src="#{GH_JS_URL}?v=#{gh_js_ver}" defer></script>)
         pr_info_ver = CustomCssInjector.asset_version(PR_INFO_JS_FILE)
         pr_info_script = %(<script src="#{PR_INFO_JS_URL}?v=#{pr_info_ver}" defer></script>)
-        body = body.sub("</head>", "#{link}\n#{custom_script}\n#{script}\n#{tz_script}\n#{gh_script}\n#{pr_info_script}\n</head>")
+        # Favicon override — replace OpenProject's default favicon with TZ logo
+        favicon_ico = %(<link rel="icon" type="image/x-icon" href="/tz-assets/favicon.ico">)
+        favicon_32  = %(<link rel="icon" type="image/png" sizes="32x32" href="/tz-assets/tz-favicon-32.png">)
+        favicon_16  = %(<link rel="icon" type="image/png" sizes="16x16" href="/tz-assets/tz-favicon-16.png">)
+        apple_icon  = %(<link rel="apple-touch-icon" sizes="180x180" href="/tz-assets/tz-favicon-180.png">)
+        # Remove existing favicon links
+        body = body.gsub(/<link[^>]*rel=["'](?:shortcut )?icon["'][^>]*>/, "")
+        body = body.gsub(/<link[^>]*rel=["']apple-touch-icon["'][^>]*>/, "")
+        body = body.sub("</head>", "#{favicon_ico}\n#{favicon_32}\n#{favicon_16}\n#{apple_icon}\n#{link}\n#{custom_script}\n#{script}\n#{tz_script}\n#{gh_script}\n#{pr_info_script}\n</head>")
         headers.delete_if { |k, _| %w[content-length etag].include?(k.to_s.downcase) }
       end
 

@@ -3458,6 +3458,100 @@ body[class*="controller-permissions"] .form--field .form--select-container {
   width: 100% !important;
   max-width: 100% !important;
 }
+/* ============================================================
+   (8) User memberships form — force role checkboxes visible.
+   The membership form (/users/:id/edit/memberships) renders
+   ProjectRole.givable as <label.form--label-with-check-box>
+   inside .form--field-container.-vertical. Earlier admin
+   form overrides (lines ~3379-3500) collapse field-containers
+   to block + max-width and the labels end up hidden. Defensive
+   override so the role list always renders.
+   ============================================================ */
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--field-container,
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--field-container.-vertical {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-width: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--label-with-check-box,
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership label.form--label-with-check-box {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  margin: 4px 0 !important;
+  padding: 0 !important;
+  font-size: 13.5px !important;
+  color: #1f2937 !important;
+}
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership input[name="membership[role_ids][]"] {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 !important;
+  accent-color: var(--op-green) !important;
+}
+
+/* (8b) Tighten role list spacing — left-align, compact rows */
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--field.-vertical {
+  display: block !important;
+  margin: 12px 0 0 0 !important;
+  padding: 0 !important;
+}
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--field.-vertical > label {
+  display: block !important;
+  margin: 0 0 6px 0 !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #374151 !important;
+  text-align: left !important;
+  float: none !important;
+  width: auto !important;
+}
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--field-container.-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership label.form--label-with-check-box {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 2px 0 !important;
+  width: auto !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--label-with-check-box .form--label,
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership .form--label-with-check-box span {
+  display: inline !important;
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  color: #1f2937 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+/* Compact the Add button row */
+body.controller-users:not(.action-new):not(.action-index) form#new_project_membership fieldset > div:last-child {
+  margin-top: 12px !important;
+}
 
 /* Checkboxes — green accent, sized for desktop */
 body.controller-users:not(.action-new):not(.action-index) .form--field input.form--check-box,
